@@ -74,6 +74,7 @@ import java_cup.runtime.*;
 LineTerminator	= \r|\n|\r\n
 WhiteSpace		= {LineTerminator} | [ \t\f]
 INTEGER			= 0 | [1-9][0-9]*
+STRING			= "SDFS"
 ID				= [a-z]+
 
 /******************************/
@@ -96,11 +97,35 @@ ID				= [a-z]+
 
 "+"					{ return symbol(TokenNames.PLUS);}
 "-"					{ return symbol(TokenNames.MINUS);}
-"PPP"				{ return symbol(TokenNames.TIMES);}
+"*"					{ return symbol(TokenNames.TIMES);}
 "/"					{ return symbol(TokenNames.DIVIDE);}
 "("					{ return symbol(TokenNames.LPAREN);}
 ")"					{ return symbol(TokenNames.RPAREN);}
-{INTEGER}			{ return symbol(TokenNames.NUMBER, Integer.valueOf(yytext()));}
+"["					{ return symbol(TokenNames.LBRACK);}
+"]"					{ return symbol(TokenNames.RBRACK);}
+"{"					{ return symbol(TokenNames.LBRACE);}
+"}"					{ return symbol(TokenNames.RBRACE);}
+","					{ return symbol(TokenNames.COMMA);}
+"."					{ return symbol(TokenNames.DOT);}
+";"					{ return symbol(TokenNames.SEMICOLON);}
+"int"				{ return symbol(TokenNames.TYPE_INT);}
+"string"			{ return symbol(TokenNames.TYPE_STRING);}
+"void"				{ return symbol(TokenNames.TYPE_VOID);}
+":="				{ return symbol(TokenNames.ASSIGN);}
+"="					{ return symbol(TokenNames.EQ);}
+"<"					{ return symbol(TokenNames.LT);}
+">"					{ return symbol(TokenNames.GT);}
+"array"				{ return symbol(TokenNames.ARRAY);}
+"class"				{ return symbol(TokenNames.CLASS);}
+"return"			{ return symbol(TokenNames.RETURN);}
+"while"				{ return symbol(TokenNames.WHILE);}
+"if"				{ return symbol(TokenNames.IF);}
+"else"				{ return symbol(TokenNames.ELSE);}
+"new"				{ return symbol(TokenNames.NEW);}
+"extends"			{ return symbol(TokenNames.EXTENDS);}
+"nil"				{ return symbol(TokenNames.NIL);}
+{INTEGER}			{ return symbol(TokenNames.INT, Integer.valueOf(yytext()));}
+{STRING}			{ return symbol(TokenNames.STRING, String.valueOf(yytext()));}
 {ID}				{ return symbol(TokenNames.ID,     yytext());}
 {WhiteSpace}		{ /* just skip what was found, do nothing */ }
 <<EOF>>				{ return symbol(TokenNames.EOF);}
