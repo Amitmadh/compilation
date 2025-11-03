@@ -1,4 +1,4 @@
-public interface TokenNames {
+public class TokenNames {
   /* terminals */
   public static final int LPAREN = 1;
   public static final int RPAREN = 2;
@@ -33,77 +33,78 @@ public interface TokenNames {
   public static final int STRING = 31;
   public static final int ID = 32;
   public static final int EOF = 0;
-}
-
-public String getTokenName(int n) {
-  switch (n) {
-    case 0:
-      return "EOF";
-    case 1:
-      return "LPAREN";
-    case 2:
-      return "RPAREN";
-    case 3:
-      return "LBRACK";
-    case 4:
-      return "RBRACK";
-    case 5:
-      return "LBRACE";
-    case 6:
-      return "RBRACE";
-    case 7:
-      return "PLUS";
-    case 8:
-      return "MINUS";
-    case 9:
-      return "TIMES";
-    case 10:
-      return "DIVIDE";
-    case 11:
-      return "COMMA";
-    case 12:
-      return "DOT";
-    case 13:
-      return "SEMICOLON";
-    case 14:
-      return "TYPE_INT";
-    case 15:
-      return "TYPE_STRING";
-    case 16:
-      return "TYPE_VOID";
-    case 17:
-      return "ASSIGN";
-    case 18:
-      return "EQ";
-    case 19:
-      return "LT";
-    case 20:
-      return "GT";
-    case 21:
-      return "ARRAY";
-    case 22:
-      return "CLASS";
-    case 23:
-      return "RETURN";
-    case 24:
-      return "WHILE";
-    case 25:
-      return "IF";
-    case 26:
-      return "ELSE";
-    case 27:
-      return "NEW";
-    case 28:
-      return "EXTENDS";
-    case 29:
-      return "NIL";
-    case 30:
-      return "INT";
-    case 31:
-      return "STRING";
-    case 32:
-      return "ID";
-    default:
-      return "ERROR";
+    
+  public static String getTokenName(int n) {
+    switch (n) {
+      case 0:
+        return "EOF";
+      case 1:
+        return "LPAREN";
+      case 2:
+        return "RPAREN";
+      case 3:
+        return "LBRACK";
+      case 4:
+        return "RBRACK";
+      case 5:
+        return "LBRACE";
+      case 6:
+        return "RBRACE";
+      case 7:
+        return "PLUS";
+      case 8:
+        return "MINUS";
+      case 9:
+        return "TIMES";
+      case 10:
+        return "DIVIDE";
+      case 11:
+        return "COMMA";
+      case 12:
+        return "DOT";
+      case 13:
+        return "SEMICOLON";
+      case 14:
+        return "TYPE_INT";
+      case 15:
+        return "TYPE_STRING";
+      case 16:
+        return "TYPE_VOID";
+      case 17:
+        return "ASSIGN";
+      case 18:
+        return "EQ";
+      case 19:
+        return "LT";
+      case 20:
+        return "GT";
+      case 21:
+        return "ARRAY";
+      case 22:
+        return "CLASS";
+      case 23:
+        return "RETURN";
+      case 24:
+        return "WHILE";
+      case 25:
+        return "IF";
+      case 26:
+        return "ELSE";
+      case 27:
+        return "NEW";
+      case 28:
+        return "EXTENDS";
+      case 29:
+        return "NIL";
+      case 30:
+        return "INT";
+      case 31:
+        return "STRING";
+      case 32:
+        return "ID";
+      default:
+        return "ERROR";
+    }
   }
+
 }

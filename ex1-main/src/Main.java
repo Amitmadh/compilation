@@ -13,7 +13,6 @@ public class Main
 		PrintWriter fileWriter;
 		String inputFileName = argv[0];
 		String outputFileName = argv[1];
-		
 		try
 		{
 			/********************************/
@@ -44,12 +43,17 @@ public class Main
 				/************************/
 				/* [6] Print to console */
 				/************************/
+				System.out.print(TokenNames.getTokenName(s.sym));
+				if (s.sym >= 30 && s.sym <= 32) {
+					System.out.print("(");
+					System.out.print(s.value);
+					System.out.print(")");
+				}
 				System.out.print("[");
 				System.out.print(l.getLine());
 				System.out.print(",");
 				System.out.print(l.getTokenStartPosition());
-				System.out.print("]:");
-				System.out.print(s.value);
+				System.out.print("]");
 				System.out.print("\n");
 				
 				/*********************/
