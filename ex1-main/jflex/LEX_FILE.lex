@@ -133,4 +133,5 @@ TYPE2COMMENT	= \/\*({COMMENT} | [\r\n])*\*\/
 {ID}				{ return symbol(TokenNames.ID,     yytext());}
 {WhiteSpace}		{ /* just skip what was found, do nothing */ }
 <<EOF>>				{ return symbol(TokenNames.EOF);}
+. 					{ return symbol(TokenNames.ERROR);}
 }

@@ -35,11 +35,19 @@ public class Main
 			/***********************/
 			s = l.next_token();
 
+
 			/********************************/
 			/* [5] Main reading tokens loop */
 			/********************************/
 			while (s.sym != TokenNames.EOF)
 			{
+				if (TokenNames.getTokenName(s.sym) == "ERROR") {
+					System.out.print("ERROR\n");
+					fileWriter = new PrintWriter(outputFileName);
+					fileWriter.print("ERROR\n");
+					fileWriter.close();
+					return;
+				}
 				/************************/
 				/* [6] Print to console */
 				/************************/
