@@ -74,9 +74,11 @@ import java_cup.runtime.*;
 LineTerminator	= \r|\n|\r\n
 WhiteSpace		= {LineTerminator} | [ \t\f]
 INTEGER			= 0 | [1-9][0-9]*
-STRING			= "[a-zA-Z]*"
+STRING			= \"[a-zA-Z]*\"
 ID				= [a-zA-Z][a-zA-Z0-9]*
-
+COMMENT			= [a-zA-Z0-9{WhiteSpace}\(\)\[\]\{\}\?\!\+\-\*\/\.\;]
+TYPE1COMMENT	= \/\/{COMMENT}*{LineTerminator}
+TYPE2COMMENT	= \/\*{COMMENT}*\*\/
 /******************************/
 /* DOLLAR DOLLAR - DON'T TOUCH! */
 /******************************/
@@ -124,6 +126,8 @@ ID				= [a-zA-Z][a-zA-Z0-9]*
 "new"				{ return symbol(TokenNames.NEW);}
 "extends"			{ return symbol(TokenNames.EXTENDS);}
 "nil"				{ return symbol(TokenNames.NIL);}
+{TYPE1COMMENT}		{ /* just skip what was found, do nothing */ }
+{TYPE2COMMENT}		{ /* just skip what was found, do nothing */ }
 {INTEGER}			{ return symbol(TokenNames.INT, Integer.valueOf(yytext()));}
 {STRING}			{ return symbol(TokenNames.STRING, String.valueOf(yytext()));}
 {ID}				{ return symbol(TokenNames.ID,     yytext());}
