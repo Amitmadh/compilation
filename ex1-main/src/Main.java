@@ -59,9 +59,17 @@ public class Main
 				/*********************/
 				/* [7] Print to file */
 				/*********************/
+				fileWriter.print(TokenNames.getTokenName(s.sym));
+				if (s.sym >= 30 && s.sym <= 32) {
+					fileWriter.print("(");
+					fileWriter.print(s.value);
+					fileWriter.print(")");
+				}
+				fileWriter.print("[");
 				fileWriter.print(l.getLine());
-				fileWriter.print(": ");
-				fileWriter.print(s.value);
+				fileWriter.print(",");
+				fileWriter.print(l.getTokenStartPosition());
+				fileWriter.print("]");
 				fileWriter.print("\n");
 				
 				/***********************/
