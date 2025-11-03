@@ -74,8 +74,8 @@ import java_cup.runtime.*;
 LineTerminator	= \r|\n|\r\n
 WhiteSpace		= {LineTerminator} | [ \t\f]
 INTEGER			= 0 | [1-9][0-9]*
-STRING			= "SDFS"
-ID				= [a-z]+
+STRING			= "[a-zA-Z]*"
+ID				= [a-zA-Z][a-zA-Z0-9]*
 
 /******************************/
 /* DOLLAR DOLLAR - DON'T TOUCH! */
