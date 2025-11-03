@@ -76,9 +76,9 @@ WhiteSpace		= {LineTerminator} | [ \t\f]
 INTEGER			= 0 | [1-9][0-9]*
 STRING			= \"[a-zA-Z]*\"
 ID				= [a-zA-Z][a-zA-Z0-9]*
-COMMENT			= [a-zA-Z0-9 \t\r\n\f\(\)\[\]\{\}\?\!\+\-\*\/\.\;]
+COMMENT			= [a-zA-Z0-9 \t\f\(\)\[\]\{\}\?\!\+\-\*\/\.\;]
 TYPE1COMMENT	= \/\/{COMMENT}*{LineTerminator}
-TYPE2COMMENT	= \/\*{COMMENT}*\*\/
+TYPE2COMMENT	= \/\*({COMMENT} | [\r\n])*\*\/
 /******************************/
 /* DOLLAR DOLLAR - DON'T TOUCH! */
 /******************************/
