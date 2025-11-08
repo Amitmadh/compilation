@@ -32,6 +32,7 @@ public class TokenNames {
   public static final int INT = 30;
   public static final int STRING = 31;
   public static final int ID = 32;
+  public static final int ERROR = 33;
   public static final int EOF = 0;
     
   public static String getTokenName(int n) {

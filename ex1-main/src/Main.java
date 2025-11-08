@@ -48,6 +48,15 @@ public class Main
 					fileWriter.close();
 					return;
 				}
+
+				if (TokenNames.getTokenName(s.sym) == "INT" && ((Integer)s.value) >= 32768) {
+					System.out.print("ERROR\n");
+					fileWriter = new PrintWriter(outputFileName);
+					fileWriter.print("ERROR\n");
+					fileWriter.close();
+					return;
+				}
+
 				/************************/
 				/* [6] Print to console */
 				/************************/

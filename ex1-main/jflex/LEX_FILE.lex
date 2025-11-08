@@ -74,11 +74,14 @@ import java_cup.runtime.*;
 LineTerminator	= \r|\n|\r\n
 WhiteSpace		= {LineTerminator} | [ \t\f]
 INTEGER			= 0 | [1-9][0-9]*
+IntegerError	= 0+{INTEGER}+
 STRING			= \"[a-zA-Z]*\"
 ID				= [a-zA-Z][a-zA-Z0-9]*
-COMMENT			= [a-zA-Z0-9 \t\f\(\)\[\]\{\}\?\!\+\-\*\/\.\;]
-TYPE1COMMENT	= \/\/{COMMENT}*{LineTerminator}
-TYPE2COMMENT	= \/\*({COMMENT} | [\r\n])*\*\/
+COMMENT1		= [a-zA-Z0-9 \t\f\(\)\[\]\{\}\?\!\+\-\*\/\.\;]
+TYPE1COMMENT	= \/\/{COMMENT1}*{LineTerminator}
+COMMENT2			= [a-zA-Z0-9 \r\n\t\f\(\)\[\]\{\}\?\!\+\-\.\;]
+TYPE2COMMENT	= \/\*(({COMMENT2} | \/) | \*+{COMMENT2})*\*+\/
+Type2CommentError = \/\*(({COMMENT2} | \/) | \*+{COMMENT2})*
 /******************************/
 /* DOLLAR DOLLAR - DON'T TOUCH! */
 /******************************/
@@ -128,7 +131,9 @@ TYPE2COMMENT	= \/\*({COMMENT} | [\r\n])*\*\/
 "nil"				{ return symbol(TokenNames.NIL);}
 {TYPE1COMMENT}		{ /* just skip what was found, do nothing */ }
 {TYPE2COMMENT}		{ /* just skip what was found, do nothing */ }
+{Type2CommentError} { return symbol(TokenNames.ERROR);}
 {INTEGER}			{ return symbol(TokenNames.INT, Integer.valueOf(yytext()));}
+{IntegerError}		{ return symbol(TokenNames.ERROR);}
 {STRING}			{ return symbol(TokenNames.STRING, String.valueOf(yytext()));}
 {ID}				{ return symbol(TokenNames.ID,     yytext());}
 {WhiteSpace}		{ /* just skip what was found, do nothing */ }
