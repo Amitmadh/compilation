@@ -47,15 +47,10 @@ public class Main
 					fileWriter.print("\n");
 				}
 
-				if (TokenNames.getTokenName(s.sym) == "ERROR") {
+				if (TokenNames.getTokenName(s.sym) == "ERROR" ||
+						TokenNames.getTokenName(s.sym) == "INT" && ((Integer)s.value) >= 32768) {
 					System.out.print("ERROR");
-					fileWriter.print("ERROR");
-					fileWriter.close();
-					return;
-				}
-
-				if (TokenNames.getTokenName(s.sym) == "INT" && ((Integer)s.value) >= 32768) {
-					System.out.print("ERROR");
+					fileWriter = new PrintWriter(outputFileName);
 					fileWriter.print("ERROR");
 					fileWriter.close();
 					return;
