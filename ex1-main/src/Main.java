@@ -39,20 +39,24 @@ public class Main
 			/********************************/
 			/* [5] Main reading tokens loop */
 			/********************************/
+			boolean firstToken = true;
 			while (s.sym != TokenNames.EOF)
-			{
+			{	
+				if (!firstToken){
+					System.out.print("\n");
+					fileWriter.print("\n");
+				}
+
 				if (TokenNames.getTokenName(s.sym) == "ERROR") {
-					System.out.print("ERROR\n");
-					fileWriter = new PrintWriter(outputFileName);
-					fileWriter.print("ERROR\n");
+					System.out.print("ERROR");
+					fileWriter.print("ERROR");
 					fileWriter.close();
 					return;
 				}
 
 				if (TokenNames.getTokenName(s.sym) == "INT" && ((Integer)s.value) >= 32768) {
-					System.out.print("ERROR\n");
-					fileWriter = new PrintWriter(outputFileName);
-					fileWriter.print("ERROR\n");
+					System.out.print("ERROR");
+					fileWriter.print("ERROR");
 					fileWriter.close();
 					return;
 				}
@@ -71,7 +75,6 @@ public class Main
 				System.out.print(",");
 				System.out.print(l.getTokenStartPosition());
 				System.out.print("]");
-				System.out.print("\n");
 				
 				/*********************/
 				/* [7] Print to file */
@@ -87,12 +90,12 @@ public class Main
 				fileWriter.print(",");
 				fileWriter.print(l.getTokenStartPosition());
 				fileWriter.print("]");
-				fileWriter.print("\n");
 				
 				/***********************/
 				/* [8] Read next token */
 				/***********************/
 				s = l.next_token();
+				firstToken = false;
 			}
 			
 			/******************************/
