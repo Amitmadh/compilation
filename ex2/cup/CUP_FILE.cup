@@ -97,6 +97,14 @@ non terminal AstExp exp;
 non terminal AstVar var;
 non terminal AstStmt stmt;
 non terminal AstStmtList stmtList;
+non terminal program;
+non terminal dec;
+non terminal varDec;
+non terminal funcDec;
+non terminal classDec;
+non terminal arrayTypeDef;
+non terminal type;
+
 
 /***********************/
 /* OPERATOR PRECEDENCE */
