@@ -117,6 +117,26 @@ start with stmtList;
 /********************/
 /* DERIVATION RULES */
 /********************/
+program		::=		dec:i								{: RESULT = new AstExpInt(i);          :}
+					| dec:v	program:p						{: RESULT = new AstExpVar(v);          :}
+					;
+
+dec			::=		varDec:i								{: RESULT = new AstExpInt(i);          :}
+					| funcDec:v								{: RESULT = new AstExpVar(v);          :}
+					| classDec:e1				{: RESULT = new AstExpBinop(e1, e2, 0);:}
+					| arrayTypeDef:e1			{: RESULT = new AstExpBinop(e1, e2, 1);:}
+					;
+
+type		::=		TYPE_INT:i								{: RESULT = new AstExpInt(i);          :}
+					| TYPE_STRING:v								{: RESULT = new AstExpVar(v);          :}
+					| TYPE_VOID:e1				{: RESULT = new AstExpBinop(e1, e2, 0);:}
+					| ID:e1			{: RESULT = new AstExpBinop(e1, e2, 1);:}
+					;
+
+varDec		::=		type:i ID SEMICOLON								{: RESULT = new AstExpInt(i);          :}
+					| type:v ID ASSIGN exp:e SEMICOLON							{: RESULT = new AstExpVar(v);          :}
+					| type:e1 ID ASSIGN newExp:e SEMICOLON				{: RESULT = new AstExpBinop(e1, e2, 0);:}
+					;
 
 stmtList	::=		stmt:s	stmtList:l		{: RESULT = new AstStmtList(s,l);    :}
 					| stmt:s				{: RESULT = new AstStmtList(s,null); :}
@@ -137,3 +157,5 @@ exp			::=		INT:i								{: RESULT = new AstExpInt(i);          :}
 					| exp:e1 PLUS  exp:e2				{: RESULT = new AstExpBinop(e1, e2, 0);:}
 					| exp:e1 MINUS exp:e2				{: RESULT = new AstExpBinop(e1, e2, 1);:}
 					;
+
+
