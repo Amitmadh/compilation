@@ -35,13 +35,23 @@ public class AstFuncArg extends AstNode
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE FUNC ARGUMENT(%s)\n",fieldName);
+		System.out.format("AST NODE FUNC ARGUMENT(%s)\n", fieldName);
+
+		/****************************************/
+		/* RECURSIVELY PRINT VAR + SUBSCRIPT ... */
+		/****************************************/
+		if (type != null) type.printMe();
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("ID(%s)",fieldName));
+			String.format("ARG\nID(%s)", fieldName));
+
+		/****************************************/
+		/* PRINT Edges to AST GRAPHVIZ DOT file */
+		/****************************************/
+		if (type != null) AstGraphviz.getInstance().logEdge(serialNumber,type.serialNumber);
 	}
 }

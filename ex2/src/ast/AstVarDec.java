@@ -53,12 +53,12 @@ public class AstVarDec extends AstDec
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("VAEDEC( %s )",fieldName));
+			String.format("VARDEC( %s )",fieldName));
 
         /****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		if (type       != null) AstGraphviz.getInstance().logEdge(serialNumber,type.serialNumber);
+		if (type != null) AstGraphviz.getInstance().logEdge(serialNumber,type.serialNumber);
 		if (exp != null) AstGraphviz.getInstance().logEdge(serialNumber,exp.serialNumber);
         if (nexp != null) AstGraphviz.getInstance().logEdge(serialNumber,nexp.serialNumber);
 	}

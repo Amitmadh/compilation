@@ -8,20 +8,17 @@ parser code
 {:
 	public Lexer lexer;
 
+	public boolean lexError = false;
+
 	public Parser(Lexer lexer)
 	{
 		super(lexer);
 		this.lexer = lexer;
 	}
+
 	public void report_error(String message, Object info)
 	{
-		System.out.print("ERROR >> ");		
-		System.out.print("[");
-		System.out.print(lexer.getLine());
-		System.out.print(":");
-		System.out.print(lexer.getTokenStartPosition());
-		System.out.print("] ");		
-		System.exit(0);
+		throw new RuntimeException("ERROR(" + lexer.getLine() + ")");
 	}
 :}
 
@@ -137,7 +134,7 @@ program		::=		dec:d				{: RESULT = new AstProgram(d, null);:}
 					| dec:d program:p	{: RESULT = new AstProgram(d, p);	:}
 					;
 
-dec			::=		varDec:d			{: RESULT = new AstDecVarDec(d);			:}
+dec			::=		varDec:d			{: RESULT = new AstDecVarDec(d);		:}
 					| funcDec:d			{: RESULT = new AstDecFuncDec(d);		:}
 					| classDec:d		{: RESULT = new AstDecClassDec(d);		:}
 					| arrayTypeDef:d	{: RESULT = new AstDecArrayTypeDef(d);	:}
@@ -229,4 +226,3 @@ callExp		::=		ID:fieldName LPAREN RPAREN 							{: RESULT = new AstCallExp(null,
 					| ID:fieldName LPAREN expList:el RPAREN 			{: RESULT = new AstCallExp(null, fieldName, el);    :}
 					| var:v DOT ID:fieldName LPAREN expList:el RPAREN 	{: RESULT = new AstCallExp(v, fieldName, el);       :}
 					;
-

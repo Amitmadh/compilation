@@ -33,7 +33,7 @@ public class AstDecVarDec extends AstDec
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE DecVarDec\n");
+		System.out.format("AST NODE DEC TO VAR DEC\n");
 
         /**************************************/
 		/* RECURSIVELY PRINT left + right ... */
@@ -45,7 +45,7 @@ public class AstDecVarDec extends AstDec
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("DECVARDEC"));
+			String.format("DEC->VARDEC"));
 
         /****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */

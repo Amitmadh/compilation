@@ -33,7 +33,7 @@ public class AstDecArrayTypeDef extends AstDec
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE ARRAY TYPE DEF\n");
+		System.out.format("AST NODE DEC TO ARRAY TYPE DEF\n");
 
         /**************************************/
 		/* RECURSIVELY PRINT left + right ... */
@@ -45,7 +45,7 @@ public class AstDecArrayTypeDef extends AstDec
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("ARRAYTYPEDEF"));
+			String.format("DEC->ARRAYTYPEDEF"));
 
         /****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */

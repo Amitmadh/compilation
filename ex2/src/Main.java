@@ -1,5 +1,5 @@
 import java.io.*;
-import java.io.PrintWriter;
+
 import java_cup.runtime.Symbol;
 import ast.*;
 
@@ -10,7 +10,7 @@ public class Main
 		Lexer l;
 		Parser p;
 		Symbol s;
-		AstStmtList ast;
+		AstProgram ast;
 		FileReader fileReader;
 		PrintWriter fileWriter;
 		String inputFileName = argv[0];
@@ -41,13 +41,18 @@ public class Main
 			/***********************************/
 			/* [5] 3 ... 2 ... 1 ... Parse !!! */
 			/***********************************/
-			ast = (AstStmtList) p.parse().value;
-			
-			/*************************/
-			/* [6] Print the AST ... */
-			/*************************/
-			ast.printMe();
-			
+			try {
+    			p.parse();
+    			fileWriter.println("OK");
+			} catch (Exception e) {
+				if (e.getMessage() == "lexical error") {
+                    fileWriter.print("ERROR"); 
+                } 
+                else {
+					fileWriter.print(e.getMessage());       // Prints: ERROR
+                }
+			}
+
 			/*************************/
 			/* [7] Close output file */
 			/*************************/
@@ -65,5 +70,7 @@ public class Main
 		}
 	}
 }
+
+
 
 

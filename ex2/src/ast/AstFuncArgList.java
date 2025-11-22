@@ -52,7 +52,7 @@ public class AstFuncArgList extends AstNode
 		/**********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			"FUNCARG\nLIST\n");
+			"FUNC\nARG\nLIST\n");
 		
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */

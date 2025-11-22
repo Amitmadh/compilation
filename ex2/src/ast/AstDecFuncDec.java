@@ -33,7 +33,7 @@ public class AstDecFuncDec extends AstDec
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE DecFuncDec\n");
+		System.out.format("AST NODE DEC TO FUNC DEC\n");
 
         /**************************************/
 		/* RECURSIVELY PRINT left + right ... */
@@ -45,7 +45,7 @@ public class AstDecFuncDec extends AstDec
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("DECFUNCDEC"));
+			String.format("DEC->FUNCDEC"));
 
         /****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */

@@ -1,6 +1,7 @@
 package ast;
 
 public class AstType extends AstNode {
+	
     public int type;
 	
 	/******************/
