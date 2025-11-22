@@ -40,6 +40,7 @@ public class AstNewExp extends AstExp
 		/**************************************/
 		/* RECURSIVELY PRINT left + right ... */
 		/**************************************/
+		if (type != null) type.printMe();
 		if (exp != null) exp.printMe();
 		
 		/***************************************/
@@ -52,6 +53,7 @@ public class AstNewExp extends AstExp
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
+		if (type  != null) AstGraphviz.getInstance().logEdge(serialNumber,type.serialNumber);
 		if (exp  != null) AstGraphviz.getInstance().logEdge(serialNumber,exp.serialNumber);
 	}
 }

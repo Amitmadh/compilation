@@ -47,7 +47,7 @@ public class AstFuncArg extends AstNode
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("ARG\nID(%s)", fieldName));
+			String.format("ARG ID(%s)", fieldName));
 
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */

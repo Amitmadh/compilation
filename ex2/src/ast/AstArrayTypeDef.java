@@ -17,7 +17,7 @@ public class AstArrayTypeDef extends AstDec
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== arrayTypeDef -> ARRAY ID EQ type LBRACK RBRACK SEMICOLON\n");
+		System.out.format("====================== arrayTypeDef -> ARRAY ID( %s ) EQ type LBRACK RBRACK SEMICOLON\n", fieldname);
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -33,13 +33,13 @@ public class AstArrayTypeDef extends AstDec
 		/************************************/
 		/* AST NODE TYPE = EXP VAR AST NODE */
 		/************************************/
-		System.out.print("AST NODE ARRAY TEPE DEFINITION\n");
+		System.out.format("AST NODE ARRAY TYPE DEFINITION ( %s )\n", fieldname);
 		
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			"ARRAYTYPEDEF");
+			String.format("ARRAYTYPEDEF( %s )", fieldname));
 	}
 }

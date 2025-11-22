@@ -43,6 +43,6 @@ public class AstVarSimple extends AstVar
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("SIMPLE\nVAR\n(%s)",name));
+			String.format("SIMPLE\nVAR(%s)",name));
 	}
 }

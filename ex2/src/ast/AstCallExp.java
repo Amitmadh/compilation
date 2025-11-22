@@ -19,7 +19,7 @@ public class AstCallExp extends AstNode
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== callExp -> [ var DOT ] ID LPAREN [ exp { COMMA exp } ] RPAREN\n");
+		System.out.format("====================== callExp -> [ var DOT ] ID( %s ) LPAREN [ exp { COMMA exp } ] RPAREN\n", fieldName);
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -55,7 +55,7 @@ public class AstCallExp extends AstNode
         /****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		if (var       != null) AstGraphviz.getInstance().logEdge(serialNumber,var.serialNumber);
+		if (var != null) AstGraphviz.getInstance().logEdge(serialNumber,var.serialNumber);
 		if (expList != null) AstGraphviz.getInstance().logEdge(serialNumber,expList.serialNumber);
 	}
 }

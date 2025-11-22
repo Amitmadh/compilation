@@ -1,6 +1,6 @@
 package ast;
 
-public class AstVarDec extends AstDec
+public class AstVarDec extends AstNode
 {
 	public AstType type;
     public String fieldName;

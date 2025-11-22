@@ -48,12 +48,12 @@ public class AstVarSubscript extends AstVar
 		/***************************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			"SUBSCRIPT\nVAR\n...[...]");
+			"SUBSCRIPT\nVAR");
 		
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		if (var       != null) AstGraphviz.getInstance().logEdge(serialNumber,var.serialNumber);
+		if (var != null) AstGraphviz.getInstance().logEdge(serialNumber,var.serialNumber);
 		if (subscript != null) AstGraphviz.getInstance().logEdge(serialNumber,subscript.serialNumber);
 	}
 }

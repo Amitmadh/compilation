@@ -17,7 +17,7 @@ public class AstDecClassDec extends AstDec
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== dec -> classDec\n");
+		System.out.print("====================== dec -> classDec\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -33,7 +33,7 @@ public class AstDecClassDec extends AstDec
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE DEC TO CLASS DEC\n");
+		System.out.print("AST NODE DEC\n");
 
         /**************************************/
 		/* RECURSIVELY PRINT left + right ... */
@@ -45,7 +45,7 @@ public class AstDecClassDec extends AstDec
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("DEC->CLASSDEC"));
+			String.format("DEC"));
 
         /****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */

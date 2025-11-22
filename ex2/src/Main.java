@@ -10,7 +10,7 @@ public class Main
 		Lexer l;
 		Parser p;
 		Symbol s;
-		AstProgram ast;
+		AstProgram ast = null;
 		FileReader fileReader;
 		PrintWriter fileWriter;
 		String inputFileName = argv[0];
@@ -42,8 +42,13 @@ public class Main
 			/* [5] 3 ... 2 ... 1 ... Parse !!! */
 			/***********************************/
 			try {
-    			p.parse();
+    			ast = (AstProgram) p.parse().value;
     			fileWriter.println("OK");
+
+				/*************************/
+				/* [6] Print the AST ... */
+				/*************************/
+				ast.printMe();
 			} catch (Exception e) {
 				if (e.getMessage() == "lexical error") {
                     fileWriter.print("ERROR"); 

@@ -40,6 +40,6 @@ public class AstExpInt extends AstExp
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("INT(%d)",value));
+			String.format("EXP INT(%d)",value));
 	}
 }
