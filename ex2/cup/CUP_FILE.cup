@@ -140,10 +140,10 @@ dec			::=		varDec:d			{: RESULT = new AstDecVarDec(d);		:}
 					| arrayTypeDef:d	{: RESULT = new AstDecArrayTypeDef(d);	:}
 					;
 
-type		::=		TYPE_INT		{: RESULT = new AstType(0);:}
-					| TYPE_STRING	{: RESULT = new AstType(1);:}
-					| TYPE_VOID		{: RESULT = new AstType(2);:}
-					| ID			{: RESULT = new AstType(3);:}
+type		::=		TYPE_INT		{: RESULT = new AstType(0, null);	:}
+					| TYPE_STRING	{: RESULT = new AstType(1, null);	:}
+					| TYPE_VOID		{: RESULT = new AstType(2, null);	:}
+					| ID:d			{: RESULT = new AstType(3, d);		:}
 					;
 
 varDec		::=		type:t ID:fieldName SEMICOLON						{: RESULT = new AstVarDec(t, fieldName, null, null);	:}
@@ -186,15 +186,15 @@ var			::=		ID:name						{: RESULT = new AstVarSimple(name);       :}
 					| var:v LBRACK exp:e RBRACK	{: RESULT = new AstVarSubscript(v,e);     :}
 					;
 					
-stmt		::=		varDec:v																			{: RESULT = new AstStmtVarDec(v);          :}
-					| var:v ASSIGN exp:e SEMICOLON														{: RESULT = new AstStmtAssign(v,e); 	:}
-					| var:v ASSIGN newExp:e SEMICOLON													{: RESULT = new AstStmtAssign(v,e); 	:}
-					| RETURN SEMICOLON																	{: RESULT = new AstStmtReturn(null);    :}
-					| RETURN exp:e SEMICOLON															{: RESULT = new AstStmtReturn(e);       :}
-					| IF LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE								{: RESULT = new AstStmtIf(cond,body); 	:}
-					| IF LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE ELSE LBRACE stmtList RBRACE	{: RESULT = new AstStmtIf(cond,body); 	:}
-					| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE							{: RESULT = new AstStmtWhile(cond,body);:}
-					| callExp:ce SEMICOLON																{: RESULT = new AstStmtCallExp(ce);         :}
+stmt		::=		varDec:v																						{: RESULT = new AstStmtVarDec(v);          :}
+					| var:v ASSIGN exp:e SEMICOLON																	{: RESULT = new AstStmtAssign(v,e); 	:}
+					| var:v ASSIGN newExp:e SEMICOLON																{: RESULT = new AstStmtAssign(v,e); 	:}
+					| RETURN SEMICOLON																				{: RESULT = new AstStmtReturn(null);    :}
+					| RETURN exp:e SEMICOLON																		{: RESULT = new AstStmtReturn(e);       :}
+					| IF LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE											{: RESULT = new AstStmtIf(cond, body, null); 	:}
+					| IF LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE ELSE LBRACE stmtList:elseBody RBRACE	{: RESULT = new AstStmtIf(cond, body, elseBody); 	:}
+					| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE										{: RESULT = new AstStmtWhile(cond,body);:}
+					| callExp:ce SEMICOLON																			{: RESULT = new AstStmtCallExp(ce);         :}
 					;
 
 exp			::=		var:v								{: RESULT = new AstExpVar(v);          	:}
