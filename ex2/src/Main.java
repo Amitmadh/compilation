@@ -43,7 +43,7 @@ public class Main
 			/***********************************/
 			try {
     			ast = (AstProgram) p.parse().value;
-    			fileWriter.println("OK");
+    			fileWriter.print("OK");
 
 				/*************************/
 				/* [6] Print the AST ... */
