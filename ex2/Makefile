@@ -48,7 +48,7 @@ CUP_FLAGS =                                \
 #########################
 # DEFINITIONS :: PARSER #
 #########################
-INPUT    = ${INPUT_DIR}/Input.txt
+INPUT    = ${INPUT_DIR}/TEST_01_Print_Primes.txt
 OUTPUT   = ${OUTPUT_DIR}/ParseStatus.txt
 
 ##########
@@ -123,6 +123,8 @@ debug: all
 	@echo "*                           *"
 	@echo "*                           *"
 	@echo "*****************************"
+	# Ensure output directory exists before running program (prevents PrintWriter failure in AstGraphviz)
+	mkdir -p ${OUTPUT_DIR}
 	java -jar PARSER ${INPUT} ${OUTPUT}
 	@echo "\n"
 	@echo "***************************************"
