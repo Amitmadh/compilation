@@ -17,7 +17,7 @@ public class AstExpString extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== exp -> INT( %d )\n", value);
+		System.out.format("====================== exp -> STRING( %s )\n", value);
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */

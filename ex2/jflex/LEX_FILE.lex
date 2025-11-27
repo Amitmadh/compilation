@@ -58,7 +58,7 @@ import java_cup.runtime.*;
 	private Symbol symbol(int type, Object value) {return new Symbol(type, yyline, yycolumn, value);}
 	private Symbol symbol_integer(int value) {
 		if (value < 32768) {return new Symbol(TokenNames.INT, yyline, yycolumn, value);}
-		else {return symbol(TokenNames.ERROR);}
+		else {throw new RuntimeException("lexical error");}
 	}
 
 	/*******************************************/
@@ -86,6 +86,8 @@ TYPE1COMMENT	= \/\/{COMMENT1}*{LineTerminator}
 COMMENT2			= [a-zA-Z0-9 \r\n\t\f\(\)\[\]\{\}\?\!\+\-\.\;]
 TYPE2COMMENT	= \/\*(({COMMENT2} | \/) | \*+{COMMENT2})*\*+\/
 Type2CommentError = \/\*(({COMMENT2} | \/) | \*+{COMMENT2})*
+Type1CommentError = \/\/.*[^a-zA-Z0-9\s(){}\[\]?!+*\-./;].*{LineTerminator}
+
 /******************************/
 /* DOLLAR DOLLAR - DON'T TOUCH! */
 /******************************/
@@ -134,6 +136,7 @@ Type2CommentError = \/\*(({COMMENT2} | \/) | \*+{COMMENT2})*
 "extends"			{ return symbol(TokenNames.EXTENDS);}
 "nil"				{ return symbol(TokenNames.NIL);}
 {TYPE1COMMENT}		{ /* just skip what was found, do nothing */ }
+{Type1CommentError} { throw new RuntimeException("lexical error");}
 {TYPE2COMMENT}		{ /* just skip what was found, do nothing */ }
 {Type2CommentError} { throw new RuntimeException("lexical error");}
 {INTEGER}			{ return symbol_integer(Integer.valueOf(yytext()));}
