@@ -1,13 +1,14 @@
 package ast;
 
-public class AstExpString extends AstExp
-{
-	public String value;
+public class AstType extends AstNode {
+	
+    public int type;
+	String name;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpString(String value)
+	public AstType(int type, String name)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -17,12 +18,13 @@ public class AstExpString extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== exp -> STRING( %s )\n", value);
+		System.out.format("====================== type -> TYPE INT | TYPE STRING | TYPE VOID | ID\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
-		this.value = value;
+		this.type = type;
+		this.name = name;
 	}
 
 	/************************************************/
@@ -30,16 +32,25 @@ public class AstExpString extends AstExp
 	/************************************************/
 	public void printMe()
 	{
+        String stype="";
+		
+		/*********************************/
+		/* CONVERT op to a printable sop */
+		/*********************************/
+		if (type == 0) {stype = "TYPE_INT";}
+		if (type == 1) {stype = "TYPE_STRING";}
+        if (type == 2) {stype = "TYPE_VOID";}
+        if (type == 3) {stype = name;}
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE STRING( %s )\n",value);
+		System.out.format("AST NODE TYPE(%s)\n", stype);
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("STRING(%s)",value));
+			String.format("TYPE(%s)",stype));
 	}
 }

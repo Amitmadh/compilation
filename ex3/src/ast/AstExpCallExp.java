@@ -1,13 +1,13 @@
 package ast;
 
-public class AstExpString extends AstExp
+public class AstExpCallExp extends AstExp
 {
-	public String value;
+	public AstCallExp callExp;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpString(String value)
+	public AstExpCallExp(AstCallExp callExp)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -17,12 +17,12 @@ public class AstExpString extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== exp -> STRING( %s )\n", value);
+		System.out.format("====================== exp -> callExp\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
-		this.value = value;
+		this.callExp = callExp;
 	}
 
 	/************************************************/
@@ -33,13 +33,23 @@ public class AstExpString extends AstExp
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE STRING( %s )\n",value);
+		System.out.format("AST NODE CALLEXP\n");
+
+        /**************************************/
+		/* RECURSIVELY PRINT left + right ... */
+		/**************************************/
+		if (callExp != null) callExp.printMe();
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("STRING(%s)",value));
+			String.format("CALLEXP"));
+
+        /****************************************/
+		/* PRINT Edges to AST GRAPHVIZ DOT file */
+		/****************************************/
+		if (callExp  != null) AstGraphviz.getInstance().logEdge(serialNumber,callExp.serialNumber);
 	}
 }

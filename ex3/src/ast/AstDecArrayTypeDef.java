@@ -1,13 +1,13 @@
 package ast;
 
-public class AstExpString extends AstExp
+public class AstDecArrayTypeDef extends AstDec
 {
-	public String value;
+	public AstArrayTypeDef arrayTypeDef;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpString(String value)
+	public AstDecArrayTypeDef(AstArrayTypeDef arrayTypeDef)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -17,12 +17,12 @@ public class AstExpString extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== exp -> STRING( %s )\n", value);
+		System.out.print("====================== dec -> arrayTypeDef\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
-		this.value = value;
+		this.arrayTypeDef = arrayTypeDef;
 	}
 
 	/************************************************/
@@ -33,13 +33,23 @@ public class AstExpString extends AstExp
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE STRING( %s )\n",value);
+		System.out.print("AST NODE DEC\n");
+
+        /**************************************/
+		/* RECURSIVELY PRINT left + right ... */
+		/**************************************/
+		if (arrayTypeDef != null) arrayTypeDef.printMe();
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("STRING(%s)",value));
+			String.format("DEC"));
+
+        /****************************************/
+		/* PRINT Edges to AST GRAPHVIZ DOT file */
+		/****************************************/
+		if (arrayTypeDef  != null) AstGraphviz.getInstance().logEdge(serialNumber,arrayTypeDef.serialNumber);
 	}
 }

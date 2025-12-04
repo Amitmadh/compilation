@@ -1,15 +1,14 @@
 package ast;
 
-public class AstExpBinop extends AstExp
+public class AstNewExp extends AstExp
 {
-	int op;
-	public AstExp left;
-	public AstExp right;
+	AstType type;
+	public AstExp exp;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpBinop(AstExp left, AstExp right, int op)
+	public AstNewExp(AstType type, AstExp exp)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -19,56 +18,42 @@ public class AstExpBinop extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== exp -> exp BINOP exp\n");
+		System.out.print("====================== newExp -> NEW type [exp]\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
-		this.left = left;
-		this.right = right;
-		this.op = op;
+		this.type = type;
+		this.exp = exp;
 	}
 	
 	/*************************************************/
 	/* The printing message for a binop exp AST node */
 	/*************************************************/
 	public void printMe()
-	{
-		String sop="";
-		
-		/*********************************/
-		/* CONVERT op to a printable sop */
-		/*********************************/
-		if (op == 0) {sop = "+";}
-		if (op == 1) {sop = "-";}
-		if (op == 2) {sop = "*";}
-		if (op == 3) {sop = "/";}
-		if (op == 4) {sop = "<";}
-		if (op == 5) {sop = ">";}
-		if (op == 6) {sop = "=";}
-		
+	{	
 		/*************************************/
 		/* AST NODE TYPE = AST BINOP EXP */
 		/*************************************/
-		System.out.print("AST NODE BINOP EXP\n");
+		System.out.print("AST NODE NEW EXP\n");
 
 		/**************************************/
 		/* RECURSIVELY PRINT left + right ... */
 		/**************************************/
-		if (left != null) left.printMe();
-		if (right != null) right.printMe();
+		if (type != null) type.printMe();
+		if (exp != null) exp.printMe();
 		
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("EXP BINOP(%s)",sop));
+			String.format("NEWEXP"));
 		
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		if (left  != null) AstGraphviz.getInstance().logEdge(serialNumber,left.serialNumber);
-		if (right != null) AstGraphviz.getInstance().logEdge(serialNumber,right.serialNumber);
+		if (type  != null) AstGraphviz.getInstance().logEdge(serialNumber,type.serialNumber);
+		if (exp  != null) AstGraphviz.getInstance().logEdge(serialNumber,exp.serialNumber);
 	}
 }

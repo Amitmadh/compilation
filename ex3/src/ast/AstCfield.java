@@ -1,13 +1,14 @@
 package ast;
 
-public class AstExpString extends AstExp
+public class AstCfield extends AstNode
 {
-	public String value;
+	AstVarDec varDec;
+    AstFuncDec funDec;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpString(String value)
+	public AstCfield(AstVarDec varDec, AstFuncDec funDec)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -17,12 +18,13 @@ public class AstExpString extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== exp -> STRING( %s )\n", value);
+		System.out.format("====================== cfield -> varDec | funcDec\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
-		this.value = value;
+		this.varDec = varDec;
+        this.funDec = funDec;
 	}
 
 	/************************************************/
@@ -33,13 +35,25 @@ public class AstExpString extends AstExp
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE STRING( %s )\n",value);
+		System.out.format("AST NODE CLASS FIELD\n");
+
+        /**************************************/
+		/* RECURSIVELY PRINT left + right ... */
+		/**************************************/
+		if (varDec != null) varDec.printMe();
+		if (funDec != null) funDec.printMe();
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("STRING(%s)",value));
+			String.format("CFIELD"));
+
+        /****************************************/
+		/* PRINT Edges to AST GRAPHVIZ DOT file */
+		/****************************************/
+		if (varDec  != null) AstGraphviz.getInstance().logEdge(serialNumber,varDec.serialNumber);
+		if (funDec != null) AstGraphviz.getInstance().logEdge(serialNumber,funDec.serialNumber);
 	}
 }

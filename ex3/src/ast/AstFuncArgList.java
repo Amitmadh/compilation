@@ -1,38 +1,45 @@
 package ast;
 
-import types.*;
-
-public class AstTypeNameList extends AstNode
+public class AstFuncArgList extends AstNode
 {
 	/****************/
 	/* DATA MEMBERS */
 	/****************/
-	public AstTypeName head;
-	public AstTypeNameList tail;
-	
+	public AstFuncArg head;
+	public AstFuncArgList tail;
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstTypeNameList(AstTypeName head, AstTypeNameList tail)
+	public AstFuncArgList(AstFuncArg head, AstFuncArgList tail)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		serialNumber = AstNodeSerialNumber.getFresh();
 
+		/***************************************/
+		/* PRINT CORRESPONDING DERIVATION RULE */
+		/***************************************/
+		if (tail != null) System.out.print("====================== funcArgs -> funcArg funcArgs	\n");
+		if (tail == null) System.out.print("====================== funcArgs -> funcArg			\n");
+
+		/*******************************/
+		/* COPY INPUT DATA MEMBERS ... */
+		/*******************************/
 		this.head = head;
 		this.tail = tail;
 	}
 
 	/******************************************************/
-	/* The printing message for a type name list AST node */
+	/* The printing message for a statement list AST node */
 	/******************************************************/
 	public void printMe()
 	{
 		/**************************************/
-		/* AST NODE TYPE = AST TYPE NAME LIST */
+		/* AST NODE TYPE = AST STATEMENT LIST */
 		/**************************************/
-		System.out.print("AST TYPE NAME LIST\n");
+		System.out.print("AST NODE ARG LIST\n");
 
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
@@ -45,7 +52,7 @@ public class AstTypeNameList extends AstNode
 		/**********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			"TYPE-NAME\nLIST\n");
+			"FUNC\nARG\nLIST\n");
 		
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
@@ -53,20 +60,5 @@ public class AstTypeNameList extends AstNode
 		if (head != null) AstGraphviz.getInstance().logEdge(serialNumber,head.serialNumber);
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
 	}
-
-	public TypeList semantMe()
-	{
-		if (tail == null)
-		{
-			return new TypeList(
-				head.semantMe(),
-				null);
-		}
-		else
-		{
-			return new TypeList(
-				head.semantMe(),
-				tail.semantMe());
-		}
-	}
+	
 }

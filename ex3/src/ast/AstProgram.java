@@ -1,17 +1,17 @@
 package ast;
 
-public class AstExpList extends AstNode
+public class AstProgram extends AstNode
 {
 	/****************/
 	/* DATA MEMBERS */
 	/****************/
-	public AstExp head;
-	public AstExpList tail;
-
+	public AstDec head;
+	public AstProgram tail;
+	
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpList(AstExp head, AstExpList tail)
+	public AstProgram(AstDec head, AstProgram tail)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -21,44 +21,43 @@ public class AstExpList extends AstNode
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		if (tail != null) System.out.print("====================== exps -> exp exps \n");
-		if (tail == null) System.out.print("====================== exps -> exp      \n");
+        if (tail != null) System.out.print("====================== program -> dec program   \n");
+		if (tail == null) System.out.print("====================== program -> dec           \n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
 		this.head = head;
-		this.tail = tail;
+        this.tail = tail;
 	}
 
-	/******************************************************/
-	/* The printing message for a statement list AST node */
-	/******************************************************/
+	/************************************************/
+	/* The printing message for an int exp AST node */
+	/************************************************/
 	public void printMe()
 	{
-		/**************************************/
-		/* AST NODE TYPE = AST STATEMENT LIST */
-		/**************************************/
-		System.out.print("AST NODE EXP LIST\n");
+		/*******************************/
+		/* AST NODE TYPE = AST PROGRAM */
+		/*******************************/
+		System.out.format("AST NODE PROGRAM\n");
 
-		/*************************************/
-		/* RECURSIVELY PRINT HEAD + TAIL ... */
-		/*************************************/
+		/**************************************/
+		/* RECURSIVELY PRINT left + right ... */
+		/**************************************/
 		if (head != null) head.printMe();
 		if (tail != null) tail.printMe();
 
-		/**********************************/
-		/* PRINT to AST GRAPHVIZ DOT file */
-		/**********************************/
+		/*********************************/
+		/* Print to AST GRAPHVIZ DOT file */
+		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			"EXP\nLIST\n");
-		
-		/****************************************/
+			String.format("PROGRAM"));
+
+        /****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		if (head != null) AstGraphviz.getInstance().logEdge(serialNumber,head.serialNumber);
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
 	}
-	
 }

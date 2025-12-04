@@ -1,13 +1,14 @@
 package ast;
 
-public class AstExpString extends AstExp
+public class AstFuncArg extends AstNode
 {
-	public String value;
+	AstType type;
+    String fieldName;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpString(String value)
+	public AstFuncArg(AstType type, String fieldName)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -17,12 +18,13 @@ public class AstExpString extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== exp -> STRING( %s )\n", value);
+		System.out.format("====================== funcArg -> type ID(%s)\n", fieldName);
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
-		this.value = value;
+		this.type = type;
+        this.fieldName = fieldName;
 	}
 
 	/************************************************/
@@ -33,13 +35,23 @@ public class AstExpString extends AstExp
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE STRING( %s )\n",value);
+		System.out.format("AST NODE FUNC ARGUMENT(%s)\n", fieldName);
+
+		/****************************************/
+		/* RECURSIVELY PRINT VAR + SUBSCRIPT ... */
+		/****************************************/
+		if (type != null) type.printMe();
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("STRING(%s)",value));
+			String.format("ARG ID(%s)", fieldName));
+
+		/****************************************/
+		/* PRINT Edges to AST GRAPHVIZ DOT file */
+		/****************************************/
+		if (type != null) AstGraphviz.getInstance().logEdge(serialNumber,type.serialNumber);
 	}
 }

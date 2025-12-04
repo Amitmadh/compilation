@@ -1,13 +1,13 @@
 package ast;
 
-public class AstStmtReturn extends AstStmt
+public class AstStmtCallExp extends AstStmt
 {
-	public AstExp exp;
+	public AstCallExp callExp;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstStmtReturn(AstExp exp)
+	public AstStmtCallExp(AstCallExp callExp)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -17,12 +17,12 @@ public class AstStmtReturn extends AstStmt
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== stmt -> RETURN [exp] SEMICOLON\n");
+		System.out.print("====================== stmt -> callExp SEMICOLON\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
-		this.exp = exp;
+		this.callExp = callExp;
 	}
 	
 	/***********************************************/
@@ -33,24 +33,24 @@ public class AstStmtReturn extends AstStmt
 		/************************************/
 		/* AST NODE TYPE = EXP VAR AST NODE */
 		/************************************/
-		System.out.print("AST NODE STMT RETURN\n");
+		System.out.print("AST NODE STMT CALLEXP\n");
 
 		/*****************************/
 		/* RECURSIVELY PRINT var ... */
 		/*****************************/
-		if (exp != null) exp.printMe();
+		if (callExp != null) callExp.printMe();
 		
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			"STMT\nRETURN");
+			"STMT\nCALLEXP");
 
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		AstGraphviz.getInstance().logEdge(serialNumber,exp.serialNumber);
+		AstGraphviz.getInstance().logEdge(serialNumber,callExp.serialNumber);
 			
 	}
 }

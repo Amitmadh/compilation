@@ -1,19 +1,17 @@
 package ast;
 
-import types.*;
-
 public class AstStmtAssign extends AstStmt
 {
 	/***************/
 	/*  var := exp */
 	/***************/
-	public AstExpVar var;
+	public AstVar var;
 	public AstExp exp;
 
 	/*******************/
 	/*  CONSTRUCTOR(S) */
 	/*******************/
-	public AstStmtAssign(AstExpVar var, AstExp exp)
+	public AstStmtAssign(AstVar var, AstExp exp)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -26,7 +24,7 @@ public class AstStmtAssign extends AstStmt
 		System.out.print("====================== stmt -> var ASSIGN exp SEMICOLON\n");
 
 		/*******************************/
-		/* COPY INPUT DATA MENBERS ... */
+		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
 		this.var = var;
 		this.exp = exp;
@@ -52,7 +50,7 @@ public class AstStmtAssign extends AstStmt
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
 		AstGraphviz.getInstance().logNode(
-                serialNumber,
+				serialNumber,
 			"ASSIGN\nleft := right\n");
 		
 		/****************************************/
@@ -60,20 +58,5 @@ public class AstStmtAssign extends AstStmt
 		/****************************************/
 		AstGraphviz.getInstance().logEdge(serialNumber,var.serialNumber);
 		AstGraphviz.getInstance().logEdge(serialNumber,exp.serialNumber);
-	}
-
-	public Type semantMe()
-	{
-		Type t1 = null;
-		Type t2 = null;
-		
-		if (var != null) t1 = var.semantMe();
-		if (exp != null) t2 = exp.semantMe();
-		
-		if (t1 != t2)
-		{
-			System.out.format(">> ERROR [%d:%d] type mismatch for var := exp\n",6,6);				
-		}
-		return null;
 	}
 }

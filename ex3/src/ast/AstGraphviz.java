@@ -1,5 +1,7 @@
 package ast;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
 public class AstGraphviz
@@ -33,21 +35,26 @@ public class AstGraphviz
 			/****************************/
 			try
 			{
-				String dirname="./output/";
-				String filename="AST_IN_GRAPHVIZ_DOT_FORMAT.txt";
-				instance.fileWriter = new PrintWriter(dirname+filename);
+				String dirname = "./output";
+				String filename = "AST_IN_GRAPHVIZ_DOT_FORMAT.txt";
+				File dir = new File(dirname);
+				if (!dir.exists()) dir.mkdirs();
+				File out = new File(dir, filename);
+				instance.fileWriter = new PrintWriter(new FileOutputStream(out));
+
+				/******************************************************/
+				/* Print Directed Graph header in Graphviz dot format */
+				/******************************************************/
+				instance.fileWriter.print("digraph\n");
+				instance.fileWriter.print("{\n");
+				instance.fileWriter.print("graph [ordering = \"out\"]\n");
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
+				// Fall back to using System.err to avoid NPEs during AST logging
+				instance.fileWriter = new PrintWriter(System.err, true);
 			}
-
-			/******************************************************/
-			/* Print Directed Graph header in Graphviz dot format */
-			/******************************************************/
-			instance.fileWriter.print("digraph\n");
-			instance.fileWriter.print("{\n");
-			instance.fileWriter.print("graph [ordering = \"out\"]\n");
 		}
 		return instance;
 	}
@@ -57,6 +64,7 @@ public class AstGraphviz
 	/***********************************/
 	public void logNode(int nodeSerialNumber,String nodeName)
 	{
+		if (fileWriter == null) return;
 		fileWriter.format(
 			"v%d [label = \"%s\"];\n",
 			nodeSerialNumber,
@@ -70,6 +78,7 @@ public class AstGraphviz
 		int fatherNodeSerialNumber,
 		int sonNodeSerialNumber)
 	{
+		if (fileWriter == null) return;
 		fileWriter.format(
 			"v%d -> v%d;\n",
 			fatherNodeSerialNumber,
@@ -81,6 +90,7 @@ public class AstGraphviz
 	/******************************/
 	public void finalizeFile()
 	{
+		if (fileWriter == null) return;
 		fileWriter.print("}\n");
 		fileWriter.close();
 	}
