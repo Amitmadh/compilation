@@ -65,10 +65,17 @@ public class AstGraphviz
 	public void logNode(int nodeSerialNumber,String nodeName)
 	{
 		if (fileWriter == null) return;
+		// Escape backslashes, double quotes and newlines so the label is
+		// a valid Graphviz string literal (use \n for newlines).
+		String safe = nodeName;
+		if (safe == null) safe = "";
+		safe = safe.replace("\\", "\\\\");
+		safe = safe.replace("\"", "\\\"");
+		safe = safe.replace("\n", "\\n");
 		fileWriter.format(
 			"v%d [label = \"%s\"];\n",
 			nodeSerialNumber,
-			nodeName);
+			safe);
 	}
 
 	/***********************************/

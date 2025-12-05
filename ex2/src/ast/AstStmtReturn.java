@@ -50,7 +50,7 @@ public class AstStmtReturn extends AstStmt
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		AstGraphviz.getInstance().logEdge(serialNumber,exp.serialNumber);
+		if (exp != null)AstGraphviz.getInstance().logEdge(serialNumber,exp.serialNumber);
 			
 	}
 }
