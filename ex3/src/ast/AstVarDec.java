@@ -90,7 +90,7 @@ public class AstVarDec extends AstNode
 		/**************************************/
 		if (SymbolTable.getInstance().findInCurrentScope(fieldName) != null)
 		{
-			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,name);				
+			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,fieldName);				
 		}
 		/**************************************/
 		/* [4] Check that Initialization expression type matches variable type */
