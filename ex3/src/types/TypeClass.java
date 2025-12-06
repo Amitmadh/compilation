@@ -23,4 +23,21 @@ public class TypeClass extends Type
 		this.father = father;
 		this.dataMembers = dataMembers;
 	}
+
+	/***************/
+	/* isClass() */
+	/***************/
+	@Override
+	public boolean isClass(){ return true;}	
+
+	public boolean isSubClassOf(TypeClass other) {
+		TypeClass curr = this;
+		while (curr != null) {
+			if (curr.name.equals(other.name)) {
+				return true;
+			}
+			curr = curr.father;
+		}
+		return false;
+	}
 }

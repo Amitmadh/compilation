@@ -12,5 +12,11 @@ public class TypeArray extends Type
         this.name = name;
         this.elemType = elemType;
     }
+
+    /*************/
+    /* isArray() */
+    /*************/
+    @Override
+    public boolean isArray(){ return true;}
     
 }

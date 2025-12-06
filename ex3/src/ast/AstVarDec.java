@@ -90,7 +90,8 @@ public class AstVarDec extends AstNode
 		/**************************************/
 		if (SymbolTable.getInstance().findInCurrentScope(fieldName) != null)
 		{
-			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,fieldName);				
+			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,fieldName);	
+			System.exit(0);			
 		}
 		/**************************************/
 		/* [4] Check that Initialization expression type matches variable type */
@@ -102,13 +103,36 @@ public class AstVarDec extends AstNode
 			{
 				if (!(exp_type.name).equals(t.name))
 				{
-					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);				
+					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
+					System.exit(0);		
 				}
 			}
-			if (!exp_type.isSubTypeOf(t))
-			{
-				System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);				
+			if (t.isArray()){
+				if (!exp_type.isArray())
+				{
+					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);
+					System.exit(0);				
+				}
+				if (!(((TypeArray)exp_type).elemType.name).equals(((TypeArray)t).elemType.name))
+				{
+					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
+					System.exit(0);		
+				}
+
 			}
+			if (t.isClass()){
+				if (!exp_type.isClass())
+				{
+					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
+					System.exit(0);		
+				}
+				if (!((TypeClass)exp_type).isSubClassOf((TypeClass)t))
+				{
+					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
+					System.exit(0);		
+				}
+			}
+			
 		}
 		if (nexp != null)
 		{

@@ -52,6 +52,10 @@ public class AstArrayTypeDef extends AstDec
 	public Type semantMe()
 	{
 		Type t;
+		if (!SymbolTable.getInstance().isGlobalScope()) {
+			System.out.format(">> ERROR [%d:%d] array type definitions are allowed only in the global scope\n",2,2);
+			System.exit(0);
+		}
 		/****************************/
 		/* [1] Make sure the type of elements is not void */
 		/****************************/
