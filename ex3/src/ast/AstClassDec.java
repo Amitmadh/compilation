@@ -1,5 +1,8 @@
 package ast;
 
+import symboltable.SymbolTable;
+import types.TypeClass;
+
 public class AstClassDec extends AstDec
 {
     public String className;
@@ -57,5 +60,33 @@ public class AstClassDec extends AstDec
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		if (cfieldList != null) AstGraphviz.getInstance().logEdge(serialNumber,cfieldList.serialNumber);
+	}
+
+	public Type semantMe()
+	{	
+		/*************************/
+		/* [1] Begin Class Scope */
+		/*************************/
+		SymbolTable.getInstance().beginScope();
+
+		/***************************/
+		/* [2] Semant Data Members */
+		/***************************/
+		TypeClass t = new TypeClass(null,name, dataMembers.semantMe());
+
+		/*****************/
+		/* [3] End Scope */
+		/*****************/
+		SymbolTable.getInstance().endScope();
+
+		/************************************************/
+		/* [4] Enter the Class Type to the Symbol Table */
+		/************************************************/
+		SymbolTable.getInstance().enter(name,t);
+
+		/*********************************************************/
+		/* [5] Return value is irrelevant for class declarations */
+		/*********************************************************/
+		return null;		
 	}
 }

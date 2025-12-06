@@ -7,10 +7,6 @@ package symboltable;
 /* GENERAL IMPORTS */
 /*******************/
 import java.io.PrintWriter;
-
-/*******************/
-/* PROJECT IMPORTS */
-/*******************/
 import types.*;
 
 /****************/
@@ -19,6 +15,7 @@ import types.*;
 public class SymbolTable
 {
 	private int hashArraySize = 13;
+	private int scopeDepth = 0;
 	
 	/**********************************************/
 	/* The actual symbol table data structure ... */
@@ -98,6 +95,21 @@ public class SymbolTable
 		return null;
 	}
 
+	/***********************************************/
+	/* Find name in current scope */
+	/***********************************************/
+	public Type findInCurrentScope(String name) {
+		for (SymbolTableEntry e = top; e != null; e = e.prevtop) {
+			if (e.name == "SCOPE-BOUNDARY") {
+				break;  /* reached scope boundary */
+			}
+			if (e.name == name) {
+				return e.type; /* found in current scope */
+			}
+		}
+		return null;
+	}
+
 	/***************************************************************************/
 	/* begine scope = Enter the <SCOPE-BOUNDARY> element to the data structure */
 	/***************************************************************************/
@@ -112,7 +124,8 @@ public class SymbolTable
 		enter(
 			"SCOPE-BOUNDARY",
 			new TypeForScopeBoundaries("NONE"));
-
+		/* Update number of scopes */
+		scopeDepth++;
 		/*********************************************/
 		/* Print the symbol table after every change */
 		/*********************************************/
@@ -141,11 +154,17 @@ public class SymbolTable
 		topIndex = topIndex -1;
 		top = top.prevtop;
 
+		/* Update number of scopes */
+		scopeDepth--;
 		/*********************************************/
 		/* Print the symbol table after every change */		
 		/*********************************************/
 		printMe();
 	}
+
+	public boolean isGlobalScope() {
+        return scopeDepth == 0;
+    }
 	
 	public static int n=0;
 	

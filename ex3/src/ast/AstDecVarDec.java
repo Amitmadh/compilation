@@ -52,4 +52,9 @@ public class AstDecVarDec extends AstDec
 		/****************************************/
 		if (varDeck  != null) AstGraphviz.getInstance().logEdge(serialNumber,varDeck.serialNumber);
 	}
+	public Type semantMe()
+	{
+		return varDeck.semantMe();
+	}
+	
 }

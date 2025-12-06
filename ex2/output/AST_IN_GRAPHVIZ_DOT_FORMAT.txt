@@ -1,0 +1,13 @@
+digraph
+{
+graph [ordering = "out"]
+v0 [label = "TYPE(TYPE_INT)"];
+v1 [label = "EXP INT(2)"];
+v2 [label = "VARDEC( i )"];
+v2 -> v0;
+v2 -> v1;
+v3 [label = "DEC"];
+v3 -> v2;
+v4 [label = "PROGRAM"];
+v4 -> v3;
+}

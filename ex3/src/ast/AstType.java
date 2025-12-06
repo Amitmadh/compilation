@@ -3,7 +3,7 @@ package ast;
 public class AstType extends AstNode {
 	
     public int type;
-	String name;
+	public String name;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -24,7 +24,18 @@ public class AstType extends AstNode {
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
 		this.type = type;
-		this.name = name;
+		if (type == 0) {
+			this.name = "int";
+		}
+		else if (type == 1) {
+			this.name = "string";
+		}
+		else if (type == 2) {
+			this.name = "void";
+		}
+		else { // type == 3 (ID)
+			this.name = name;
+		}
 	}
 
 	/************************************************/
