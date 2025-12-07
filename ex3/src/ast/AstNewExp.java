@@ -1,5 +1,8 @@
 package ast;
 
+import types.*;
+import symboltable.*;
+
 public class AstNewExp extends AstExp
 {
 	AstType type;
@@ -55,5 +58,52 @@ public class AstNewExp extends AstExp
 		/****************************************/
 		if (type  != null) AstGraphviz.getInstance().logEdge(serialNumber,type.serialNumber);
 		if (exp  != null) AstGraphviz.getInstance().logEdge(serialNumber,exp.serialNumber);
+	}
+
+	public Type semantMe()
+	{
+		Type t;
+		/****************************/
+		/* [1] Make sure variable is not of type void */
+		/****************************/
+		if ("void".equals(type.name)){
+			System.out.format(">> ERROR [%d:%d] variable %s cannot be of type void\n",2,2,fieldName);
+			System.exit(0);
+		}
+		/****************************/
+		/* [2] Check If Type exists */
+		/****************************/
+		t = SymbolTable.getInstance().find(type.name);
+		if (t == null)
+		{
+			System.out.format(">> ERROR [%d:%d] non existing type %s\n",2,2,type);
+			System.exit(0);
+		}
+		
+		if (t.isArray()){
+			TypeArray array_type = (TypeArray) t;
+			if (exp == null){
+				System.out.format(">> ERROR [%d:%d] must provide array size expression\n",2,2);
+				System.exit(0);
+			}
+			/****************************/
+			/* [3] Semant the exp */
+			/****************************/
+			Type expType = exp.semantMe();
+			if (!expType.isInt()){
+				System.out.format(">> ERROR [%d:%d] array size expression must be of type int\n",2,2);
+				System.exit(0);
+			}
+			return array_type;
+
+		} 
+		else {
+			if (exp != null){
+				System.out.format(">> ERROR [%d:%d] only array types can have size expression\n",2,2);
+				System.exit(0);
+			}
+			return t;
+		}
+		
 	}
 }

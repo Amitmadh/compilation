@@ -137,10 +137,33 @@ public class AstVarDec extends AstNode
 		if (nexp != null)
 		{
 			Type nexp_type = nexp.semantMe();
-			if (!nexp_type.isSubTypeOf(t))
-			{
-				System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);				
+			
+			if (t.isArray()){
+				if (!nexp_type.isArray())
+				{
+					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);
+					System.exit(0);				
+				}
+				if (!(((TypeArray)nexp_type).elemType.name).equals(((TypeArray)t).elemType.name))
+				{
+					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
+					System.exit(0);		
+				}
+
 			}
+			if (t.isClass()){
+				if (!nexp_type.isClass())
+				{
+					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
+					System.exit(0);		
+				}
+				if (!((TypeClass)nexp_type).isSubClassOf((TypeClass)t))
+				{
+					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
+					System.exit(0);		
+				}
+			}
+			
 		}
 		/************************************************/
 		/* [5] Enter the Identifier to the Symbol Table */
