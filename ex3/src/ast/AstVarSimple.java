@@ -1,4 +1,6 @@
 package ast;
+import symboltable.*;
+import types.*;
 
 public class AstVarSimple extends AstVar
 {
@@ -44,5 +46,27 @@ public class AstVarSimple extends AstVar
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
 			String.format("SIMPLE\nVAR(%s)",name));
+	}
+
+	public Type semantMe()
+	{
+		/****************************/
+		/* [1] Look up in symbol table */
+		/****************************/
+		Type t = SymbolTable.getInstance().find(name);
+		
+		/******************************/
+		/* [2] Check if variable exists */
+		/******************************/
+		if (t == null)
+		{
+			System.out.format(">> ERROR [%d:%d] variable %s does not exist in scope\n",2,2,name);
+			System.exit(0);
+		}
+		
+		/*************************/
+		/* [3] Return variable type */
+		/*************************/
+		return t;
 	}
 }
