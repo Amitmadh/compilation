@@ -67,7 +67,7 @@ public class AstNewExp extends AstExp
 		/* [1] Make sure variable is not of type void */
 		/****************************/
 		if ("void".equals(type.name)){
-			System.out.format(">> ERROR [%d:%d] variable %s cannot be of type void\n",2,2,fieldName);
+			System.out.format(">> ERROR [%d:%d] variable %s cannot be of type void\n",2,2,type.name);
 			System.exit(0);
 		}
 		/****************************/
@@ -94,16 +94,28 @@ public class AstNewExp extends AstExp
 				System.out.format(">> ERROR [%d:%d] array size expression must be of type int\n",2,2);
 				System.exit(0);
 			}
+			if (exp instanceof AstExpInt) {
+				int v = ((AstExpInt)exp).value;
+				if (v <= 0) {
+					System.out.format(">> ERROR: array size must be positive constant\n");
+					System.exit(0);
+				}
+			}
 			return array_type;
-
 		} 
-		else {
+		else  if (t.isClass()){
 			if (exp != null){
 				System.out.format(">> ERROR [%d:%d] only array types can have size expression\n",2,2);
 				System.exit(0);
 			}
 			return t;
 		}
+		else{
+			System.out.format(">> ERROR [%d:%d] only class or array types can be instantiated\n",2,2);
+			System.exit(0);
+			return null;
+		}
 		
 	}
+	
 }

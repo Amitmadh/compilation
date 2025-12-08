@@ -96,83 +96,70 @@ public class AstVarDec extends AstNode
 		/**************************************/
 		/* [4] Check that Initialization expression type matches variable type */
 		/**************************************/
-		if (exp != null)
-		{
-			Type exp_type = exp.semantMe();
-			if (type.name.equals("int") || type.name.equals("string"))
-			{
-				if (!(exp_type.name).equals(t.name))
-				{
-					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
-					System.exit(0);		
-				}
-			}
-			if (t.isArray()){
-				if (!exp_type.isArray())
-				{
-					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);
-					System.exit(0);				
-				}
-				if (!(((TypeArray)exp_type).elemType.name).equals(((TypeArray)t).elemType.name))
-				{
-					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
-					System.exit(0);		
-				}
+		Type initType = null;
 
-			}
-			if (t.isClass()){
-				if (!exp_type.isClass())
-				{
-					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
-					System.exit(0);		
-				}
-				if (!((TypeClass)exp_type).isSubClassOf((TypeClass)t))
-				{
-					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
-					System.exit(0);		
-				}
-			}
-			
+    
+		if (exp != null) {
+			initType = exp.semantMe();
 		}
-		if (nexp != null)
-		{
-			Type nexp_type = nexp.semantMe();
-			
-			if (t.isArray()){
-				if (!nexp_type.isArray())
-				{
-					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);
-					System.exit(0);				
-				}
-				if (!(((TypeArray)nexp_type).elemType.name).equals(((TypeArray)t).elemType.name))
-				{
-					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
-					System.exit(0);		
-				}
+		else if (nexp != null) {
+			initType = nexp.semantMe();
+		}
 
-			}
-			if (t.isClass()){
-				if (!nexp_type.isClass())
-				{
-					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
-					System.exit(0);		
+		// Only perform checks if there is an initialization
+		if (initType != null) {
+
+			if (initType instanceof TypeNil) { 
+				if (!t.isClass() && !t.isArray()) {
+					System.out.format(">> ERROR [%d:%d] cannot assign nil to primitive type %s\n", 2, 2, fieldName);
+					System.exit(0);
 				}
-				if (!((TypeClass)nexp_type).isSubClassOf((TypeClass)t))
-				{
-					System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch\n",2,2,fieldName);		
-					System.exit(0);		
+				// If it is class/array, nil is valid, so we can return/continue.
+			} 
+			else {
+				// Check Primitives (int, string)
+				if (t.name.equals("int") || t.name.equals("string")) {
+					if (!initType.name.equals(t.name)) {
+						System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch. Expected %s, got %s\n", 2, 2, fieldName, t.name, initType.name);
+						System.exit(0);
+					}
+				}
+				
+				// Check Arrays
+				else if (t.isArray()) {
+					if (!initType.isArray()) {
+						System.out.format(">> ERROR [%d:%d] variable %s type mismatch: expected array\n", 2, 2, fieldName);
+						System.exit(0);
+					}
+					// Check inner element type equality
+					Type tElem = ((TypeArray)t).elemType;
+					Type initElem = ((TypeArray)initType).elemType;
+					
+					if (!tElem.name.equals(initElem.name)) {
+						System.out.format(">> ERROR [%d:%d] array element type mismatch\n", 2, 2);
+						System.exit(0);
+					}
+				}
+				
+				// Check Classes
+				else if (t.isClass()) {
+					if (!initType.isClass()) {
+						System.out.format(">> ERROR [%d:%d] variable %s type mismatch: expected class\n", 2, 2, fieldName);
+						System.exit(0);
+					}
+					// Check Inheritance (Polymorphism)
+					if (!((TypeClass)initType).isSubClassOf((TypeClass)t)) {
+						System.out.format(">> ERROR [%d:%d] type %s is not a subclass of %s\n", 2, 2, initType.name, t.name);
+						System.exit(0);
+					}
 				}
 			}
-			
 		}
 		/************************************************/
 		/* [5] Enter the Identifier to the Symbol Table */
 		/************************************************/
-		SymbolTable.getInstance().enter(fieldName,t);
+		SymbolTable.getInstance().enter(fieldName, t);
 
-		/************************************************************/
-		/* [6] Return value is irrelevant for variable declarations */
-		/************************************************************/
-		return null;		
-	}
+		return null;	
+	}	
 }
