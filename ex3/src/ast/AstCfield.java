@@ -58,9 +58,10 @@ public class AstCfield extends AstNode
 		if (varDec  != null) AstGraphviz.getInstance().logEdge(serialNumber,varDec.serialNumber);
 		if (funDec != null) AstGraphviz.getInstance().logEdge(serialNumber,funDec.serialNumber);
 	}
-	public Type semantMe()
+	public TypeClassVarDec semantMe()
 	{	
 		Type t = null;
+		TypeClassVarDec varClassDec = null;
 		if (varDec != null) {
 			varDec.semantMe();
 			t = SymbolTable.getInstance().find(varDec.type.name);
@@ -68,6 +69,7 @@ public class AstCfield extends AstNode
 				System.out.format(">> ERROR [%d:%d] Type %s not found\n", 2, 2, varDec.type.name);
 				System.exit(0);
 			}
+			varClassDec = new TypeClassVarDec(varDec.fieldName, t);
 		}	
 		else {
 			funDec.semantMe();
@@ -76,8 +78,9 @@ public class AstCfield extends AstNode
 				System.out.format(">> ERROR [%d:%d] Type %s not found\n", 2, 2, funDec.fieldName);
 				System.exit(0);
 			}
+			varClassDec = new TypeClassVarDec(funDec.fieldName, t);
 			
 		}
-		return t;
+		return varClassDec;
 	}
 }

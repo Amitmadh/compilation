@@ -1,4 +1,5 @@
 package ast;
+import types.*;
 
 public class AstVarField extends AstVar
 {
@@ -54,4 +55,38 @@ public class AstVarField extends AstVar
 		/****************************************/
 		if (var != null) AstGraphviz.getInstance().logEdge(serialNumber,var.serialNumber);
 	}
+
+	public Type semantMe()
+	{
+		/* 1. Check that the var is instance of class */
+		Type varType = var.semantMe();
+		if (!(varType.isClass()))
+		{
+			System.out.format(">> ERROR [%d:%d] var must have class type\n",2,2);
+			System.exit(0);
+		}
+		
+		/* 2. Find field in class data members (including ancestors)*/
+		TypeClass classType = (TypeClass) varType;	
+		TypeClass currentClass = classType;
+		while (currentClass != null) 
+    	{
+			TypeClassVarDecList dataMembers = currentClass.dataMembers;
+			while (dataMembers != null) 
+			{
+				if (dataMembers.head.name.equals(fieldName)) {
+					return dataMembers.head.type;
+				}
+				dataMembers = dataMembers.tail;
+			}
+			currentClass = currentClass.father;
+		}	
+    
+		System.out.format(">> ERROR [%d:%d] field %s does not exist in class %s\n", 2, 2, fieldName, classType.name);
+		System.exit(0);
+    
+    	return null;
+	}
+		
+		
 }

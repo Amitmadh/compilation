@@ -62,10 +62,13 @@ public class AstCfieldList extends AstNode
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
 	}
 
-	public TypeList semantMe()
+	public TypeClassVarDecList semantMe()
 	{
-		Type headType = null;
-		TypeList tailTypes = null;
+		TypeClassVarDec headType = null;
+		TypeClassVarDecList tailTypes = null;
+		if (head == null) {
+        	return null;
+    	}
 
 		/*******************************/
 		/* [1] Semant head cfield ...  */
@@ -80,7 +83,7 @@ public class AstCfieldList extends AstNode
 		/*******************************/
 		/* [3] Return the type list ... */
 		/*******************************/
-		return new TypeList(headType, tailTypes);
+		return new TypeClassVarDecList(headType, tailTypes);
 	}
 	
 }

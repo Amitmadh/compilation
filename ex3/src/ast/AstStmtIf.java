@@ -1,5 +1,6 @@
 package ast;
-
+import symboltable.SymbolTable;
+import types.*;
 public class AstStmtIf extends AstStmt
 {
 	public AstExp cond;
@@ -59,5 +60,33 @@ public class AstStmtIf extends AstStmt
 		if (cond != null) AstGraphviz.getInstance().logEdge(serialNumber,cond.serialNumber);
 		if (body != null) AstGraphviz.getInstance().logEdge(serialNumber,body.serialNumber);
 		if (elseBody != null) AstGraphviz.getInstance().logEdge(serialNumber,body.serialNumber);
+	}
+	public Type semantMe()
+	{
+		/****************************/
+		/* [1] Semant the cond exp */
+		/****************************/
+		Type condType = cond.semantMe();
+		if (!condType.isInt())
+		{
+			System.out.format(">> ERROR [%d:%d] IF condition is not boolean\n",0,0);
+			System.exit(0);
+		}
+		/*	[2] Begin scope */
+		SymbolTable.getInstance().beginScope();
+		/*******************************/
+		/* [3] Semant the body stmtList */
+		/*******************************/
+		body.semantMe();
+		SymbolTable.getInstance().endScope();
+		/********************************/
+		/* [4] Semant the else body stmtList */
+		/********************************/
+		if (elseBody != null) {
+			SymbolTable.getInstance().beginScope();
+			elseBody.semantMe();
+			SymbolTable.getInstance().endScope();
+		}
+		return null;
 	}
 }
