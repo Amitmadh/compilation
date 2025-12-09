@@ -64,21 +64,21 @@ public class AstClassDec extends AstDec
 
 	public Type semantMe()
 	{	
+		/***************************/
+		/* [1] Class in global scope */
 		if (!SymbolTable.getInstance().isGlobalScope()) {
 			System.out.format(">> ERROR [%d:%d] class declarations are allowed only in the global scope\n",2,2);
 			System.exit(0);
 		}
-		/* [3] Check That Name does NOT exist in current scope*/
+		/* [2] Check That Name does NOT exist in current scope*/
 		/**************************************/
 		if (SymbolTable.getInstance().find(className) != null)
 		{
-			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,className);	
+			System.out.format(">> ERROR [%d:%d] class %s already exists in scope\n",2,2,className);	
 			System.exit(0);		
 		}
-		/*************************/
-		/* [1] Begin Class Scope */
-		/*************************/
-		SymbolTable.getInstance().beginScope();
+		/***************************/
+		/* [3] Handle Extends */
 		Type fatherType = null;
 		if (extendName != null)
 		{
@@ -90,25 +90,29 @@ public class AstClassDec extends AstDec
 			}
 			
 		}
-		
 
 		/***************************/
-		/* [2] Semant Data Members */
+		/* [4] Enter the Class Type to the Symbol Table */
 		/***************************/
-		TypeClass t = new TypeClass(TypeClass(fatherType),className, cfieldList.semantMe());
+		TypeClass t = new TypeClass((TypeClass)fatherType, className, null);
+		SymbolTable.getInstance().enter(className,t);
+		/*************************/
+		/* [5] Begin Class Scope */
+		/*************************/
+		SymbolTable.getInstance().beginScope();
 
+		/*******************************/
+		/* [6] Semant Class Fields */		
+		if (cfieldList != null) {
+			t.dataMembers = cfieldList.semantMe();
+		}
 		/*****************/
-		/* [3] End Scope */
+		/* [7] End Scope */
 		/*****************/
 		SymbolTable.getInstance().endScope();
 
-		/************************************************/
-		/* [4] Enter the Class Type to the Symbol Table */
-		/************************************************/
-		SymbolTable.getInstance().enter(className,t);
-
 		/*********************************************************/
-		/* [5] Return value is irrelevant for class declarations */
+		/* [8] Return value is irrelevant for class declarations */
 		/*********************************************************/
 		return null;		
 	}
