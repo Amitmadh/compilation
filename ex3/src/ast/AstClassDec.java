@@ -1,7 +1,7 @@
 package ast;
 
-import symboltable.SymbolTable;
-import types.TypeClass;
+import types.*;
+import symboltable.*;
 
 public class AstClassDec extends AstDec
 {
@@ -64,15 +64,38 @@ public class AstClassDec extends AstDec
 
 	public Type semantMe()
 	{	
+		if (!SymbolTable.getInstance().isGlobalScope()) {
+			System.out.format(">> ERROR [%d:%d] class declarations are allowed only in the global scope\n",2,2);
+			System.exit(0);
+		}
+		/* [3] Check That Name does NOT exist in current scope*/
+		/**************************************/
+		if (SymbolTable.getInstance().find(className) != null)
+		{
+			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,className);	
+			System.exit(0);		
+		}
 		/*************************/
 		/* [1] Begin Class Scope */
 		/*************************/
 		SymbolTable.getInstance().beginScope();
+		Type fatherType = null;
+		if (extendName != null)
+		{
+			fatherType = SymbolTable.getInstance().find(extendName);
+			if (fatherType == null || !(fatherType.isClass()))
+			{
+				System.out.format(">> ERROR [%d:%d] non existing father class %s\n",2,2,extendName);
+				System.exit(0);
+			}
+			
+		}
+		
 
 		/***************************/
 		/* [2] Semant Data Members */
 		/***************************/
-		TypeClass t = new TypeClass(null,name, dataMembers.semantMe());
+		TypeClass t = new TypeClass(TypeClass(fatherType),className, cfieldList.semantMe());
 
 		/*****************/
 		/* [3] End Scope */
@@ -82,7 +105,7 @@ public class AstClassDec extends AstDec
 		/************************************************/
 		/* [4] Enter the Class Type to the Symbol Table */
 		/************************************************/
-		SymbolTable.getInstance().enter(name,t);
+		SymbolTable.getInstance().enter(className,t);
 
 		/*********************************************************/
 		/* [5] Return value is irrelevant for class declarations */

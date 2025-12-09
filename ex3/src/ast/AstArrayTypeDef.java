@@ -1,7 +1,7 @@
 package ast;
 
-import types.*;
 import symboltable.*;
+import types.*;
 
 public class AstArrayTypeDef extends AstDec
 {
@@ -76,9 +76,10 @@ public class AstArrayTypeDef extends AstDec
 		/**************************************/
 		/* [3] Check That Name does NOT exist in current scope*/
 		/**************************************/
-		if (SymbolTable.getInstance().findInCurrentScope(fieldname) != null)
+		if (SymbolTable.getInstance().find(fieldname) != null)
 		{
-			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,name);				
+			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,fieldname);	
+			System.exit(0);		
 		}
 		
 		/************************************************/

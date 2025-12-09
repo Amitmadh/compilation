@@ -1,5 +1,7 @@
 package ast;
 
+import types.*;
+
 public class AstDecClassDec extends AstDec
 {
 	public AstClassDec classDec;
@@ -51,5 +53,10 @@ public class AstDecClassDec extends AstDec
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		if (classDec  != null) AstGraphviz.getInstance().logEdge(serialNumber,classDec.serialNumber);
+	}
+
+	public Type semantMe()
+	{	
+		return classDec.semantMe();
 	}
 }
