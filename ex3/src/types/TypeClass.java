@@ -12,12 +12,12 @@ public class TypeClass extends Type
 	/* Note that data members coming from the AST are */
 	/* packed together with the class methods         */
 	/**************************************************/
-	public TypeClassVarDecList dataMembers;
+	public TypeList dataMembers;
 	
 	/****************/
 	/* CTROR(S) ... */
 	/****************/
-	public TypeClass(TypeClass father, String name, TypeClassVarDecList dataMembers)
+	public TypeClass(TypeClass father, String name, TypeList dataMembers)
 	{
 		this.name = name;
 		this.father = father;

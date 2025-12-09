@@ -1,4 +1,5 @@
 package ast;
+import types.*;
 
 public class AstCfieldList extends AstNode
 {
@@ -59,6 +60,27 @@ public class AstCfieldList extends AstNode
 		/****************************************/
 		if (head != null) AstGraphviz.getInstance().logEdge(serialNumber,head.serialNumber);
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
+	}
+
+	public TypeList semantMe()
+	{
+		Type headType = null;
+		TypeList tailTypes = null;
+
+		/*******************************/
+		/* [1] Semant head cfield ...  */
+		/*******************************/
+		if (head != null) headType = head.semantMe();
+
+		/*******************************/
+		/* [2] Semant tail cfieldList */
+		/*******************************/
+		if (tail != null) tailTypes = tail.semantMe();
+
+		/*******************************/
+		/* [3] Return the type list ... */
+		/*******************************/
+		return new TypeList(headType, tailTypes);
 	}
 	
 }

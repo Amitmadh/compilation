@@ -1,4 +1,6 @@
 package ast;
+import symboltable.SymbolTable;
+import types.*;
 
 public class AstCfield extends AstNode
 {
@@ -55,5 +57,27 @@ public class AstCfield extends AstNode
 		/****************************************/
 		if (varDec  != null) AstGraphviz.getInstance().logEdge(serialNumber,varDec.serialNumber);
 		if (funDec != null) AstGraphviz.getInstance().logEdge(serialNumber,funDec.serialNumber);
+	}
+	public Type semantMe()
+	{	
+		Type t = null;
+		if (varDec != null) {
+			varDec.semantMe();
+			t = SymbolTable.getInstance().find(varDec.type.name);
+			if (t == null) {
+				System.out.format(">> ERROR [%d:%d] Type %s not found\n", 2, 2, varDec.type.name);
+				System.exit(0);
+			}
+		}	
+		else {
+			funDec.semantMe();
+			t = SymbolTable.getInstance().find(funDec.fieldName);
+			if (t == null) {
+				System.out.format(">> ERROR [%d:%d] Type %s not found\n", 2, 2, funDec.fieldName);
+				System.exit(0);
+			}
+			
+		}
+		return t;
 	}
 }

@@ -78,7 +78,7 @@ public class AstArrayTypeDef extends AstDec
 		/**************************************/
 		if (SymbolTable.getInstance().find(fieldname) != null)
 		{
-			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,fieldname);	
+			System.out.format(">> ERROR [%d:%d] array %s already exists in scope\n",2,2,fieldname);	
 			System.exit(0);		
 		}
 		
