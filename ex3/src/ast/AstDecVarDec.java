@@ -1,5 +1,5 @@
 package ast;
-
+import types.*;
 public class AstDecVarDec extends AstDec
 {
 	public AstVarDec varDeck;

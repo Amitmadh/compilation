@@ -1,5 +1,5 @@
 package ast;
-
+import types.*;
 public class AstStmtVarDec extends AstStmt
 {
 	public AstVarDec varDec;
@@ -52,5 +52,9 @@ public class AstStmtVarDec extends AstStmt
 		/****************************************/
 		AstGraphviz.getInstance().logEdge(serialNumber,varDec.serialNumber);
 			
+	}
+	public Type semantMe()
+	{
+		return varDec.semantMe();
 	}
 }
