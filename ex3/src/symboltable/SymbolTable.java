@@ -271,6 +271,7 @@ public class SymbolTable
 			/*****************************************/
 			instance.enter("int",   TypeInt.getInstance());
 			instance.enter("string", TypeString.getInstance());
+			instance.enter("void",  TypeVoid.getInstance());
 
 			/*************************************/
 			/* [2] How should we handle void ??? */

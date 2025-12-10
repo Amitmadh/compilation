@@ -1,5 +1,8 @@
 package ast;
 
+import symboltable.SymbolTable;
+import types.*;
+
 public class AstFuncDec extends AstDec
 {
 	public AstType type;
@@ -61,5 +64,59 @@ public class AstFuncDec extends AstDec
 		if (type       != null) AstGraphviz.getInstance().logEdge(serialNumber,type.serialNumber);
 		if (argList != null) AstGraphviz.getInstance().logEdge(serialNumber,argList.serialNumber);
         if (stmtList != null) AstGraphviz.getInstance().logEdge(serialNumber,stmtList.serialNumber);
+	}
+	public Type semantMe()
+	{
+		Type returnType;
+		TypeList argListTypes = null;
+
+		/*******************/
+		/* [0] return type */
+		/*******************/
+		returnType = SymbolTable.getInstance().find(type.name);
+		if (returnType == null)
+		{
+			System.out.format(">> ERROR [%d:%d] non existing return type %s\n",6,6,type.name);	
+			System.exit(0);			
+		}
+		/*******************/
+		/* Check Duplicates & Enter Function (Recursive support) */
+		/*******************/
+		if (SymbolTable.getInstance().findInCurrentScope(fieldName) != null) {
+			System.out.format(">> ERROR [%d:%d] function %s already exists\n", 6, 6, fieldName);
+			System.exit(0);
+		}
+		TypeFunction funcType = new TypeFunction(returnType, fieldName, null);
+		SymbolTable.getInstance().enter(fieldName, funcType);
+		/****************************/
+		/* Begin Function Scope */
+		/****************************/
+		SymbolTable.getInstance().beginScope();
+
+		/***************************/
+		/* Semant Input Params */
+		/***************************/
+		if (argList != null) {
+			argListTypes = argList.semantMe();
+		}
+		/***************************/
+		/* Update FUNCTION TYPE params*/
+		/***************************/
+		funcType.params = argListTypes;
+
+		/*******************/
+		/* Semant Body */
+		/*******************/
+		stmtList.semantMe();
+
+		/*****************/
+		/* End Scope */
+		/*****************/
+		SymbolTable.getInstance().endScope();
+
+		/************************************************************/
+		/* Return value is irrelevant for function declarations */
+		/************************************************************/
+		return null;		
 	}
 }
