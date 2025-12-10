@@ -1,5 +1,5 @@
 package ast;
-
+import types.*;
 public class AstStmtList extends AstNode
 {
 	/****************/
@@ -60,5 +60,22 @@ public class AstStmtList extends AstNode
 		if (head != null) AstGraphviz.getInstance().logEdge(serialNumber,head.serialNumber);
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
 	}
-	
+	public Type semantMe()
+	{
+		if (head == null) {
+        	return null;
+    	}
+
+		/*******************************/
+		/* [1] Semant head stmt ...  */
+		/*******************************/
+		head.semantMe();
+
+		/*******************************/
+		/* [2] Semant tail stmtList */
+		/*******************************/
+		if (tail != null) tail.semantMe();
+
+		return null;
+	}
 }
