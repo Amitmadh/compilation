@@ -21,5 +21,10 @@ public abstract class Type
 	/* isInt() */
 	/*************/
 	public boolean isInt(){ return false;}
-	
+
+	/*************/
+	/* isString() */
+	/*************/
+	public boolean isString(){ return false;}
+
 }

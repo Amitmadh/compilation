@@ -1,4 +1,6 @@
 package ast;
+import symboltable.SymbolTable;
+import types.*;
 
 public class AstExpBinop extends AstExp
 {
@@ -70,5 +72,43 @@ public class AstExpBinop extends AstExp
 		/****************************************/
 		if (left  != null) AstGraphviz.getInstance().logEdge(serialNumber,left.serialNumber);
 		if (right != null) AstGraphviz.getInstance().logEdge(serialNumber,right.serialNumber);
+	}
+
+	public Type semantMe()
+	{
+		Type type_left = left.semantMe();
+		Type type_right = right.semantMe();
+		/****************************/
+		/* [1] Check special case: operator + on two strings */
+		/****************************/
+		if(op == 0 && type_left.isString() && type_right.isString()) {
+			return TypeString.getInstance();
+		}
+
+		/****************************/
+		/* [2] General case: ensure both sides are int */
+		/****************************/
+		if (!type_left.isInt() || !type_right.isInt()) {
+			System.out.format(">> ERROR [%d:%d] binary operator %s requires both operands to be of type int\n",2,2,op);
+			System.exit(0);
+		}
+
+		/****************************/
+		/* [3] Check if op is /, if so check that right side is not 0 */
+		/****************************/
+		if (op == 3) {
+			if (right instanceof AstExpInt) {
+				AstExpInt right_int = (AstExpInt)right;
+				if (right_int.value == 0) {
+					System.out.format(">> ERROR [%d:%d] division by zero\n",2,2);
+					System.exit(0);
+				}
+			}
+		}
+
+		/****************************/
+		/* [4] Return type int */
+		/****************************/
+		return TypeInt.getInstance();
 	}
 }

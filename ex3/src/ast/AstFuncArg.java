@@ -1,4 +1,6 @@
 package ast;
+import types.*;
+import symboltable.SymbolTable;
 
 public class AstFuncArg extends AstNode
 {
@@ -53,5 +55,40 @@ public class AstFuncArg extends AstNode
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		if (type != null) AstGraphviz.getInstance().logEdge(serialNumber,type.serialNumber);
+	}
+
+	public Type semantMe()
+	{
+		Type t;
+		/****************************/
+		/* [1] Make sure variable is not of type void */
+		/****************************/
+		if ("void".equals(type.name)){
+			System.out.format(">> ERROR [%d:%d] argument %s cannot be of type void\n",2,2,fieldName);
+			System.exit(0);
+		}
+		/****************************/
+		/* [2] Check If Type exists */
+		/****************************/
+		t = SymbolTable.getInstance().find(type.name);
+		if (t == null)
+		{
+			System.out.format(">> ERROR [%d:%d] non existing type %s\n",2,2,type);
+			System.exit(0);
+		}
+		/**************************************/
+		/* [3] Check That Name does NOT exist in current scope*/
+		/**************************************/
+		if (SymbolTable.getInstance().findInCurrentScope(fieldName) != null)
+		{
+			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,fieldName);	
+			System.exit(0);			
+		}
+		/************************************************/
+		/* [4] Enter the Identifier to the Symbol Table */
+		/************************************************/
+		SymbolTable.getInstance().enter(fieldName, t);
+
+		return t;
 	}
 }

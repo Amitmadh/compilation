@@ -1,0 +1,2 @@
+# Ignore workspace-specific VS Code settings that may contain local paths
+.vscode/
