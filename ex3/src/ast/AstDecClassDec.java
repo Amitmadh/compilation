@@ -1,7 +1,5 @@
 package ast;
 
-import types.*;
-
 public class AstDecClassDec extends AstDec
 {
 	public AstClassDec classDec;
@@ -55,8 +53,7 @@ public class AstDecClassDec extends AstDec
 		if (classDec  != null) AstGraphviz.getInstance().logEdge(serialNumber,classDec.serialNumber);
 	}
 
-	public Type semantMe()
-	{	
-		return classDec.semantMe();
-	}
+	public void semantMe() {
+        if (classDec != null) classDec.semantMe();
+    }
 }

@@ -1,7 +1,5 @@
 package ast;
 
-import types.*;
-
 public class AstDecArrayTypeDef extends AstDec
 {
 	public AstArrayTypeDef arrayTypeDef;
@@ -55,8 +53,7 @@ public class AstDecArrayTypeDef extends AstDec
 		if (arrayTypeDef  != null) AstGraphviz.getInstance().logEdge(serialNumber,arrayTypeDef.serialNumber);
 	}
 	
-	public Type semantMe()
-	{	
-		return arrayTypeDef.semantMe();
-	}
+	public void semantMe() {
+        if (arrayTypeDef != null) arrayTypeDef.semantMe();
+    }
 }

@@ -1,7 +1,7 @@
 package ast;
 
-import types.*;
 import symboltable.*;
+import types.*;
 
 public class AstClassDec extends AstDec
 {
@@ -62,7 +62,7 @@ public class AstClassDec extends AstDec
 		if (cfieldList != null) AstGraphviz.getInstance().logEdge(serialNumber,cfieldList.serialNumber);
 	}
 
-	public Type semantMe()
+	public void semantMe()
 	{	
 		/***************************/
 		/* [1] Class in global scope */
@@ -114,6 +114,6 @@ public class AstClassDec extends AstDec
 		/*********************************************************/
 		/* [8] Return value is irrelevant for class declarations */
 		/*********************************************************/
-		return null;		
+		
 	}
 }

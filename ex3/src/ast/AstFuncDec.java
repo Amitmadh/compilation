@@ -65,7 +65,7 @@ public class AstFuncDec extends AstDec
 		if (argList != null) AstGraphviz.getInstance().logEdge(serialNumber,argList.serialNumber);
         if (stmtList != null) AstGraphviz.getInstance().logEdge(serialNumber,stmtList.serialNumber);
 	}
-	public Type semantMe()
+	public void semantMe()
 	{
 		Type returnType;
 		TypeList argListTypes = null;
@@ -122,6 +122,6 @@ public class AstFuncDec extends AstDec
 		/************************************************************/
 		/* Return value is irrelevant for function declarations */
 		/************************************************************/
-		return null;		
+			
 	}
 }

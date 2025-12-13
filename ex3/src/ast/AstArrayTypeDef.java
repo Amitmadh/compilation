@@ -49,7 +49,7 @@ public class AstArrayTypeDef extends AstDec
 			String.format("ARRAYTYPEDEF( %s )", fieldname));
 	}
 
-	public Type semantMe()
+	public void semantMe()
 	{
 		Type t;
 		if (!SymbolTable.getInstance().isGlobalScope()) {
@@ -90,7 +90,6 @@ public class AstArrayTypeDef extends AstDec
 
 		/************************************************************/
 		/* [5] Return value is irrelevant for variable declarations */
-		/************************************************************/
-		return null;		
+		/************************************************************/	
 	}
 }
