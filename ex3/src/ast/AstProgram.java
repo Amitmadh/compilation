@@ -21,8 +21,8 @@ public class AstProgram extends AstNode
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-        if (tail != null) System.out.print("====================== program -> dec program   \n");
-		if (tail == null) System.out.print("====================== program -> dec           \n");
+        // if (tail != null) System.out.print("====================== program -> dec program   \n");
+		// if (tail == null) System.out.print("====================== program -> dec           \n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */

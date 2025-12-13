@@ -1,7 +1,7 @@
    
 import java.io.*;
-
-import java_cup.runtime.Symbol;
+import java.io.PrintWriter;
+// import java_cup.runtime.Symbol;
 import ast.*;
 
 public class Main
@@ -10,7 +10,7 @@ public class Main
 	{
 		Lexer l;
 		Parser p;
-		Symbol s;
+		// Symbol s;
 		AstProgram ast;
 		FileReader fileReader;
 		PrintWriter fileWriter;
@@ -42,7 +42,7 @@ public class Main
 			/***********************************/
 			/* [5] 3 ... 2 ... 1 ... Parse !!! */
 			/***********************************/
-			ast = (AstProgram) p.parse().value;
+			ast = (AstProgram)p.parse().value;
 			
 			/*************************/
 			/* [6] Print the AST ... */
