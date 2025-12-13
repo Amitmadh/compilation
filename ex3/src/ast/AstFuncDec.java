@@ -94,6 +94,11 @@ public class AstFuncDec extends AstDec
 		SymbolTable.getInstance().beginScope();
 
 		/***************************/
+		/* Set Current Function Return Type for return stmts */	
+		/***************************/
+		SymbolTable.getInstance().setFunctionReturnType(returnType);
+
+		/***************************/
 		/* Semant Input Params */
 		/***************************/
 		if (argList != null) {

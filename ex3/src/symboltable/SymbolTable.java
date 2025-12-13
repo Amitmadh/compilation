@@ -23,6 +23,7 @@ public class SymbolTable
 	private SymbolTableEntry[] table = new SymbolTableEntry[hashArraySize];
 	private SymbolTableEntry top;
 	private int topIndex = 0;
+	private Type currentFunctionReturnType = null; /* for return statement checks */
 	
 	/**************************************************************/
 	/* A very primitive hash function for exposition purposes ... */
@@ -108,6 +109,13 @@ public class SymbolTable
 			}
 		}
 		return null;
+	}
+	public void setFunctionReturnType(Type t) {
+		this.currentFunctionReturnType = t;
+	}
+
+	public Type getFunctionReturnType() {
+		return this.currentFunctionReturnType;
 	}
 
 	/***************************************************************************/
