@@ -17,7 +17,7 @@ public class AstDecFuncDec extends AstDec
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== dec -> funcDec\n");
+		// System.out.print("====================== dec -> funcDec\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -33,7 +33,7 @@ public class AstDecFuncDec extends AstDec
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.print("AST NODE DEC\n");
+		// System.out.print("AST NODE DEC\n");
 
         /**************************************/
 		/* RECURSIVELY PRINT left + right ... */

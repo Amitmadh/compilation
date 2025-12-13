@@ -20,7 +20,7 @@ public class AstExpBinop extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== exp -> exp BINOP exp\n");
+		// System.out.print("====================== exp -> exp BINOP exp\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -51,7 +51,7 @@ public class AstExpBinop extends AstExp
 		/*************************************/
 		/* AST NODE TYPE = AST BINOP EXP */
 		/*************************************/
-		System.out.print("AST NODE BINOP EXP\n");
+		// System.out.print("AST NODE BINOP EXP\n");
 
 		/**************************************/
 		/* RECURSIVELY PRINT left + right ... */

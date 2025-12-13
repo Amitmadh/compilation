@@ -20,7 +20,7 @@ public class AstStmtIf extends AstStmt
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== stmt -> IF LPAREN exp RPAREN LBRACE stmtList RBRACE [ ELSE LBRACE stmtList RBRACE ]\n");
+		// System.out.print("====================== stmt -> IF LPAREN exp RPAREN LBRACE stmtList RBRACE [ ELSE LBRACE stmtList RBRACE ]\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -38,7 +38,7 @@ public class AstStmtIf extends AstStmt
 		/********************************************/
 		/* AST NODE TYPE = AST ASSIGNMENT STATEMENT */
 		/********************************************/
-		System.out.print("AST NODE IF STMT\n");
+		// System.out.print("AST NODE IF STMT\n");
 
 		/***********************************/
 		/* RECURSIVELY PRINT VAR + EXP ... */

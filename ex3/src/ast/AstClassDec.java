@@ -22,7 +22,7 @@ public class AstClassDec extends AstDec
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== classDec -> CLASS ID( %s ) [ EXTENDS ID( %s ) ] LBRACE cField { cField } RBRACE\n", className, extendName);
+		// System.out.format("====================== classDec -> CLASS ID( %s ) [ EXTENDS ID( %s ) ] LBRACE cField { cField } RBRACE\n", className, extendName);
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -40,9 +40,9 @@ public class AstClassDec extends AstDec
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE CLASSDEC( %s )",className);
-        if (extendName != null) System.out.format(" EXTENDES( %s )",extendName);
-        System.out.format("\n");
+		// System.out.format("AST NODE CLASSDEC( %s )",className);
+        // if (extendName != null) System.out.format(" EXTENDES( %s )",extendName);
+        // System.out.format("\n");
 
         /****************************************/
 		/* RECURSIVELY PRINT VAR + SUBSCRIPT ... */

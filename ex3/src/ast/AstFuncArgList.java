@@ -21,8 +21,8 @@ public class AstFuncArgList extends AstNode
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		if (tail != null) System.out.print("====================== funcArgs -> funcArg funcArgs	\n");
-		if (tail == null) System.out.print("====================== funcArgs -> funcArg			\n");
+		// if (tail != null) System.out.print("====================== funcArgs -> funcArg funcArgs	\n");
+		// if (tail == null) System.out.print("====================== funcArgs -> funcArg			\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -39,7 +39,7 @@ public class AstFuncArgList extends AstNode
 		/**************************************/
 		/* AST NODE TYPE = AST STATEMENT LIST */
 		/**************************************/
-		System.out.print("AST NODE ARG LIST\n");
+		// System.out.print("AST NODE ARG LIST\n");
 
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */

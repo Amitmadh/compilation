@@ -22,7 +22,7 @@ public class AstVarDec extends AstNode
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== varDec -> type ID [ASSIGN (exp | newExp)] SEMICOLON\n");
+		// System.out.format("====================== varDec -> type ID [ASSIGN (exp | newExp)] SEMICOLON\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -41,7 +41,7 @@ public class AstVarDec extends AstNode
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE VARDEC( %s )\n",fieldName);
+		// System.out.format("AST NODE VARDEC( %s )\n",fieldName);
         
         /****************************************/
 		/* RECURSIVELY PRINT VAR + SUBSCRIPT ... */

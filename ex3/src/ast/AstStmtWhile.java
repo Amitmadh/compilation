@@ -19,7 +19,7 @@ public class AstStmtWhile extends AstStmt
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== stmt -> WHILE LPAREN exp RPAREN LBRACE stmtList RBRACE\n");
+		// System.out.print("====================== stmt -> WHILE LPAREN exp RPAREN LBRACE stmtList RBRACE\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -36,7 +36,7 @@ public class AstStmtWhile extends AstStmt
 		/********************************************/
 		/* AST NODE TYPE = AST ASSIGNMENT STATEMENT */
 		/********************************************/
-		System.out.print("AST NODE WHILE STMT\n");
+		// System.out.print("AST NODE WHILE STMT\n");
 
 		/***********************************/
 		/* RECURSIVELY PRINT VAR + EXP ... */

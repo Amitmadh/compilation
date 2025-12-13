@@ -21,7 +21,7 @@ public class AstArrayTypeDef extends AstDec
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== arrayTypeDef -> ARRAY ID( %s ) EQ type LBRACK RBRACK SEMICOLON\n", fieldname);
+		// System.out.format("====================== arrayTypeDef -> ARRAY ID( %s ) EQ type LBRACK RBRACK SEMICOLON\n", fieldname);
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -39,7 +39,7 @@ public class AstArrayTypeDef extends AstDec
 		/************************************/
 		/* AST NODE TYPE = EXP VAR AST NODE */
 		/************************************/
-		System.out.format("AST NODE ARRAY TYPE DEFINITION ( %s )\n", fieldname);
+		// System.out.format("AST NODE ARRAY TYPE DEFINITION ( %s )\n", fieldname);
 		
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */

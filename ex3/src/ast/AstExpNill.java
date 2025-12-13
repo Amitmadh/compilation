@@ -16,7 +16,7 @@ public class AstExpNill extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== exp -> NILL\n");
+		// System.out.format("====================== exp -> NILL\n");
 	}
 
 	/************************************************/
@@ -27,7 +27,7 @@ public class AstExpNill extends AstExp
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE NILL\n");
+		// System.out.format("AST NODE NILL\n");
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */

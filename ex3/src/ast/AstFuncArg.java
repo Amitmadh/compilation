@@ -20,7 +20,7 @@ public class AstFuncArg extends AstNode
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== funcArg -> type ID(%s)\n", fieldName);
+		// System.out.format("====================== funcArg -> type ID(%s)\n", fieldName);
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -37,7 +37,7 @@ public class AstFuncArg extends AstNode
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE FUNC ARGUMENT(%s)\n", fieldName);
+		// System.out.format("AST NODE FUNC ARGUMENT(%s)\n", fieldName);
 
 		/****************************************/
 		/* RECURSIVELY PRINT VAR + SUBSCRIPT ... */

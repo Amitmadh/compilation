@@ -20,7 +20,7 @@ public class AstCfield extends AstNode
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== cfield -> varDec | funcDec\n");
+		// System.out.format("====================== cfield -> varDec | funcDec\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -37,7 +37,7 @@ public class AstCfield extends AstNode
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE CLASS FIELD\n");
+		// System.out.format("AST NODE CLASS FIELD\n");
 
         /**************************************/
 		/* RECURSIVELY PRINT left + right ... */

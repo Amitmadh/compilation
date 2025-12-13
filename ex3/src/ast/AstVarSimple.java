@@ -22,7 +22,7 @@ public class AstVarSimple extends AstVar
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== var -> ID( %s )\n",name);
+		// System.out.format("====================== var -> ID( %s )\n",name);
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -38,7 +38,7 @@ public class AstVarSimple extends AstVar
 		/**********************************/
 		/* AST NODE TYPE = AST SIMPLE VAR */
 		/**********************************/
-		System.out.format("AST NODE SIMPLE VAR( %s )\n",name);
+		// System.out.format("AST NODE SIMPLE VAR( %s )\n",name);
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */

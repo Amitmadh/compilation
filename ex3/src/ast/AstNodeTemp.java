@@ -16,7 +16,7 @@ public class AstNodeTemp extends AstNode
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== tmpNode\n");
+		// System.out.format("====================== tmpNode\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -31,7 +31,7 @@ public class AstNodeTemp extends AstNode
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE TMP\n");
+		// System.out.format("AST NODE TMP\n");
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */

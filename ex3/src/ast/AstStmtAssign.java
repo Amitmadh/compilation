@@ -22,7 +22,7 @@ public class AstStmtAssign extends AstStmt
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== stmt -> var ASSIGN exp SEMICOLON\n");
+		// System.out.print("====================== stmt -> var ASSIGN exp SEMICOLON\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -39,7 +39,7 @@ public class AstStmtAssign extends AstStmt
 		/********************************************/
 		/* AST NODE TYPE = AST ASSIGNMENT STATEMENT */
 		/********************************************/
-		System.out.print("AST NODE ASSIGN STMT\n");
+		// System.out.print("AST NODE ASSIGN STMT\n");
 
 		/***********************************/
 		/* RECURSIVELY PRINT VAR + EXP ... */

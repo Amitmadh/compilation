@@ -20,7 +20,7 @@ public class AstStmtReturn extends AstStmt
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== stmt -> RETURN [exp] SEMICOLON\n");
+		// System.out.print("====================== stmt -> RETURN [exp] SEMICOLON\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -36,7 +36,7 @@ public class AstStmtReturn extends AstStmt
 		/************************************/
 		/* AST NODE TYPE = EXP VAR AST NODE */
 		/************************************/
-		System.out.print("AST NODE STMT RETURN\n");
+		// System.out.print("AST NODE STMT RETURN\n");
 
 		/*****************************/
 		/* RECURSIVELY PRINT var ... */

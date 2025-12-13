@@ -39,7 +39,7 @@ public class AstProgram extends AstNode
 		/*******************************/
 		/* AST NODE TYPE = AST PROGRAM */
 		/*******************************/
-		System.out.format("AST NODE PROGRAM\n");
+		// System.out.format("AST NODE PROGRAM\n");
 
 		/**************************************/
 		/* RECURSIVELY PRINT left + right ... */

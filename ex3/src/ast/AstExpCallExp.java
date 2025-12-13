@@ -17,7 +17,7 @@ public class AstExpCallExp extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== exp -> callExp\n");
+		// System.out.format("====================== exp -> callExp\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -33,7 +33,7 @@ public class AstExpCallExp extends AstExp
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE CALLEXP\n");
+		// System.out.format("AST NODE CALLEXP\n");
 
         /**************************************/
 		/* RECURSIVELY PRINT left + right ... */

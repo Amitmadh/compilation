@@ -19,7 +19,7 @@ public class AstVarField extends AstVar
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== var -> var DOT ID( %s )\n",fieldName);
+		// System.out.format("====================== var -> var DOT ID( %s )\n",fieldName);
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -36,7 +36,7 @@ public class AstVarField extends AstVar
 		/*********************************/
 		/* AST NODE TYPE = AST FIELD VAR */
 		/*********************************/
-		System.out.format("AST NODE FIELD VAR( %s )\n", fieldName);
+		// System.out.format("AST NODE FIELD VAR( %s )\n", fieldName);
 
 		/**********************************************/
 		/* RECURSIVELY PRINT VAR, then FIELD NAME ... */

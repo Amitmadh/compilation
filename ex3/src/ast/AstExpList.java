@@ -23,8 +23,8 @@ public class AstExpList extends AstNode
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		if (tail != null) System.out.print("====================== exps -> exp exps \n");
-		if (tail == null) System.out.print("====================== exps -> exp      \n");
+		// if (tail != null) System.out.print("====================== exps -> exp exps \n");
+		// if (tail == null) System.out.print("====================== exps -> exp      \n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -41,7 +41,7 @@ public class AstExpList extends AstNode
 		/**************************************/
 		/* AST NODE TYPE = AST STATEMENT LIST */
 		/**************************************/
-		System.out.print("AST NODE EXP LIST\n");
+		// System.out.print("AST NODE EXP LIST\n");
 
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */

@@ -18,7 +18,7 @@ public class AstVarSubscript extends AstVar
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== var -> var [ exp ]\n");
+		// System.out.print("====================== var -> var [ exp ]\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -35,7 +35,7 @@ public class AstVarSubscript extends AstVar
 		/*************************************/
 		/* AST NODE TYPE = AST SUBSCRIPT VAR */
 		/*************************************/
-		System.out.print("AST NODE SUBSCRIPT VAR\n");
+		// System.out.print("AST NODE SUBSCRIPT VAR\n");
 
 		/****************************************/
 		/* RECURSIVELY PRINT VAR + SUBSCRIPT ... */

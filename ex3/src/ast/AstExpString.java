@@ -17,7 +17,7 @@ public class AstExpString extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== exp -> STRING( %s )\n", value);
+		// System.out.format("====================== exp -> STRING( %s )\n", value);
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -33,7 +33,7 @@ public class AstExpString extends AstExp
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE STRING( %s )\n",value);
+		// System.out.format("AST NODE STRING( %s )\n",value);
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */

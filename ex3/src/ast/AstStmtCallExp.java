@@ -17,7 +17,7 @@ public class AstStmtCallExp extends AstStmt
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== stmt -> callExp SEMICOLON\n");
+		// System.out.print("====================== stmt -> callExp SEMICOLON\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -33,7 +33,7 @@ public class AstStmtCallExp extends AstStmt
 		/************************************/
 		/* AST NODE TYPE = EXP VAR AST NODE */
 		/************************************/
-		System.out.print("AST NODE STMT CALLEXP\n");
+		// System.out.print("AST NODE STMT CALLEXP\n");
 
 		/*****************************/
 		/* RECURSIVELY PRINT var ... */

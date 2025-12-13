@@ -16,7 +16,7 @@ public class AstDecVarDec extends AstDec
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== dec -> varDec\n");
+		// System.out.print("====================== dec -> varDec\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -32,7 +32,7 @@ public class AstDecVarDec extends AstDec
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.print("AST NODE DEC\n");
+		// System.out.print("AST NODE DEC\n");
 
         /**************************************/
 		/* RECURSIVELY PRINT left + right ... */

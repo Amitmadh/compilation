@@ -23,7 +23,7 @@ public class AstFuncDec extends AstDec
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== funcDec -> type ID LPAREN [ type ID { COMMA type ID } ] RPAREN LBRACE stmtList RBRACE\n");
+		// System.out.format("====================== funcDec -> type ID LPAREN [ type ID { COMMA type ID } ] RPAREN LBRACE stmtList RBRACE\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -42,7 +42,7 @@ public class AstFuncDec extends AstDec
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE FUNCDEC( %s )\n",fieldName);
+		// System.out.format("AST NODE FUNCDEC( %s )\n",fieldName);
         
         /****************************************/
 		/* RECURSIVELY PRINT VAR + SUBSCRIPT ... */

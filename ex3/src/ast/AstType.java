@@ -18,7 +18,7 @@ public class AstType extends AstNode {
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== type -> TYPE INT | TYPE STRING | TYPE VOID | ID\n");
+		// System.out.format("====================== type -> TYPE INT | TYPE STRING | TYPE VOID | ID\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -55,7 +55,7 @@ public class AstType extends AstNode {
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE TYPE(%s)\n", stype);
+		// System.out.format("AST NODE TYPE(%s)\n", stype);
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */

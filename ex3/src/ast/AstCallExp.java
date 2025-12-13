@@ -20,7 +20,7 @@ public class AstCallExp extends AstNode
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== callExp -> [ var DOT ] ID( %s ) LPAREN [ exp { COMMA exp } ] RPAREN\n", fieldName);
+		// System.out.format("====================== callExp -> [ var DOT ] ID( %s ) LPAREN [ exp { COMMA exp } ] RPAREN\n", fieldName);
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -38,7 +38,7 @@ public class AstCallExp extends AstNode
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE CALL EXPRESSION(%s)\n",fieldName);
+		// System.out.format("AST NODE CALL EXPRESSION(%s)\n",fieldName);
 
         /****************************************/
 		/* RECURSIVELY PRINT VAR + SUBSCRIPT ... */
