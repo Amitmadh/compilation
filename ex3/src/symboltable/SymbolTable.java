@@ -101,10 +101,10 @@ public class SymbolTable
 	/***********************************************/
 	public Type findInCurrentScope(String name) {
 		for (SymbolTableEntry e = top; e != null; e = e.prevtop) {
-			if (e.name == "SCOPE-BOUNDARY") {
+			if (e.name.equals("SCOPE-BOUNDARY")) {
 				break;  /* reached scope boundary */
 			}
-			if (e.name == name) {
+			if (e.name.equals(name)) {
 				return e.type; /* found in current scope */
 			}
 		}
@@ -149,7 +149,7 @@ public class SymbolTable
 		/**************************************************************************/
 		/* Pop elements from the symbol table stack until a SCOPE-BOUNDARY is hit */		
 		/**************************************************************************/
-		while (top.name != "SCOPE-BOUNDARY")
+		while (!top.name.equals("SCOPE-BOUNDARY"))
 		{
 			table[top.index] = top.next;
 			topIndex = topIndex -1;
@@ -286,7 +286,7 @@ public class SymbolTable
 			/*************************************/
 
 			/***************************************/
-			/* [3] Enter library function PrintInt */
+			/* [3] Enter library functions PrintInt and PrintString*/
 			/***************************************/
 			instance.enter(
 				"PrintInt",
@@ -295,6 +295,15 @@ public class SymbolTable
 					"PrintInt",
 					new TypeList(
 						TypeInt.getInstance(),
+						null)));
+			
+			instance.enter(
+				"PrintString",
+				new TypeFunction(
+					TypeVoid.getInstance(),
+					"PrintString",
+					new TypeList(
+						TypeString.getInstance(),
 						null)));
 			
 		}
