@@ -1,5 +1,5 @@
 package ast;
-
+import types.*;
 public class AstFuncArgList extends AstNode
 {
 	/****************/
@@ -59,6 +59,28 @@ public class AstFuncArgList extends AstNode
 		/****************************************/
 		if (head != null) AstGraphviz.getInstance().logEdge(serialNumber,head.serialNumber);
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
+	}
+	public TypeList semantMe()
+	{
+		TypeList tailTypes = null;
+		Type headType = null;
+
+		if (head == null) {
+        	return null;
+    	}
+
+		/*******************************/
+		/* [1] Semant head arg ...  */
+		/*******************************/
+		headType = head.semantMe();
+
+		/*******************************/
+		/* [2] Semant tail argList */
+		/*******************************/
+		if (tail != null) tailTypes = tail.semantMe();
+		
+
+		return new TypeList(headType, tailTypes);
 	}
 	
 }

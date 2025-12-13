@@ -1,6 +1,6 @@
 package ast;
-import types.*;
 import symboltable.SymbolTable;
+import types.*;
 
 public class AstFuncArg extends AstNode
 {
@@ -73,7 +73,7 @@ public class AstFuncArg extends AstNode
 		t = SymbolTable.getInstance().find(type.name);
 		if (t == null)
 		{
-			System.out.format(">> ERROR [%d:%d] non existing type %s\n",2,2,type);
+			System.out.format(">> ERROR [%d:%d] non existing type %s\n",2,2,type.name);
 			System.exit(0);
 		}
 		/**************************************/
