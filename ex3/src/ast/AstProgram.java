@@ -1,4 +1,5 @@
 package ast;
+import types.*;
 
 public class AstProgram extends AstNode
 {
@@ -21,8 +22,8 @@ public class AstProgram extends AstNode
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-        if (tail != null) System.out.print("====================== program -> dec program   \n");
-		if (tail == null) System.out.print("====================== program -> dec           \n");
+        // if (tail != null) System.out.print("====================== program -> dec program   \n");
+		// if (tail == null) System.out.print("====================== program -> dec           \n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -59,5 +60,16 @@ public class AstProgram extends AstNode
 		/****************************************/
 		if (head != null) AstGraphviz.getInstance().logEdge(serialNumber,head.serialNumber);
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
+	}
+
+	public Type semantMe()
+	{
+		/*************************************/
+		/* RECURSIVELY PRINT HEAD + TAIL ... */
+		/*************************************/
+		if (head != null) head.semantMe();
+		if (tail != null) tail.semantMe();
+
+		return null;
 	}
 }

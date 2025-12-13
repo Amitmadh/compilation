@@ -1,2 +1,8 @@
 # Ignore workspace-specific VS Code settings that may contain local paths
 .vscode/
+ex3/output/
+ex3/SEMANT
+ex3/bin
+ex3/src/Parser.java
+ex3/src/TokenNames.java
+ex3/src/Lexer.java
