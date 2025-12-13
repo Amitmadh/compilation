@@ -1,5 +1,6 @@
 package ast;
-
+import types.*;
+import symboltable.*;
 public class AstCallExp extends AstNode
 {
 	AstVar var;
@@ -57,5 +58,117 @@ public class AstCallExp extends AstNode
 		/****************************************/
 		if (var != null) AstGraphviz.getInstance().logEdge(serialNumber,var.serialNumber);
 		if (expList != null) AstGraphviz.getInstance().logEdge(serialNumber,expList.serialNumber);
+	}
+	public Type semantMe()
+	{
+		Type varType = null;
+		Type funcType = null;
+		/******************************/
+		/* retrieve function type */
+		/******************************/
+		if (var != null)
+		{
+			varType = var.semantMe();
+
+			if (varType == null)
+			{
+				System.out.format(">> ERROR [%d:%d] calling method %s on a non-existing variable\n", 2, 2, fieldName);
+				System.exit(0);
+			}
+			/* Check that the var is instance of class */
+			if (!(varType.isClass()))
+			{
+				System.out.format(">> ERROR [%d:%d] var must have class type\n",2,2);
+				System.exit(0);
+			}
+			
+			/* Find func fieldName in class data members (including ancestors)*/
+			TypeClass classType = (TypeClass) varType;	
+			TypeClass currentClass = classType;
+			while (currentClass != null && funcType == null) 
+			{
+				TypeClassVarDecList dataMembers = currentClass.dataMembers;
+				while (dataMembers != null) 
+				{
+					if (dataMembers.head.name.equals(fieldName)) {
+						funcType =  dataMembers.head.type;
+						break;
+					}
+					dataMembers = dataMembers.tail;
+				}
+				currentClass = currentClass.father;
+			}
+		
+		}
+		else{	
+			/* Lookup function name in symbol table */
+			funcType = SymbolTable.getInstance().find(fieldName);
+		}
+		/* Check that funcType is indeed a function */
+		if (funcType == null || !funcType.isFunction())
+			{
+				System.out.format(">> ERROR [%d:%d] call to undefined function %s\n", 2, 2, fieldName);
+				System.exit(0);
+			}
+		TypeFunction funcTypeFunction = (TypeFunction)funcType;
+
+		/***************************************/
+		/* Semant the expList object */
+		/***************************************/
+		TypeList expTypes = null;
+		if (expList != null)
+		{
+			expTypes = expList.semantMe();
+		}
+
+
+		/***********************************************/
+		/* Check that the types of the arguments match the function's parameters */
+		/***********************************************/
+		TypeList paramTypes = funcTypeFunction.params;
+		TypeList currExpType = expTypes;
+		Type paramType = null;
+        Type expType = null;
+		boolean match = false;
+		while (paramTypes != null && currExpType != null)
+		{
+			paramType = paramTypes.head;
+        	expType = currExpType.head;
+			if (paramType.name.equals(expType.name))
+			{
+				match = true;
+			}
+			/*Handle Nil */
+			else if (expType instanceof TypeNil || "nil".equals(expType.name))
+			{
+				if (paramType.isClass() || paramType.isArray())
+				{
+					match = true;
+				}
+			}
+			else if (paramType.isClass() && expType.isClass())
+			{
+				TypeClass paramClass = (TypeClass) paramType;
+				TypeClass expClass = (TypeClass) expType;
+				if (expClass.isSubClassOf(paramClass))
+				{
+					match = true;
+				}
+			}
+			if (!match)
+			{
+				System.out.format(">> ERROR [%d:%d] function %s argument type mismatch. Expected %s, got %s\n", 2, 2, fieldName, paramType.name, expType.name);
+				System.exit(0);
+			}
+			paramTypes = paramTypes.tail;
+			currExpType = currExpType.tail;
+			match = false;
+		}
+		if (paramTypes != null || currExpType != null)
+		{
+			System.out.format(">> ERROR [%d:%d] function %s argument count mismatch\n", 2, 2, fieldName);
+			System.exit(0);
+		}
+		return funcTypeFunction.returnType;
 	}
 }

@@ -1,5 +1,5 @@
 package ast;
-
+import types.*;
 public class AstExpCallExp extends AstExp
 {
 	public AstCallExp callExp;
@@ -51,5 +51,9 @@ public class AstExpCallExp extends AstExp
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		if (callExp  != null) AstGraphviz.getInstance().logEdge(serialNumber,callExp.serialNumber);
+	}
+	public Type semantMe()
+	{
+		return callExp.semantMe();
 	}
 }

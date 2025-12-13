@@ -1,5 +1,5 @@
 package ast;
-
+import types.*;
 public class AstStmtCallExp extends AstStmt
 {
 	public AstCallExp callExp;
@@ -52,5 +52,9 @@ public class AstStmtCallExp extends AstStmt
 		/****************************************/
 		AstGraphviz.getInstance().logEdge(serialNumber,callExp.serialNumber);
 			
+	}
+	public Type semantMe()
+	{
+		return callExp.semantMe();
 	}
 }
