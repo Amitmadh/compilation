@@ -53,7 +53,7 @@ public class AstStmtCallExp extends AstStmt
 		AstGraphviz.getInstance().logEdge(serialNumber,callExp.serialNumber);
 			
 	}
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		return callExp.semantMe();
 	}

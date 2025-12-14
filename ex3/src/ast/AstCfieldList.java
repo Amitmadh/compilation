@@ -62,7 +62,7 @@ public class AstCfieldList extends AstNode
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
 	}
 
-	public TypeClassVarDecList semantMe()
+	public TypeClassVarDecList semantMe() throws SemanticException
 	{
 		TypeClassVarDec headType = null;
 		TypeClassVarDecList tailTypes = null;

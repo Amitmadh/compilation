@@ -56,14 +56,13 @@ public class AstVarField extends AstVar
 		if (var != null) AstGraphviz.getInstance().logEdge(serialNumber,var.serialNumber);
 	}
 
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		/* 1. Check that the var is instance of class */
 		Type varType = var.semantMe();
 		if (!(varType.isClass()))
 		{
-			System.out.format(">> ERROR [%d:%d] var must have class type\n",2,2);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] var must have class type",2,2));
 		}
 		
 		/* 2. Find field in class data members (including ancestors)*/
@@ -82,10 +81,9 @@ public class AstVarField extends AstVar
 			currentClass = currentClass.father;
 		}	
     
-		System.out.format(">> ERROR [%d:%d] field %s does not exist in class %s\n", 2, 2, fieldName, classType.name);
-		System.exit(0);
+		throw new SemanticException(String.format(">> ERROR [%d:%d] field %s does not exist in class %s", 2, 2, fieldName, classType.name));
     
-    	return null;
+    	//return null;
 	}
 		
 		

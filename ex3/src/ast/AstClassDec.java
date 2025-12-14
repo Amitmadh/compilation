@@ -62,20 +62,18 @@ public class AstClassDec extends AstDec
 		if (cfieldList != null) AstGraphviz.getInstance().logEdge(serialNumber,cfieldList.serialNumber);
 	}
 
-	public void semantMe()
+	public void semantMe() throws SemanticException
 	{	
 		/***************************/
 		/* [1] Class in global scope */
 		if (!SymbolTable.getInstance().isGlobalScope()) {
-			System.out.format(">> ERROR [%d:%d] class declarations are allowed only in the global scope\n",2,2);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] class declarations are allowed only in the global scope",2,2));
 		}
 		/* [2] Check That Name does NOT exist in current scope*/
 		/**************************************/
 		if (SymbolTable.getInstance().find(className) != null)
 		{
-			System.out.format(">> ERROR [%d:%d] class %s already exists in scope\n",2,2,className);	
-			System.exit(0);		
+			throw new SemanticException(String.format(">> ERROR [%d:%d] class %s already exists in scope",2,2,className));
 		}
 		/***************************/
 		/* [3] Handle Extends */
@@ -85,8 +83,7 @@ public class AstClassDec extends AstDec
 			fatherType = SymbolTable.getInstance().find(extendName);
 			if (fatherType == null || !(fatherType.isClass()))
 			{
-				System.out.format(">> ERROR [%d:%d] non existing father class %s\n",2,2,extendName);
-				System.exit(0);
+				throw new SemanticException(String.format(">> ERROR [%d:%d] non existing father class %s",2,2,extendName));
 			}
 			
 		}

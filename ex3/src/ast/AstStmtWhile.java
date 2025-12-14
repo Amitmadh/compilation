@@ -57,7 +57,7 @@ public class AstStmtWhile extends AstStmt
 		if (cond != null) AstGraphviz.getInstance().logEdge(serialNumber,cond.serialNumber);
 		if (body != null) AstGraphviz.getInstance().logEdge(serialNumber,body.serialNumber);
 	}
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		/****************************/
 		/* [1] Semant the cond exp */
@@ -65,8 +65,7 @@ public class AstStmtWhile extends AstStmt
 		Type condType = cond.semantMe();
 		if (!condType.isInt())
 		{
-			System.out.format(">> ERROR [%d:%d] While condition is not boolean\n",0,0);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] While condition is not boolean",0,0));
 		}
 		/*	[2] Begin scope */
 		SymbolTable.getInstance().beginScope();

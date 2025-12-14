@@ -60,7 +60,7 @@ public class AstStmtAssign extends AstStmt
 		AstGraphviz.getInstance().logEdge(serialNumber,var.serialNumber);
 		AstGraphviz.getInstance().logEdge(serialNumber,exp.serialNumber);
 	}
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		Type t = var.semantMe();
 		
@@ -78,8 +78,7 @@ public class AstStmtAssign extends AstStmt
 
 			if (initType instanceof TypeNil) { 
 				if (!t.isClass() && !t.isArray()) {
-					System.out.format(">> ERROR [%d:%d] cannot assign nil to primitive type %s\n", 2, 2, t.name);
-					System.exit(0);
+					throw new SemanticException(String.format(">> ERROR [%d:%d] cannot assign nil to primitive type %s", 2, 2, t.name));
 				}
 				/* If it is class/array, nil is valid, so we can return/continue.*/
 			} 
@@ -87,37 +86,32 @@ public class AstStmtAssign extends AstStmt
 				/* Check Primitives (int, string) */
 				if (t.name.equals("int") || t.name.equals("string")) {
 					if (!initType.name.equals(t.name)) {
-						System.out.format(">> ERROR [%d:%d] type mismatch in assignment. Expected %s, got %s\n", 2, 2, t.name, initType.name);
-						System.exit(0);
+						throw new SemanticException(String.format(">> ERROR [%d:%d] type mismatch in assignment. Expected %s, got %s", 2, 2, t.name, initType.name));
 					}
 				}
 				
 				/* Check Arrays */
 				else if (t.isArray()) {
 					if (!initType.isArray()) {
-						System.out.format(">> ERROR [%d:%d] type mismatch: cannot assign non-array to array\n", 2, 2);
-						System.exit(0);
+						throw new SemanticException(String.format(">> ERROR [%d:%d] type mismatch: cannot assign non-array to array", 2, 2));
 					}
 					/* Check inner element type equality */
 					Type tElem = ((TypeArray)t).elemType;
 					Type initElem = ((TypeArray)initType).elemType;
 					
 					if (!tElem.name.equals(initElem.name)) {
-						System.out.format(">> ERROR [%d:%d] array element type mismatch\n", 2, 2);
-						System.exit(0);
+						throw new SemanticException(String.format(">> ERROR [%d:%d] array element type mismatch", 2, 2));
 					}
 				}
 				
 				/* Check Classes */
 				else if (t.isClass()) {
 					if (!initType.isClass()) {
-						System.out.format(">> ERROR [%d:%d] type mismatch: cannot assign non-class to class\n", 2, 2);
-						System.exit(0);
+						throw new SemanticException(String.format(">> ERROR [%d:%d] type mismatch: cannot assign non-class to class", 2, 2));
 					}
 					/* Check Inheritance (Polymorphism) */
 					if (!((TypeClass)initType).isSubClassOf((TypeClass)t)) {
-						System.out.format(">> ERROR [%d:%d] type %s is not a subclass of %s\n", 2, 2, initType.name, t.name);
-						System.exit(0);
+						throw new SemanticException(String.format(">> ERROR [%d:%d] type %s is not a subclass of %s", 2, 2, initType.name, t.name));
 					}
 				}
 			}

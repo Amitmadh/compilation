@@ -53,7 +53,7 @@ public class AstDecClassDec extends AstDec
 		if (classDec  != null) AstGraphviz.getInstance().logEdge(serialNumber,classDec.serialNumber);
 	}
 
-	public void semantMe() {
-        if (classDec != null) classDec.semantMe();
-    }
+	public void semantMe() throws SemanticException {
+		if (classDec != null) classDec.semantMe();
+	}
 }

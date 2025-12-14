@@ -53,7 +53,7 @@ public class AstStmtVarDec extends AstStmt
 		AstGraphviz.getInstance().logEdge(serialNumber,varDec.serialNumber);
 			
 	}
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		return varDec.semantMe();
 	}

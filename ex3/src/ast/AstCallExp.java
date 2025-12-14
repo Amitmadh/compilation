@@ -59,7 +59,7 @@ public class AstCallExp extends AstNode
 		if (var != null) AstGraphviz.getInstance().logEdge(serialNumber,var.serialNumber);
 		if (expList != null) AstGraphviz.getInstance().logEdge(serialNumber,expList.serialNumber);
 	}
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		Type varType = null;
 		Type funcType = null;
@@ -72,14 +72,12 @@ public class AstCallExp extends AstNode
 
 			if (varType == null)
 			{
-				System.out.format(">> ERROR [%d:%d] calling method %s on a non-existing variable\n", 2, 2, fieldName);
-				System.exit(0);
+				throw new SemanticException(String.format(">> ERROR [%d:%d] calling method %s on a non-existing variable", 2, 2, fieldName));
 			}
 			/* Check that the var is instance of class */
 			if (!(varType.isClass()))
 			{
-				System.out.format(">> ERROR [%d:%d] var must have class type\n",2,2);
-				System.exit(0);
+				throw new SemanticException(String.format(">> ERROR [%d:%d] var must have class type",2,2));
 			}
 			
 			/* Find func fieldName in class data members (including ancestors)*/
@@ -107,8 +105,7 @@ public class AstCallExp extends AstNode
 		/* Check that funcType is indeed a function */
 		if (funcType == null || !funcType.isFunction())
 			{
-				System.out.format(">> ERROR [%d:%d] call to undefined function %s\n", 2, 2, fieldName);
-				System.exit(0);
+				throw new SemanticException(String.format(">> ERROR [%d:%d] call to undefined function %s", 2, 2, fieldName));
 			}
 		TypeFunction funcTypeFunction = (TypeFunction)funcType;
 
@@ -157,8 +154,7 @@ public class AstCallExp extends AstNode
 			}
 			if (!match)
 			{
-				System.out.format(">> ERROR [%d:%d] function %s argument type mismatch. Expected %s, got %s\n", 2, 2, fieldName, paramType.name, expType.name);
-				System.exit(0);
+				throw new SemanticException(String.format(">> ERROR [%d:%d] function %s argument type mismatch. Expected %s, got %s", 2, 2, fieldName, paramType.name, expType.name));
 			}
 			paramTypes = paramTypes.tail;
 			currExpType = currExpType.tail;
@@ -166,8 +162,7 @@ public class AstCallExp extends AstNode
 		}
 		if (paramTypes != null || currExpType != null)
 		{
-			System.out.format(">> ERROR [%d:%d] function %s argument count mismatch\n", 2, 2, fieldName);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] function %s argument count mismatch", 2, 2, fieldName));
 		}
 		return funcTypeFunction.returnType;
 	}

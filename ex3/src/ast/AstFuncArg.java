@@ -57,15 +57,14 @@ public class AstFuncArg extends AstNode
 		if (type != null) AstGraphviz.getInstance().logEdge(serialNumber,type.serialNumber);
 	}
 
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		Type t;
 		/****************************/
 		/* [1] Make sure variable is not of type void */
 		/****************************/
 		if ("void".equals(type.name)){
-			System.out.format(">> ERROR [%d:%d] argument %s cannot be of type void\n",2,2,fieldName);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] argument %s cannot be of type void",2,2,fieldName));
 		}
 		/****************************/
 		/* [2] Check If Type exists */
@@ -73,16 +72,14 @@ public class AstFuncArg extends AstNode
 		t = SymbolTable.getInstance().find(type.name);
 		if (t == null)
 		{
-			System.out.format(">> ERROR [%d:%d] non existing type %s\n",2,2,type.name);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] non existing type %s",2,2,type.name));
 		}
 		/**************************************/
 		/* [3] Check That Name does NOT exist in current scope*/
 		/**************************************/
 		if (SymbolTable.getInstance().findInCurrentScope(fieldName) != null)
 		{
-			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,fieldName);	
-			System.exit(0);			
+			throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s already exists in scope",2,2,fieldName));
 		}
 		/************************************************/
 		/* [4] Enter the Identifier to the Symbol Table */

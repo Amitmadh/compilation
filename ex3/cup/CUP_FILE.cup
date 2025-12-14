@@ -78,8 +78,6 @@ terminal ELSE;
 terminal NEW;
 terminal EXTENDS;
 terminal NIL;
-terminal ERROR;
-
 
 /*************/
 /* TERMINALS */

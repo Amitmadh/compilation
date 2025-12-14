@@ -57,28 +57,25 @@ public class AstVarSubscript extends AstVar
 		if (subscript != null) AstGraphviz.getInstance().logEdge(serialNumber,subscript.serialNumber);
 	}
 
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		/* 1. Check that the var is an array */
 		Type varType = var.semantMe();
 		if (!(varType.isArray()))
 		{
-			System.out.format(">> ERROR [%d:%d] subscripted variable is not an array\n",2,2);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] subscripted variable is not an array",2,2));
 		}
 		
 		/* 2. Check that the subscript is an int */
 		Type subscriptType = subscript.semantMe();
 		if (!(subscriptType.isInt()))
 		{
-			System.out.format(">> ERROR [%d:%d] array subscript is not an integer\n",2,2);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] array subscript is not an integer",2,2));
 		}
 		if (subscript instanceof AstExpInt) {
 				int v = ((AstExpInt)subscript).value;
 				if (v < 0) {
-					System.out.format(">> ERROR: constant subscript must be greater than or equal to zero\n");
-					System.exit(0);
+					throw new SemanticException(String.format(">> ERROR: constant subscript must be greater than or equal to zero"));
 				}
 			}
 		

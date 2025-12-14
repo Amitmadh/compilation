@@ -73,7 +73,7 @@ public class AstExpBinop extends AstExp
 		if (right != null) AstGraphviz.getInstance().logEdge(serialNumber,right.serialNumber);
 	}
 
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		Type type_left = left.semantMe();
 		Type type_right = right.semantMe();
@@ -89,8 +89,7 @@ public class AstExpBinop extends AstExp
 			/* [2] General case: ensure both sides are int */
 			/****************************/
 			if (!type_left.isInt() || !type_right.isInt()) {
-				System.out.format(">> ERROR [%d:%d] binary operator %s requires both operands to be of type int\n",2,2,op);
-				System.exit(0);
+				throw new SemanticException(String.format(">> ERROR [%d:%d] binary operator %s requires both operands to be of type int",2,2,op));
 			}
 
 			/****************************/
@@ -100,8 +99,7 @@ public class AstExpBinop extends AstExp
 				if (right instanceof AstExpInt) {
 					AstExpInt right_int = (AstExpInt)right;
 					if (right_int.value == 0) {
-						System.out.format(">> ERROR [%d:%d] division by zero\n",2,2);
-						System.exit(0);
+						throw new SemanticException(String.format(">> ERROR [%d:%d] division by zero",2,2));
 					}
 				}
 			}
@@ -127,8 +125,7 @@ public class AstExpBinop extends AstExp
 					return TypeInt.getInstance();
 				} 
 				else {
-					System.out.format(">> ERROR [%d:%d] equality check with nil requires class or array type\n", 2, 2);
-					System.exit(0);
+					throw new SemanticException(String.format(">> ERROR [%d:%d] equality check with nil requires class or array type", 2, 2));
 				}
 			}
 
@@ -143,8 +140,7 @@ public class AstExpBinop extends AstExp
 			}
 
 			/* if got here, them type mismatch */
-			System.out.format(">> ERROR [%d:%d] type mismatch for equality operator\n", 2, 2);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] type mismatch for equality operator", 2, 2));
 
 		}
 		/****************************/

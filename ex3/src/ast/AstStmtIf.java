@@ -61,7 +61,7 @@ public class AstStmtIf extends AstStmt
 		if (body != null) AstGraphviz.getInstance().logEdge(serialNumber,body.serialNumber);
 		if (elseBody != null) AstGraphviz.getInstance().logEdge(serialNumber,body.serialNumber);
 	}
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		/****************************/
 		/* [1] Semant the cond exp */
@@ -69,8 +69,7 @@ public class AstStmtIf extends AstStmt
 		Type condType = cond.semantMe();
 		if (!condType.isInt())
 		{
-			System.out.format(">> ERROR [%d:%d] IF condition is not boolean\n",0,0);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] IF condition is not boolean",0,0));
 		}
 		/*	[2] Begin scope */
 		SymbolTable.getInstance().beginScope();

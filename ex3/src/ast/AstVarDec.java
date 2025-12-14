@@ -65,15 +65,14 @@ public class AstVarDec extends AstNode
         if (nexp != null) AstGraphviz.getInstance().logEdge(serialNumber,nexp.serialNumber);
 	}
 
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		Type t;
 		/****************************/
 		/* [1] Make sure variable is not of type void */
 		/****************************/
 		if ("void".equals(type.name)){
-			System.out.format(">> ERROR [%d:%d] variable %s cannot be of type void\n",2,2,fieldName);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s cannot be of type void",2,2,fieldName));
 		}
 		/****************************/
 		/* [2] Check If Type exists */
@@ -81,8 +80,7 @@ public class AstVarDec extends AstNode
 		t = SymbolTable.getInstance().find(type.name);
 		if (t == null)
 		{
-			System.out.format(">> ERROR [%d:%d] non existing type %s\n",2,2,type);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] non existing type %s",2,2,type));
 		}
 		
 		/**************************************/
@@ -90,8 +88,7 @@ public class AstVarDec extends AstNode
 		/**************************************/
 		if (SymbolTable.getInstance().findInCurrentScope(fieldName) != null)
 		{
-			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,fieldName);	
-			System.exit(0);			
+			throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s already exists in scope",2,2,fieldName));
 		}
 		/**************************************/
 		/* [4] Check that Initialization expression type matches variable type */
@@ -111,8 +108,7 @@ public class AstVarDec extends AstNode
 
 			if (initType instanceof TypeNil) { 
 				if (!t.isClass() && !t.isArray()) {
-					System.out.format(">> ERROR [%d:%d] cannot assign nil to primitive type %s\n", 2, 2, fieldName);
-					System.exit(0);
+					throw new SemanticException(String.format(">> ERROR [%d:%d] cannot assign nil to primitive type %s", 2, 2, fieldName));
 				}
 				// If it is class/array, nil is valid, so we can return/continue.
 			} 
@@ -120,37 +116,32 @@ public class AstVarDec extends AstNode
 				// Check Primitives (int, string)
 				if (t.name.equals("int") || t.name.equals("string")) {
 					if (!initType.name.equals(t.name)) {
-						System.out.format(">> ERROR [%d:%d] variable %s initialization type mismatch. Expected %s, got %s\n", 2, 2, fieldName, t.name, initType.name);
-						System.exit(0);
+						throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s initialization type mismatch. Expected %s, got %s", 2, 2, fieldName, t.name, initType.name));
 					}
 				}
 				
 				// Check Arrays
 				else if (t.isArray()) {
 					if (!initType.isArray()) {
-						System.out.format(">> ERROR [%d:%d] variable %s type mismatch: expected array\n", 2, 2, fieldName);
-						System.exit(0);
+						throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s type mismatch: expected array", 2, 2, fieldName));
 					}
 					// Check inner element type equality
 					Type tElem = ((TypeArray)t).elemType;
 					Type initElem = ((TypeArray)initType).elemType;
 					
 					if (!tElem.name.equals(initElem.name)) {
-						System.out.format(">> ERROR [%d:%d] array element type mismatch\n", 2, 2);
-						System.exit(0);
+						throw new SemanticException(String.format(">> ERROR [%d:%d] array element type mismatch", 2, 2));
 					}
 				}
 				
 				// Check Classes
 				else if (t.isClass()) {
 					if (!initType.isClass()) {
-						System.out.format(">> ERROR [%d:%d] variable %s type mismatch: expected class\n", 2, 2, fieldName);
-						System.exit(0);
+						throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s type mismatch: expected class", 2, 2, fieldName));
 					}
 					// Check Inheritance (Polymorphism)
 					if (!((TypeClass)initType).isSubClassOf((TypeClass)t)) {
-						System.out.format(">> ERROR [%d:%d] type %s is not a subclass of %s\n", 2, 2, initType.name, t.name);
-						System.exit(0);
+						throw new SemanticException(String.format(">> ERROR [%d:%d] type %s is not a subclass of %s", 2, 2, initType.name, t.name));
 					}
 				}
 			}

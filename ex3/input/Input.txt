@@ -1,33 +1,38 @@
-string left := "LEFT";
-string right := "RIGHT";
+array IntArray = int[];
 
-class Person
+void BubbleSort(IntArray arr, int size)
 {
-    int left;
-    int right;
-}
-
-int foo(int d, int k)
-{
-    int left := 50;
-    int right := 40;
-	
-    if (d+k = 17)
+    int i := 0;
+    int min := -32767;
+    int minIndex := -1;
+    
+    while (i < size)
     {
-        Person left;
-        Person right;
-		
-        return left.left;
+        int j := i+1;
+        while (j<size)
+        {
+            if (arr[j] < min)
+            {
+                int i := arr[minIndex];
+                arr[minIndex] := arr[j];
+                arr[j] := i;
+            }
+        }
     }
-	
-    return left;
 }
 
 void main()
 {
-    if (foo(2,4))
-    {
-        PrintInt(800);
-    }
+    IntArray arr := new int[7];
+    
+    arr[0] := 34;
+    arr[1] := 12;
+    arr[2] := -600;
+    arr[3] := -400;
+    arr[4] := 70;
+    arr[5] := 30;
+    arr[6] := -580;
+    
+    BubbleSort(arr,7);
 }
 

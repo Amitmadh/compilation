@@ -48,7 +48,7 @@ public class AstVarSimple extends AstVar
 			String.format("SIMPLE\nVAR(%s)",name));
 	}
 
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		/****************************/
 		/* [1] Look up in symbol table */
@@ -60,8 +60,7 @@ public class AstVarSimple extends AstVar
 		/******************************/
 		if (t == null)
 		{
-			System.out.format(">> ERROR [%d:%d] variable %s does not exist in scope\n",2,2,name);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s does not exist in scope",2,2,name));
 		}
 		
 		/*************************/

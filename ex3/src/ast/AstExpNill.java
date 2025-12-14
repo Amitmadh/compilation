@@ -36,7 +36,7 @@ public class AstExpNill extends AstExp
 				serialNumber,
 			String.format("NILL"));
 	}
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		return TypeNil.getInstance();
 	}

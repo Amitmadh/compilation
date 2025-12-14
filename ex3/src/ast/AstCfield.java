@@ -58,7 +58,7 @@ public class AstCfield extends AstNode
 		if (varDec  != null) AstGraphviz.getInstance().logEdge(serialNumber,varDec.serialNumber);
 		if (funDec != null) AstGraphviz.getInstance().logEdge(serialNumber,funDec.serialNumber);
 	}
-	public TypeClassVarDec semantMe()
+	public TypeClassVarDec semantMe() throws SemanticException
 	{	
 		Type t = null;
 		TypeClassVarDec varClassDec = null;
@@ -66,8 +66,7 @@ public class AstCfield extends AstNode
 			varDec.semantMe();
 			t = SymbolTable.getInstance().find(varDec.type.name);
 			if (t == null) {
-				System.out.format(">> ERROR [%d:%d] Type %s not found\n", 2, 2, varDec.type.name);
-				System.exit(0);
+				throw new SemanticException(String.format(">> ERROR [%d:%d] Type %s not found", 2, 2, varDec.type.name));
 			}
 			varClassDec = new TypeClassVarDec(varDec.fieldName, t);
 		}	
@@ -75,8 +74,7 @@ public class AstCfield extends AstNode
 			funDec.semantMe();
 			t = SymbolTable.getInstance().find(funDec.fieldName);
 			if (t == null) {
-				System.out.format(">> ERROR [%d:%d] Type %s not found\n", 2, 2, funDec.fieldName);
-				System.exit(0);
+				throw new SemanticException(String.format(">> ERROR [%d:%d] Type %s not found", 2, 2, funDec.fieldName));
 			}
 			varClassDec = new TypeClassVarDec(funDec.fieldName, t);
 			

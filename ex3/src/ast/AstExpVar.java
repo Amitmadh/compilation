@@ -55,7 +55,7 @@ public class AstExpVar extends AstExp
 			
 	}
 
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		return var.semantMe();
 	}	

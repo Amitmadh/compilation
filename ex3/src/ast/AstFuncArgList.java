@@ -60,7 +60,7 @@ public class AstFuncArgList extends AstNode
 		if (head != null) AstGraphviz.getInstance().logEdge(serialNumber,head.serialNumber);
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
 	}
-	public TypeList semantMe()
+	public TypeList semantMe() throws SemanticException
 	{
 		TypeList tailTypes = null;
 		Type headType = null;

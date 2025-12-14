@@ -1,6 +1,6 @@
    
 import java.io.*;
-import java.io.PrintWriter;
+
 // import java_cup.runtime.Symbol;
 import ast.*;
 
@@ -42,17 +42,34 @@ public class Main
 			/***********************************/
 			/* [5] 3 ... 2 ... 1 ... Parse !!! */
 			/***********************************/
-			ast = (AstProgram)p.parse().value;
-			
-			/*************************/
-			/* [6] Print the AST ... */
-			/*************************/
-			ast.printMe();
-
-			/**************************/
-			/* [7] Semant the AST ... */
-			/**************************/
-			ast.semantMe();
+			try {
+				ast = (AstProgram) p.parse().value;
+				/*************************/
+				/* [6] Print the AST ... */
+				/*************************/
+				ast.printMe();
+				/**************************/
+				/* [7] Semant the AST ... */
+				/**************************/
+				ast.semantMe();
+				fileWriter.print("OK");
+				System.out.println("OK");
+			} catch (ast.SemanticException e) {
+				// Semantic errors produced during semantMe()
+				// TODO: print line number and change format to ERROR(line)
+				fileWriter.print(e.getMessage());
+				System.out.println(e.getMessage());
+			} catch (Exception e) {
+				// lexical errors or other runtime exceptions
+				if ("lexical error".equals(e.getMessage())) {
+					fileWriter.print("ERROR");
+					System.out.println("lexical error");
+				} else {
+					// other errors (syntax errors print as ERROR(line))
+					fileWriter.print(e.getMessage());
+					System.out.println(e.getMessage());
+				}
+			}
 			
 			/*************************/
 			/* [8] Close output file */

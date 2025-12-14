@@ -61,8 +61,8 @@ public class AstProgram extends AstNode
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
 	}
 
-	public void semantMe() {
-        if (head != null) head.semantMe();
-        if (tail != null) tail.semantMe();
+	public void semantMe() throws SemanticException {
+		if (head != null) head.semantMe();
+		if (tail != null) tail.semantMe();
     }
 }

@@ -42,7 +42,7 @@ public class AstExpString extends AstExp
 				serialNumber,
 			String.format("STRING(%s)",value));
 	}
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		return TypeString.getInstance();
 	}

@@ -65,7 +65,7 @@ public class AstFuncDec extends AstDec
 		if (argList != null) AstGraphviz.getInstance().logEdge(serialNumber,argList.serialNumber);
         if (stmtList != null) AstGraphviz.getInstance().logEdge(serialNumber,stmtList.serialNumber);
 	}
-	public void semantMe()
+	public void semantMe() throws SemanticException
 	{
 		Type returnType;
 		TypeList argListTypes = null;
@@ -76,15 +76,13 @@ public class AstFuncDec extends AstDec
 		returnType = SymbolTable.getInstance().find(type.name);
 		if (returnType == null)
 		{
-			System.out.format(">> ERROR [%d:%d] non existing return type %s\n",6,6,type.name);	
-			System.exit(0);			
+			throw new SemanticException(String.format(">> ERROR [%d:%d] non existing return type %s",6,6,type.name));
 		}
 		/*******************/
 		/* Check Duplicates & Enter Function (Recursive support) */
 		/*******************/
 		if (SymbolTable.getInstance().findInCurrentScope(fieldName) != null) {
-			System.out.format(">> ERROR [%d:%d] function %s already exists\n", 6, 6, fieldName);
-			System.exit(0);
+			throw new SemanticException(String.format(">> ERROR [%d:%d] function %s already exists", 6, 6, fieldName));
 		}
 		TypeFunction funcType = new TypeFunction(returnType, fieldName, null);
 		SymbolTable.getInstance().enter(fieldName, funcType);
