@@ -73,12 +73,14 @@ public class AstCallExp extends AstNode
 
 			if (varType == null)
 			{
-				throw new SemanticException(String.format(">> ERROR [%d:%d] calling method %s on a non-existing variable", 2, 2, fieldName));
+				System.out.printf("ERROR at line %d, calling method %s on a non-existing variable\n", line, fieldName);
+				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 			/* Check that the var is instance of class */
 			if (!(varType.isClass()))
 			{
-				throw new SemanticException(String.format(">> ERROR [%d:%d] var must have class type",2,2));
+				System.out.printf("ERROR at line %d, var must have class type\n", line);
+				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 			
 			/* Find func fieldName in class data members (including ancestors)*/
@@ -106,7 +108,8 @@ public class AstCallExp extends AstNode
 		/* Check that funcType is indeed a function */
 		if (funcType == null || !funcType.isFunction())
 			{
-				throw new SemanticException(String.format(">> ERROR [%d:%d] call to undefined function %s", 2, 2, fieldName));
+				System.out.printf("ERROR at line %d, call to undefined function %s\n", line, fieldName);
+				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 		TypeFunction funcTypeFunction = (TypeFunction)funcType;
 
@@ -155,7 +158,8 @@ public class AstCallExp extends AstNode
 			}
 			if (!match)
 			{
-				throw new SemanticException(String.format(">> ERROR [%d:%d] function %s argument type mismatch. Expected %s, got %s", 2, 2, fieldName, paramType.name, expType.name));
+				System.out.printf("ERROR at line %d, function %s argument type mismatch. Expected %s, got %s\n", line, fieldName, paramType.name, expType.name);
+				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 			paramTypes = paramTypes.tail;
 			currExpType = currExpType.tail;
@@ -163,7 +167,8 @@ public class AstCallExp extends AstNode
 		}
 		if (paramTypes != null || currExpType != null)
 		{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] function %s argument count mismatch", 2, 2, fieldName));
+			System.out.printf("ERROR at line %d, function %s argument count mismatch\n", line, fieldName);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		return funcTypeFunction.returnType;
 	}

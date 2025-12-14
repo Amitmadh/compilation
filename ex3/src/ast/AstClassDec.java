@@ -68,13 +68,15 @@ public class AstClassDec extends AstDec
 		/***************************/
 		/* [1] Class in global scope */
 		if (!SymbolTable.getInstance().isGlobalScope()) {
-			throw new SemanticException(String.format(">> ERROR [%d:%d] class declarations are allowed only in the global scope",2,2));
+			System.out.printf("ERROR at line %d, class declarations are allowed only in the global scope\n", line);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		/* [2] Check That Name does NOT exist in current scope*/
 		/**************************************/
 		if (SymbolTable.getInstance().find(className) != null)
 		{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] class %s already exists in scope",2,2,className));
+			System.out.printf("ERROR at line %d, class %s already exists in scope\n", line, className);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		/***************************/
 		/* [3] Handle Extends */
@@ -84,7 +86,8 @@ public class AstClassDec extends AstDec
 			fatherType = SymbolTable.getInstance().find(extendName);
 			if (fatherType == null || !(fatherType.isClass()))
 			{
-				throw new SemanticException(String.format(">> ERROR [%d:%d] non existing father class %s",2,2,extendName));
+				System.out.printf("ERROR at line %d, non existing father class %s\n", line, extendName);
+				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 			
 		}

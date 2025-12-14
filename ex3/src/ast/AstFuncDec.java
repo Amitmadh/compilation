@@ -77,13 +77,15 @@ public class AstFuncDec extends AstDec
 		returnType = SymbolTable.getInstance().find(type.name);
 		if (returnType == null)
 		{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] non existing return type %s",6,6,type.name));
+			System.out.printf("ERROR at line %d, non existing return type %s\n", line, type.name);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		/*******************/
 		/* Check Duplicates & Enter Function (Recursive support) */
 		/*******************/
 		if (SymbolTable.getInstance().findInCurrentScope(fieldName) != null) {
-			throw new SemanticException(String.format(">> ERROR [%d:%d] function %s already exists", 6, 6, fieldName));
+			System.out.printf("ERROR at line %d, function %s already exists\n", line, fieldName);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		TypeFunction funcType = new TypeFunction(returnType, fieldName, null);
 		SymbolTable.getInstance().enter(fieldName, funcType);

@@ -109,7 +109,8 @@ public class AstVarDec extends AstNode
 
 			if (initType instanceof TypeNil) { 
 				if (!t.isClass() && !t.isArray()) {
-					throw new SemanticException(String.format(">> ERROR [%d:%d] cannot assign nil to primitive type %s", 2, 2, fieldName));
+					System.out.printf("ERROR at line %d, cannot assign nil to primitive type %s\n", line, fieldName);
+					throw new SemanticException(String.format("ERROR(%d)",line));
 				}
 				// If it is class/array, nil is valid, so we can return/continue.
 			} 
@@ -117,32 +118,37 @@ public class AstVarDec extends AstNode
 				// Check Primitives (int, string)
 				if (t.name.equals("int") || t.name.equals("string")) {
 					if (!initType.name.equals(t.name)) {
-						throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s initialization type mismatch. Expected %s, got %s", 2, 2, fieldName, t.name, initType.name));
+						System.out.printf("ERROR at line %d, variable %s initialization type mismatch. Expected %s, got %s\n", line, fieldName, t.name, initType.name);
+						throw new SemanticException(String.format("ERROR(%d)",line));
 					}
 				}
 				
 				// Check Arrays
 				else if (t.isArray()) {
 					if (!initType.isArray()) {
-						throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s type mismatch: expected array", 2, 2, fieldName));
+						System.out.printf("ERROR at line %d, variable %s type mismatch: expected array\n", line, fieldName);
+						throw new SemanticException(String.format("ERROR(%d)",line));
 					}
 					// Check inner element type equality
 					Type tElem = ((TypeArray)t).elemType;
 					Type initElem = ((TypeArray)initType).elemType;
 					
 					if (!tElem.name.equals(initElem.name)) {
-						throw new SemanticException(String.format(">> ERROR [%d:%d] array element type mismatch", 2, 2));
+						System.out.printf("ERROR at line %d, array element type mismatch\n", line);
+						throw new SemanticException(String.format("ERROR(%d)",line));
 					}
 				}
 				
 				// Check Classes
 				else if (t.isClass()) {
 					if (!initType.isClass()) {
-						throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s type mismatch: expected class", 2, 2, fieldName));
+						System.out.printf("ERROR at line %d, variable %s type mismatch: expected class\n", line, fieldName);
+						throw new SemanticException(String.format("ERROR(%d)",line));
 					}
 					// Check Inheritance (Polymorphism)
 					if (!((TypeClass)initType).isSubClassOf((TypeClass)t)) {
-						throw new SemanticException(String.format(">> ERROR [%d:%d] type %s is not a subclass of %s", 2, 2, initType.name, t.name));
+						System.out.printf("ERROR at line %d, type %s is not a subclass of %s\n", line, initType.name, t.name);
+						throw new SemanticException(String.format("ERROR(%d)",line));
 					}
 				}
 			}

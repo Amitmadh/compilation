@@ -61,7 +61,8 @@ public class AstVarSimple extends AstVar
 		/******************************/
 		if (t == null)
 		{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s does not exist in scope",2,2,name));
+			System.out.printf("ERROR at line %d, variable %s does not exist in scope\n", line, name);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		
 		/*************************/

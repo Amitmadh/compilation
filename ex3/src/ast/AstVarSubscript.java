@@ -64,19 +64,22 @@ public class AstVarSubscript extends AstVar
 		Type varType = var.semantMe();
 		if (!(varType.isArray()))
 		{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] subscripted variable is not an array",2,2));
+			System.out.printf("ERROR at line %d, subscripted variable is not an array\n", line);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		
 		/* 2. Check that the subscript is an int */
 		Type subscriptType = subscript.semantMe();
 		if (!(subscriptType.isInt()))
 		{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] array subscript is not an integer",2,2));
+			System.out.printf("ERROR at line %d, array subscript is not an integer\n", line);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		if (subscript instanceof AstExpInt) {
 				int v = ((AstExpInt)subscript).value;
 				if (v < 0) {
-					throw new SemanticException(String.format(">> ERROR: constant subscript must be greater than or equal to zero"));
+					System.out.printf("ERROR at line %d, constant subscript must be greater than or equal to zero\n", line);
+					throw new SemanticException(String.format("ERROR(%d)",line));
 				}
 			}
 		

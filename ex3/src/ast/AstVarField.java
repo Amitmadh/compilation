@@ -63,7 +63,8 @@ public class AstVarField extends AstVar
 		Type varType = var.semantMe();
 		if (!(varType.isClass()))
 		{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] var must have class type",2,2));
+			System.out.printf("ERROR at line %d, var must have class type\n", line);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		
 		/* 2. Find field in class data members (including ancestors)*/
@@ -82,7 +83,8 @@ public class AstVarField extends AstVar
 			currentClass = currentClass.father;
 		}	
     
-		throw new SemanticException(String.format(">> ERROR [%d:%d] field %s does not exist in class %s", 2, 2, fieldName, classType.name));
+		System.out.printf("ERROR at line %d, field %s does not exist in class %s\n", line, fieldName, classType.name);
+		throw new SemanticException(String.format("ERROR(%d)",line));
     
     	//return null;
 	}

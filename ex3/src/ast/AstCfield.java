@@ -67,7 +67,8 @@ public class AstCfield extends AstNode
 			varDec.semantMe();
 			t = SymbolTable.getInstance().find(varDec.type.name);
 			if (t == null) {
-				throw new SemanticException(String.format(">> ERROR [%d:%d] Type %s not found", 2, 2, varDec.type.name));
+				System.out.printf("ERROR at line %d, Type %s not found\n", line, varDec.type.name);
+				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 			varClassDec = new TypeClassVarDec(varDec.fieldName, t);
 		}	
@@ -75,7 +76,8 @@ public class AstCfield extends AstNode
 			funDec.semantMe();
 			t = SymbolTable.getInstance().find(funDec.fieldName);
 			if (t == null) {
-				throw new SemanticException(String.format(">> ERROR [%d:%d] Type %s not found", 2, 2, funDec.fieldName));
+				System.out.printf("ERROR at line %d, Type %s not found\n", line, funDec.fieldName);
+				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 			varClassDec = new TypeClassVarDec(funDec.fieldName, t);
 			

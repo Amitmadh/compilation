@@ -75,13 +75,15 @@ public class AstStmtReturn extends AstStmt
 		/* If func has return type void, its return stmt must be empty */
 		if (expectedType instanceof TypeVoid || "void".equals(expectedType.name)) {
 			if (exp != null) {
-				throw new SemanticException(String.format(">> ERROR [%d:%d] void function cannot return a value", 2, 2));
+				System.out.printf("ERROR at line %d, void function cannot return a value\n", line);
+				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 			return null; 
 		}
 
 		if (exp == null) {
-			throw new SemanticException(String.format(">> ERROR [%d:%d] non-void function must return a value", 2, 2));
+			System.out.printf("ERROR at line %d, non-void function must return a value\n", line);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 
 		/* check return type is compatible with func return type */
@@ -89,7 +91,8 @@ public class AstStmtReturn extends AstStmt
 		/* Handle nil case */
 		if (actualType instanceof TypeNil || "nil".equals(actualType.name)) {
 			if (!expectedType.isClass() && !expectedType.isArray()) {
-				throw new SemanticException(String.format(">> ERROR [%d:%d] cannot return nil from function returning primitive type %s", 2, 2, expectedType.name));
+				System.out.printf("ERROR at line %d, cannot return nil from function returning primitive type %s\n", line, expectedType.name);
+				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 			return null; 
 		}
@@ -105,13 +108,15 @@ public class AstStmtReturn extends AstStmt
 			TypeClass actualClass = (TypeClass) actualType;
             
 			if (!actualClass.isSubClassOf(expectedClass)) {
-				throw new SemanticException(String.format(">> ERROR [%d:%d] return type %s is not a subclass of expected type %s", 2, 2, actualType.name, expectedType.name));
+				System.out.printf("ERROR at line %d, return type %s is not a subclass of expected type %s\n", line, actualType.name, expectedType.name);
+				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 			return null; 
 		}
 
 		/* If we got here, types are incompatible */
-		throw new SemanticException(String.format(">> ERROR [%d:%d] return type mismatch. Expected %s, got %s", 2, 2, expectedType.name, actualType.name));
+		System.out.printf("ERROR at line %d, return type mismatch. Expected %s, got %s\n", line, expectedType.name, actualType.name);
+		throw new SemanticException(String.format("ERROR(%d)",line));
 	}
 	
 }

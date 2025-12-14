@@ -68,7 +68,8 @@ public class AstNewExp extends AstExp
 		/* [1] Make sure variable is not of type void */
 		/****************************/
 		if ("void".equals(type.name)){
-			throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s cannot be of type void",2,2,type.name));
+			System.out.printf("ERROR at line %d, variable %s cannot be of type void\n", line, type.name);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		/****************************/
 		/* [2] Check If Type exists */
@@ -76,40 +77,43 @@ public class AstNewExp extends AstExp
 		t = SymbolTable.getInstance().find(type.name);
 		if (t == null)
 		{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] non existing type %s",2,2,type));
+			System.out.printf("ERROR at line %d, non existing type %s\n", line, type.name);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		
 		if (t.isArray()){
 			TypeArray array_type = (TypeArray) t;
 			if (exp == null){
-				throw new SemanticException(String.format(">> ERROR [%d:%d] must provide array size expression",2,2));
+				System.out.printf("ERROR at line %d, must provide array size expression\n", line);
+				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 			/****************************/
 			/* [3] Semant the exp */
 			/****************************/
 			Type expType = exp.semantMe();
 			if (!expType.isInt()){
-				throw new SemanticException(String.format(">> ERROR [%d:%d] array size expression must be of type int",2,2));
+				System.out.printf("ERROR at line %d, array size expression must be of type int\n", line);
+				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 			if (exp instanceof AstExpInt) {
 				int v = ((AstExpInt)exp).value;
 				if (v <= 0) {
-					throw new SemanticException(String.format(">> ERROR: array size must be positive constant"));
+					System.out.printf("ERROR at line %d, array size must be positive constant\n", line);
+					throw new SemanticException(String.format("ERROR(%d)",line));
 				}
 			}
 			return array_type;
 		} 
 		else  if (t.isClass()){
 			if (exp != null){
-				throw new SemanticException(String.format(">> ERROR [%d:%d] only array types can have size expression",2,2));
+				System.out.printf("ERROR at line %d, only array types can have size expression\n", line);
+				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 			return t;
 		}
 		else{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] only class or array types can be instantiated",2,2));
-			// System.out.format(">> ERROR [%d:%d] only class or array types can be instantiated\n",2,2);
-			// System.exit(0);
-			// return null;
+			System.out.printf("ERROR at line %d, only class or array types can be instantiated\n", line);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		
 	}

@@ -66,7 +66,8 @@ public class AstStmtWhile extends AstStmt
 		Type condType = cond.semantMe();
 		if (!condType.isInt())
 		{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] While condition is not boolean",0,0));
+			System.out.printf("ERROR at line %d, While condition is not boolean\n", line);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		/*	[2] Begin scope */
 		SymbolTable.getInstance().beginScope();

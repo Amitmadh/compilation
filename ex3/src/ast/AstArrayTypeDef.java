@@ -54,13 +54,15 @@ public class AstArrayTypeDef extends AstDec
 	{
 		Type t;
 		if (!SymbolTable.getInstance().isGlobalScope()) {
-			throw new SemanticException(String.format(">> ERROR [%d:%d] array type definitions are allowed only in the global scope",2,2));
+			System.out.printf("ERROR at line %d, array type definitions are allowed only in the global scope\n", line);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		/****************************/
 		/* [1] Make sure the type of elements is not void */
 		/****************************/
 		if ("void".equals(elemType.name)){
-			throw new SemanticException(String.format(">> ERROR [%d:%d] elements %s cannot be of type void",2,2,fieldname));
+			System.out.printf("ERROR at line %d, elements %s cannot be of type void\n", line, fieldname);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		/****************************/
 		/* [2] Check If Type of elements exists */
@@ -68,7 +70,8 @@ public class AstArrayTypeDef extends AstDec
 		t = SymbolTable.getInstance().find(elemType.name);
 		if (t == null)
 		{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] non existing type %s",2,2,elemType.name));
+			System.out.printf("ERROR at line %d, non existing type %s\n", line, elemType.name);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		
 		/**************************************/
@@ -76,7 +79,8 @@ public class AstArrayTypeDef extends AstDec
 		/**************************************/
 		if (SymbolTable.getInstance().find(fieldname) != null)
 		{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] array %s already exists in scope",2,2,fieldname));    
+			System.out.printf("ERROR at line %d, array %s already exists in scope\n", line, fieldname);
+			throw new SemanticException(String.format("ERROR(%d)",line)); 
 		}
 		
 		/************************************************/
