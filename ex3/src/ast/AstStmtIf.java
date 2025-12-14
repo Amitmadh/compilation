@@ -10,11 +10,12 @@ public class AstStmtIf extends AstStmt
 	/*******************/
 	/*  CONSTRUCTOR(S) */
 	/*******************/
-	public AstStmtIf(AstExp cond, AstStmtList body, AstStmtList elseBody)
+	public AstStmtIf(AstExp cond, AstStmtList body, AstStmtList elseBody, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

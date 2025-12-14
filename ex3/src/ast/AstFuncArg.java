@@ -10,11 +10,12 @@ public class AstFuncArg extends AstNode
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstFuncArg(AstType type, String fieldName)
+	public AstFuncArg(AstType type, String fieldName, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

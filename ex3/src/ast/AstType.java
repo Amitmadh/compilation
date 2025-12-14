@@ -8,11 +8,12 @@ public class AstType extends AstNode {
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstType(int type, String name)
+	public AstType(int type, String name, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

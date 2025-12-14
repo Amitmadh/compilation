@@ -7,11 +7,12 @@ public class AstStmtVarDec extends AstStmt
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstStmtVarDec(AstVarDec varDec)
+	public AstStmtVarDec(AstVarDec varDec, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

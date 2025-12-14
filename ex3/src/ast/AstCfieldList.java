@@ -12,11 +12,12 @@ public class AstCfieldList extends AstNode
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstCfieldList(AstCfield head, AstCfieldList tail)
+	public AstCfieldList(AstCfield head, AstCfieldList tail, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

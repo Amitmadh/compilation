@@ -8,11 +8,12 @@ public class AstVarSubscript extends AstVar
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstVarSubscript(AstVar var, AstExp subscript)
+	public AstVarSubscript(AstVar var, AstExp subscript, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

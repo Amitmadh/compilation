@@ -11,11 +11,12 @@ public class AstStmtList extends AstNode
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstStmtList(AstStmt head, AstStmtList tail)
+	public AstStmtList(AstStmt head, AstStmtList tail, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

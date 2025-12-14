@@ -10,11 +10,12 @@ public class AstCallExp extends AstNode
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstCallExp(AstVar var, String fieldName, AstExpList expList)
+	public AstCallExp(AstVar var, String fieldName, AstExpList expList, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

@@ -11,11 +11,12 @@ public class AstFuncArgList extends AstNode
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstFuncArgList(AstFuncArg head, AstFuncArgList tail)
+	public AstFuncArgList(AstFuncArg head, AstFuncArgList tail, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

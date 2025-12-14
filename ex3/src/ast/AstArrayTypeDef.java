@@ -11,11 +11,12 @@ public class AstArrayTypeDef extends AstDec
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstArrayTypeDef(String fieldname, AstType elemType)
+	public AstArrayTypeDef(String fieldname, AstType elemType, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

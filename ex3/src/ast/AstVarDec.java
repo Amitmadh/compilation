@@ -12,11 +12,12 @@ public class AstVarDec extends AstNode
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstVarDec(AstType type, String fieldName, AstExp exp, AstNewExp nexp)
+	public AstVarDec(AstType type, String fieldName, AstExp exp, AstNewExp nexp, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

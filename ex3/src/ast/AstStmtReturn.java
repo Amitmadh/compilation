@@ -10,11 +10,12 @@ public class AstStmtReturn extends AstStmt
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstStmtReturn(AstExp exp)
+	public AstStmtReturn(AstExp exp, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

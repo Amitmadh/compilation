@@ -7,11 +7,12 @@ public class AstStmtCallExp extends AstStmt
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstStmtCallExp(AstCallExp callExp)
+	public AstStmtCallExp(AstCallExp callExp, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

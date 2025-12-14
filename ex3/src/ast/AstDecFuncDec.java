@@ -7,11 +7,12 @@ public class AstDecFuncDec extends AstDec
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstDecFuncDec(AstFuncDec funcDec)
+	public AstDecFuncDec(AstFuncDec funcDec, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

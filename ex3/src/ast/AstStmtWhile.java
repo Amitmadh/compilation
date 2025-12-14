@@ -9,11 +9,12 @@ public class AstStmtWhile extends AstStmt
 	/*******************/
 	/*  CONSTRUCTOR(S) */
 	/*******************/
-	public AstStmtWhile(AstExp cond, AstStmtList body)
+	public AstStmtWhile(AstExp cond, AstStmtList body, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

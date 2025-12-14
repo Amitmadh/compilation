@@ -12,11 +12,12 @@ public class AstClassDec extends AstDec
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstClassDec(String className, String extendName, AstCfieldList cfieldList)
+	public AstClassDec(String className, String extendName, AstCfieldList cfieldList, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

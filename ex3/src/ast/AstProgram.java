@@ -11,11 +11,12 @@ public class AstProgram extends AstNode
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstProgram(AstDec head, AstProgram tail)
+	public AstProgram(AstDec head, AstProgram tail, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

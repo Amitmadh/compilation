@@ -11,11 +11,12 @@ public class AstNewExp extends AstExp
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstNewExp(AstType type, AstExp exp)
+	public AstNewExp(AstType type, AstExp exp, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/

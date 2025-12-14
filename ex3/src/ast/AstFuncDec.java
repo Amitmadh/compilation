@@ -13,11 +13,12 @@ public class AstFuncDec extends AstDec
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstFuncDec(AstType type, String fieldName, AstFuncArgList argList, AstStmtList stmtList)
+	public AstFuncDec(AstType type, String fieldName, AstFuncArgList argList, AstStmtList stmtList, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/
