@@ -78,6 +78,41 @@ public class SymbolTable
 		printMe();
 	}
 
+	/**
+	 * Begin a new scope and pre-populate it with the members of the given
+	 * parent class. This is used to implement inheritance: entries of the
+	 * parent class (fields and methods) are entered into the new scope so
+	 * they are visible to the child class unless shadowed by child members.
+	 */
+	public void beginScopeFrom(types.TypeClass parent)
+	{
+		/* Start a new scope boundary */
+		beginScope();
+
+		if (parent == null) return;
+
+		/*
+		 * Walk the ancestor chain from the root-most ancestor down to the
+		 * immediate parent, inserting their members in that order. This
+		 * guarantees that nearer ancestors (the immediate parent) will shadow
+		 * members from more distant ancestors when names clash.
+		 */
+		java.util.List<types.TypeClass> chain = new java.util.ArrayList<>();
+		types.TypeClass cur = parent;
+		while (cur != null) {
+			chain.add(0, cur); /* insert at front to reverse order */
+			cur = cur.father;
+		}
+
+		for (types.TypeClass anc : chain) {
+			types.TypeClassVarDecList members = anc.dataMembers;
+			while (members != null) {
+				enter(members.head.name, members.head.type);
+				members = members.tail;
+			}
+		}
+	}
+
 	/***********************************************/
 	/* Find the inner-most scope element with name */
 	/***********************************************/

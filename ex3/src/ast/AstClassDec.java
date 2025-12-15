@@ -100,7 +100,12 @@ public class AstClassDec extends AstDec
 		/*************************/
 		/* [5] Begin Class Scope */
 		/*************************/
-		SymbolTable.getInstance().beginScope();
+		if (fatherType != null) {
+			/* Start scope pre-populated with parent's members (inheritance) */
+			SymbolTable.getInstance().beginScopeFrom((TypeClass)fatherType);
+		} else {
+			SymbolTable.getInstance().beginScope();
+		}
 
 		/*******************************/
 		/* [6] Semant Class Fields */		

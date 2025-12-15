@@ -31,9 +31,10 @@ public class TypeClass extends Type
 	public boolean isClass(){ return true;}	
 
 	public boolean isSubClassOf(TypeClass other) {
+		if (other == null) return false;
 		TypeClass curr = this;
 		while (curr != null) {
-			if (curr.name.equals(other.name)) {
+			if (curr.name != null && curr.name.equals(other.name)) {
 				return true;
 			}
 			curr = curr.father;

@@ -6,3 +6,4 @@ ex3/bin
 ex3/src/Parser.java
 ex3/src/TokenNames.java
 ex3/src/Lexer.java
+ex3/src/input/Input.txt
