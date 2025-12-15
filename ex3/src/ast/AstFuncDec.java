@@ -84,8 +84,32 @@ public class AstFuncDec extends AstDec
 		/* Check Duplicates & Enter Function (Recursive support) */
 		/*******************/
 		if (SymbolTable.getInstance().findInCurrentScope(fieldName) != null) {
-			System.out.printf("ERROR at line %d, function %s already exists\n", line, fieldName);
-			throw new SemanticException(String.format("ERROR(%d)",line));
+			// allow this only if the functions have the same signature
+			Type existing = SymbolTable.getInstance().find(fieldName);
+			if (existing != null && existing.isFunction()) {
+				TypeFunction existingFunc = (TypeFunction) existing;
+				if (existingFunc.returnType.name.equals(returnType.name)) {
+					// Check if the function signatures match
+					TypeList a = existingFunc.params;
+					AstFuncArgList astArgs = argList;
+					TypeList aa = a;
+					AstFuncArgList bb = astArgs;
+					while (aa != null && bb != null) { aa = aa.tail; bb = bb.tail; }
+					if (!((aa == null) && (bb == null))) {
+						System.out.printf("ERROR at line %d, function %s already exists with different signature\n", line, fieldName);
+						throw new SemanticException(String.format("ERROR(%d)", line));
+					}
+				}else{
+					// function signatures do not match
+					System.out.printf("ERROR at line %d, function %s already exists with different signature\n", line, fieldName);
+					throw new SemanticException(String.format("ERROR(%d)",line));
+				}
+			}
+			else{
+				// existing symbol is not a function -> shadowing illegal
+				System.out.printf("ERROR at line %d, field %s already exists\n", line, fieldName);
+				throw new SemanticException(String.format("ERROR(%d)",line));
+			}
 		}
 		/* Check for shadowing/overriding: if a symbol with the same name exists in an
 		 * ancestor scope, disallow shadowing. If it's a function, allow overriding
