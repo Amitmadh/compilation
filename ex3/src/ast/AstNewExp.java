@@ -81,12 +81,13 @@ public class AstNewExp extends AstExp
 			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		
-		if (t.isArray()){
-			TypeArray array_type = (TypeArray) t;
-			if (exp == null){
-				System.out.printf("ERROR at line %d, must provide array size expression\n", line);
-				throw new SemanticException(String.format("ERROR(%d)",line));
-			}
+		if (exp != null){
+			// that means we expect an array type
+			TypeArray array_type = new TypeArray (null, t);
+			// if (exp == null){
+			// 	System.out.printf("ERROR at line %d, must provide array size expression\n", line);
+			// 	throw new SemanticException(String.format("ERROR(%d)",line));
+			// }
 			/****************************/
 			/* [3] Semant the exp */
 			/****************************/

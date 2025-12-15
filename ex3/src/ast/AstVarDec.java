@@ -73,7 +73,8 @@ public class AstVarDec extends AstNode
 		/* [1] Make sure variable is not of type void */
 		/****************************/
 		if ("void".equals(type.name)){
-			throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s cannot be of type void",2,2,fieldName));
+			System.out.printf("ERROR at line %d, variable %s cannot be of type void\n", line, fieldName);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		/****************************/
 		/* [2] Check If Type exists */
@@ -81,7 +82,8 @@ public class AstVarDec extends AstNode
 		t = SymbolTable.getInstance().find(type.name);
 		if (t == null)
 		{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] non existing type %s",2,2,type));
+			System.out.printf("ERROR at line %d, non existing type %s\n", line, type);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		
 		/**************************************/
@@ -89,7 +91,8 @@ public class AstVarDec extends AstNode
 		/**************************************/
 		if (SymbolTable.getInstance().findInCurrentScope(fieldName) != null)
 		{
-			throw new SemanticException(String.format(">> ERROR [%d:%d] variable %s already exists in scope",2,2,fieldName));
+			System.out.printf("ERROR at line %d, variable %s already exists in scope\n", line, fieldName);
+			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		/**************************************/
 		/* [4] Check that Initialization expression type matches variable type */
