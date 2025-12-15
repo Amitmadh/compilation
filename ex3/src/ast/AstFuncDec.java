@@ -116,7 +116,7 @@ public class AstFuncDec extends AstDec
 		 * only when the signature (return type and parameter list) matches exactly.
 		 */
 		Type existing = SymbolTable.getInstance().find(fieldName);
-		if (existing != null && SymbolTable.getInstance().findInCurrentScope(fieldName) == null) {
+		if (existing != null && SymbolTable.getInstance().findInCurrentScope(fieldName) != null) {
 			if (existing.isFunction()) {
 				TypeFunction existingFunc = (TypeFunction) existing;
 				/* compare return type names */
@@ -130,12 +130,13 @@ public class AstFuncDec extends AstDec
 				/* count and compare types */
 				TypeList aa = a;
 				AstFuncArgList bb = astArgs;
+				// count arguments
 				while (aa != null && bb != null) { aa = aa.tail; bb = bb.tail; }
 				if (!((aa == null) && (bb == null))) {
 					System.out.printf("ERROR at line %d, function %s already exists with different signature\n", line, fieldName);
 					throw new SemanticException(String.format("ERROR(%d)", line));
 				}
-				/* exact type equality check */
+				// exact type equality check
 				aa = a; bb = astArgs;
 				while (aa != null && bb != null) {
 					if (!java.util.Objects.equals(aa.head.name, bb.head.type.name)) {
