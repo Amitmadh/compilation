@@ -84,7 +84,12 @@ public class AstFuncDec extends AstDec
 		/* Check Duplicates & Enter Function (Recursive support) */
 		/*******************/
 		if (SymbolTable.getInstance().findInCurrentScope(fieldName) != null) {
-			// allow this only if the functions have the same signature
+			// special case: do not allow redefining in global scope
+			if (SymbolTable.getInstance().isGlobalScope()) {
+				System.out.printf("ERROR at line %d, name already exists in global scope\n", line, fieldName);
+				throw new SemanticException(String.format("ERROR(%d)",line));
+			}
+			// allow redefining only if the functions have the same signature
 			Type existing = SymbolTable.getInstance().find(fieldName);
 			if (existing != null && existing.isFunction()) {
 				TypeFunction existingFunc = (TypeFunction) existing;
