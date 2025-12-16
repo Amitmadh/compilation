@@ -99,10 +99,18 @@ public class AstStmtAssign extends AstStmt
 						System.out.printf("ERROR at line %d, type mismatch: cannot assign non-array to array\n", line);
 						throw new SemanticException(String.format("ERROR(%d)",line));
 					}
+					if(initType.name != null) {
+						// this array has a type, check it against expected
+						if( !t.name.equals(initType.name)) {
+							System.out.printf("ERROR at line %d, array type mismatch in assignment. Expected %s, got %s\n", line, t.name, initType.name);
+							throw new SemanticException(String.format("ERROR(%d)",line));
+						}
+					}
+					// else array has no type e.g created via new T[e]
 					/* Check inner element type equality */
 					Type tElem = ((TypeArray)t).elemType;
 					Type initElem = ((TypeArray)initType).elemType;
-					
+					System.out.println("ARRAYS TYPES: " + t.name + " , " + initType.name);
 					if (!tElem.name.equals(initElem.name)) {
 						System.out.printf("ERROR at line %d, array element type mismatch\n", line);
 						throw new SemanticException(String.format("ERROR(%d)",line));
