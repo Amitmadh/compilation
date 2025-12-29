@@ -1,5 +1,7 @@
 package ast;
 
+import temp.Temp;
+
 public abstract class AstNode
 {
 	/*******************************************/
@@ -20,5 +22,13 @@ public abstract class AstNode
 	public void printMe()
 	{
 		System.out.print("AST NODE UNKNOWN\n");
+	}
+
+	/*****************************************/
+	/* The default IR action for an AST node */
+	/*****************************************/
+	public Temp irMe()
+	{
+		return null;
 	}
 }

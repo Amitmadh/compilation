@@ -1,4 +1,8 @@
 package ast;
+import ir.IRcommandConstInt;
+import ir.Ir;
+import temp.Temp;
+import temp.TempFactory;
 import types.*;
 public class AstExpInt extends AstExp
 {
@@ -46,5 +50,12 @@ public class AstExpInt extends AstExp
 	public Type semantMe() throws SemanticException
 	{
 		return TypeInt.getInstance();
+	}
+
+	public Temp irMe()
+	{
+		Temp t = TempFactory.getInstance().getFreshTemp();
+		Ir.getInstance().AddIrCommand(new IRcommandConstInt(t,value));
+		return t;
 	}
 }

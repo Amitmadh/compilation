@@ -1,5 +1,9 @@
 package ast;
+import ir.Ir;
+import ir.IrCommandLoad;
 import symboltable.*;
+import temp.Temp;
+import temp.TempFactory;
 import types.*;
 
 public class AstVarSimple extends AstVar
@@ -68,6 +72,13 @@ public class AstVarSimple extends AstVar
 		/*************************/
 		/* [3] Return variable type */
 		/*************************/
+		return t;
+	}
+
+	public Temp irMe()
+	{
+		Temp t = TempFactory.getInstance().getFreshTemp();
+		Ir.getInstance().AddIrCommand(new IrCommandLoad(t,name));
 		return t;
 	}
 }

@@ -1,4 +1,5 @@
 package ast;
+import temp.Temp;
 import types.*;
 public class AstStmtList extends AstNode
 {
@@ -76,6 +77,14 @@ public class AstStmtList extends AstNode
 		/* [2] Semant tail stmtList */
 		/*******************************/
 		if (tail != null) tail.semantMe();
+
+		return null;
+	}
+
+	public Temp irMe()
+	{
+		if (head != null) head.irMe();
+		if (tail != null) tail.irMe();
 
 		return null;
 	}

@@ -1,6 +1,9 @@
 package ast;
 
+import ir.Ir;
+import ir.IrCommandLabel;
 import symboltable.SymbolTable;
+import temp.Temp;
 import types.*;
 
 public class AstFuncDec extends AstDec
@@ -194,5 +197,12 @@ public class AstFuncDec extends AstDec
 		/* Return value is irrelevant for function declarations */
 		/************************************************************/
 			
+	}
+	public Temp irMe()
+	{
+		Ir.getInstance().AddIrCommand(new IrCommandLabel("main"));
+		if (body != null) body.irMe();
+
+		return null;
 	}
 }

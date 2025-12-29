@@ -1,6 +1,10 @@
 package ast;
 import types.*;
+import ir.Ir;
+import ir.IrCommandAllocate;
+import ir.IrCommandStore;
 import symboltable.*;
+import temp.Temp;
 
 public class AstVarDec extends AstNode
 {
@@ -163,4 +167,22 @@ public class AstVarDec extends AstNode
 
 		return null;	
 	}	
+
+	public Temp irMe()
+	{
+		Ir.getInstance().AddIrCommand(new IrCommandAllocate(fieldName));
+		AstExp initialValue = null;
+		if (exp != null) {
+			initialValue = exp;
+		}
+		else if (nexp != null) {
+			initialValue = nexp;
+		}
+
+		if (initialValue != null)
+		{
+			Ir.getInstance().AddIrCommand(new IrCommandStore(fieldName,initialValue.irMe()));
+		}
+		return null;
+	}
 }

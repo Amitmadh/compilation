@@ -1,6 +1,9 @@
 package ast;
 import types.*;
+import ir.Ir;
+import ir.IrCommandPrintInt;
 import symboltable.*;
+import temp.Temp;
 public class AstCallExp extends AstNode
 {
 	AstVar var;
@@ -171,5 +174,16 @@ public class AstCallExp extends AstNode
 			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		return funcTypeFunction.returnType;
+	}
+
+	public Temp irMe()
+	{
+		Temp t = null;
+
+		if (params != null) { t = params.head.irMe(); }
+
+		Ir.getInstance().AddIrCommand(new IrCommandPrintInt(t));
+
+		return null;
 	}
 }

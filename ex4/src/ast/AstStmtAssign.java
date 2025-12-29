@@ -135,4 +135,12 @@ public class AstStmtAssign extends AstStmt
 
 		return null;	
 	}	
+
+	public Temp irMe()
+	{
+		Temp varAddr = var.irMe();
+		Temp expVal = exp.irMe();
+		Ir.getInstance().AddIrCommand(new IrCommandStoreAtAddress(varAddr, expVal));
+		return null;
+	}
 }
