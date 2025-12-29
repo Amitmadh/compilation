@@ -1,17 +1,18 @@
 package ast;
 import types.*;
-public class AstStmtList extends AstNode
+
+public class AstCfieldList extends AstNode
 {
 	/****************/
 	/* DATA MEMBERS */
 	/****************/
-	public AstStmt head;
-	public AstStmtList tail;
+	public AstCfield head;
+	public AstCfieldList tail;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstStmtList(AstStmt head, AstStmtList tail, int line)
+	public AstCfieldList(AstCfield head, AstCfieldList tail, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -22,8 +23,8 @@ public class AstStmtList extends AstNode
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		// if (tail != null) System.out.print("====================== stmts -> stmt stmts\n");
-		// if (tail == null) System.out.print("====================== stmts -> stmt      \n");
+		// if (tail != null) System.out.print("====================== cFields -> cField cFields\n");
+		// if (tail == null) System.out.print("====================== cFields -> cField        \n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -40,7 +41,7 @@ public class AstStmtList extends AstNode
 		/**************************************/
 		/* AST NODE TYPE = AST STATEMENT LIST */
 		/**************************************/
-		// System.out.print("AST NODE STMT LIST\n");
+		// System.out.print("AST NODE CFIELD LIST\n");
 
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
@@ -53,7 +54,7 @@ public class AstStmtList extends AstNode
 		/**********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			"STMT\nLIST\n");
+			"CFIELD\nLIST\n");
 		
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
@@ -61,22 +62,29 @@ public class AstStmtList extends AstNode
 		if (head != null) AstGraphviz.getInstance().logEdge(serialNumber,head.serialNumber);
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
 	}
-	public TypeList semantMe() throws SemanticException
+
+	public TypeClassVarDecList semantMe() throws SemanticException
 	{
+		TypeClassVarDec headType = null;
+		TypeClassVarDecList tailTypes = null;
 		if (head == null) {
         	return null;
     	}
 
 		/*******************************/
-		/* [1] Semant head stmt ...  */
+		/* [1] Semant head cfield ...  */
 		/*******************************/
-		head.semantMe();
+		if (head != null) headType = head.semantMe();
 
 		/*******************************/
-		/* [2] Semant tail stmtList */
+		/* [2] Semant tail cfieldList */
 		/*******************************/
-		if (tail != null) tail.semantMe();
+		if (tail != null) tailTypes = tail.semantMe();
 
-		return null;
+		/*******************************/
+		/* [3] Return the type list ... */
+		/*******************************/
+		return new TypeClassVarDecList(headType, tailTypes);
 	}
+	
 }

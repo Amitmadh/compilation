@@ -1,7 +1,5 @@
 package ast;
 
-import temp.*;
-
 public abstract class AstNode
 {
 	/*******************************************/
@@ -10,20 +8,17 @@ public abstract class AstNode
 	/* a graphviz dot format of the AST ...    */
 	/*******************************************/
 	public int serialNumber;
-	
+	public int line;
+
+	protected AstNode(int line) {
+        this.line = line + 1;
+    }
+
 	/***********************************************/
 	/* The default message for an unknown AST node */
 	/***********************************************/
 	public void printMe()
 	{
 		System.out.print("AST NODE UNKNOWN\n");
-	}
-
-	/*****************************************/
-	/* The default IR action for an AST node */
-	/*****************************************/
-	public Temp irMe()
-	{
-		return null;
 	}
 }

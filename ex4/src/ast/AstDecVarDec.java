@@ -1,13 +1,12 @@
 package ast;
-import types.*;
-public class AstExpString extends AstExp
+public class AstDecVarDec extends AstDec
 {
-	public String value;
+	public AstVarDec varDeck;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpString(String value, int line)
+	public AstDecVarDec(AstVarDec varDeck, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -18,12 +17,12 @@ public class AstExpString extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		// System.out.format("====================== exp -> STRING( %s )\n", value);
+		// System.out.print("====================== dec -> varDec\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
-		this.value = value;
+		this.varDeck = varDeck;
 	}
 
 	/************************************************/
@@ -34,17 +33,27 @@ public class AstExpString extends AstExp
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		// System.out.format("AST NODE STRING( %s )\n",value);
+		// System.out.print("AST NODE DEC\n");
+
+        /**************************************/
+		/* RECURSIVELY PRINT left + right ... */
+		/**************************************/
+		if (varDeck != null) varDeck.printMe();
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("STRING(%s)",value));
+			String.format("DEC"));
+
+        /****************************************/
+		/* PRINT Edges to AST GRAPHVIZ DOT file */
+		/****************************************/
+		if (varDeck  != null) AstGraphviz.getInstance().logEdge(serialNumber,varDeck.serialNumber);
 	}
-	public Type semantMe() throws SemanticException
-	{
-		return TypeString.getInstance();
+	public void semantMe() throws SemanticException {
+		if (varDeck != null) varDeck.semantMe();
 	}
+	
 }

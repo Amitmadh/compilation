@@ -1,6 +1,6 @@
 package ast;
 
-import temp.*;
+import types.*;
 
 public class AstExpList extends AstNode
 {
@@ -13,25 +13,36 @@ public class AstExpList extends AstNode
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpList(AstExp head, AstExpList tail)
+	public AstExpList(AstExp head, AstExpList tail, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
+		/***************************************/
+		/* PRINT CORRESPONDING DERIVATION RULE */
+		/***************************************/
+		// if (tail != null) System.out.print("====================== exps -> exp exps \n");
+		// if (tail == null) System.out.print("====================== exps -> exp      \n");
+
+		/*******************************/
+		/* COPY INPUT DATA MEMBERS ... */
+		/*******************************/
 		this.head = head;
 		this.tail = tail;
 	}
-	/*******************************************************/
-	/* The printing message for a expression list AST node */
-	/*******************************************************/
+
+	/******************************************************/
+	/* The printing message for a statement list AST node */
+	/******************************************************/
 	public void printMe()
 	{
-		/********************************/
-		/* AST NODE TYPE = AST EXP LIST */
-		/********************************/
-		System.out.print("AST NODE EXP LIST\n");
+		/**************************************/
+		/* AST NODE TYPE = AST STATEMENT LIST */
+		/**************************************/
+		// System.out.print("AST NODE EXP LIST\n");
 
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
@@ -52,9 +63,26 @@ public class AstExpList extends AstNode
 		if (head != null) AstGraphviz.getInstance().logEdge(serialNumber,head.serialNumber);
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
 	}
-
-	public Temp irMe()
+	public TypeList semantMe() throws SemanticException
 	{
-		return head.irMe();
+		TypeList tailTypes = null;
+		Type headType = null;
+
+		if (head == null) {
+        	return null;
+    	}
+
+		/*******************************/
+		/* [1] Semant head exp ...  */
+		/*******************************/
+		headType = head.semantMe();
+
+		/*******************************/
+		/* [2] Semant tail expList */
+		/*******************************/
+		if (tail != null) tailTypes = tail.semantMe();
+		
+
+		return new TypeList(headType, tailTypes);
 	}
 }

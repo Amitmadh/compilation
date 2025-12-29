@@ -1,17 +1,17 @@
 package ast;
 import types.*;
-public class AstStmtList extends AstNode
+public class AstFuncArgList extends AstNode
 {
 	/****************/
 	/* DATA MEMBERS */
 	/****************/
-	public AstStmt head;
-	public AstStmtList tail;
+	public AstFuncArg head;
+	public AstFuncArgList tail;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstStmtList(AstStmt head, AstStmtList tail, int line)
+	public AstFuncArgList(AstFuncArg head, AstFuncArgList tail, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -22,8 +22,8 @@ public class AstStmtList extends AstNode
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		// if (tail != null) System.out.print("====================== stmts -> stmt stmts\n");
-		// if (tail == null) System.out.print("====================== stmts -> stmt      \n");
+		// if (tail != null) System.out.print("====================== funcArgs -> funcArg funcArgs	\n");
+		// if (tail == null) System.out.print("====================== funcArgs -> funcArg			\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -40,7 +40,7 @@ public class AstStmtList extends AstNode
 		/**************************************/
 		/* AST NODE TYPE = AST STATEMENT LIST */
 		/**************************************/
-		// System.out.print("AST NODE STMT LIST\n");
+		// System.out.print("AST NODE ARG LIST\n");
 
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
@@ -53,7 +53,7 @@ public class AstStmtList extends AstNode
 		/**********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			"STMT\nLIST\n");
+			"FUNC\nARG\nLIST\n");
 		
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
@@ -63,20 +63,25 @@ public class AstStmtList extends AstNode
 	}
 	public TypeList semantMe() throws SemanticException
 	{
+		TypeList tailTypes = null;
+		Type headType = null;
+
 		if (head == null) {
         	return null;
     	}
 
 		/*******************************/
-		/* [1] Semant head stmt ...  */
+		/* [1] Semant head arg ...  */
 		/*******************************/
-		head.semantMe();
+		headType = head.semantMe();
 
 		/*******************************/
-		/* [2] Semant tail stmtList */
+		/* [2] Semant tail argList */
 		/*******************************/
-		if (tail != null) tail.semantMe();
+		if (tail != null) tailTypes = tail.semantMe();
+		
 
-		return null;
+		return new TypeList(headType, tailTypes);
 	}
+	
 }

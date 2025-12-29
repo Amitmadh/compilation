@@ -1,13 +1,13 @@
 package ast;
-import types.*;
-public class AstExpString extends AstExp
+
+public class AstDecClassDec extends AstDec
 {
-	public String value;
+	public AstClassDec classDec;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpString(String value, int line)
+	public AstDecClassDec(AstClassDec classDec, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -18,12 +18,12 @@ public class AstExpString extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		// System.out.format("====================== exp -> STRING( %s )\n", value);
+		// System.out.print("====================== dec -> classDec\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
-		this.value = value;
+		this.classDec = classDec;
 	}
 
 	/************************************************/
@@ -34,17 +34,27 @@ public class AstExpString extends AstExp
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		// System.out.format("AST NODE STRING( %s )\n",value);
+		// System.out.print("AST NODE DEC\n");
+
+        /**************************************/
+		/* RECURSIVELY PRINT left + right ... */
+		/**************************************/
+		if (classDec != null) classDec.printMe();
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("STRING(%s)",value));
+			String.format("DEC"));
+
+        /****************************************/
+		/* PRINT Edges to AST GRAPHVIZ DOT file */
+		/****************************************/
+		if (classDec  != null) AstGraphviz.getInstance().logEdge(serialNumber,classDec.serialNumber);
 	}
-	public Type semantMe() throws SemanticException
-	{
-		return TypeString.getInstance();
+
+	public void semantMe() throws SemanticException {
+		if (classDec != null) classDec.semantMe();
 	}
 }

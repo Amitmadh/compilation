@@ -1,14 +1,13 @@
 package ast;
 import types.*;
-
-public class AstExpVar extends AstExp
+public class AstStmtCallExp extends AstStmt
 {
-	public AstVar var;
+	public AstCallExp callExp;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpVar(AstVar var, int line)
+	public AstStmtCallExp(AstCallExp callExp, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -19,12 +18,12 @@ public class AstExpVar extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		// System.out.print("====================== exp -> var\n");
+		// System.out.print("====================== stmt -> callExp SEMICOLON\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
-		this.var = var;
+		this.callExp = callExp;
 	}
 	
 	/***********************************************/
@@ -35,29 +34,28 @@ public class AstExpVar extends AstExp
 		/************************************/
 		/* AST NODE TYPE = EXP VAR AST NODE */
 		/************************************/
-		// System.out.print("AST NODE EXP VAR\n");
+		// System.out.print("AST NODE STMT CALLEXP\n");
 
 		/*****************************/
 		/* RECURSIVELY PRINT var ... */
 		/*****************************/
-		if (var != null) var.printMe();
+		if (callExp != null) callExp.printMe();
 		
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			"EXP\nVAR");
+			"STMT\nCALLEXP");
 
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		AstGraphviz.getInstance().logEdge(serialNumber,var.serialNumber);
+		AstGraphviz.getInstance().logEdge(serialNumber,callExp.serialNumber);
 			
 	}
-
 	public Type semantMe() throws SemanticException
 	{
-		return var.semantMe();
-	}	
+		return callExp.semantMe();
+	}
 }

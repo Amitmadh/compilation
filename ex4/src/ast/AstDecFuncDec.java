@@ -1,13 +1,13 @@
 package ast;
-import types.*;
-public class AstExpString extends AstExp
+
+public class AstDecFuncDec extends AstDec
 {
-	public String value;
+	public AstFuncDec funcDec;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpString(String value, int line)
+	public AstDecFuncDec(AstFuncDec funcDec, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -18,12 +18,12 @@ public class AstExpString extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		// System.out.format("====================== exp -> STRING( %s )\n", value);
+		// System.out.print("====================== dec -> funcDec\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
-		this.value = value;
+		this.funcDec = funcDec;
 	}
 
 	/************************************************/
@@ -34,17 +34,27 @@ public class AstExpString extends AstExp
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		// System.out.format("AST NODE STRING( %s )\n",value);
+		// System.out.print("AST NODE DEC\n");
+
+        /**************************************/
+		/* RECURSIVELY PRINT left + right ... */
+		/**************************************/
+		if (funcDec != null) funcDec.printMe();
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("STRING(%s)",value));
+			String.format("DEC"));
+
+        /****************************************/
+		/* PRINT Edges to AST GRAPHVIZ DOT file */
+		/****************************************/
+		if (funcDec  != null) AstGraphviz.getInstance().logEdge(serialNumber,funcDec.serialNumber);
 	}
-	public Type semantMe() throws SemanticException
-	{
-		return TypeString.getInstance();
+
+	public void semantMe() throws SemanticException {
+		if (funcDec != null) funcDec.semantMe();
 	}
 }

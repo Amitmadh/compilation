@@ -1,14 +1,13 @@
 package ast;
 import types.*;
-
-public class AstExpVar extends AstExp
+public class AstStmtVarDec extends AstStmt
 {
-	public AstVar var;
+	public AstVarDec varDec;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpVar(AstVar var, int line)
+	public AstStmtVarDec(AstVarDec varDec, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -19,12 +18,12 @@ public class AstExpVar extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		// System.out.print("====================== exp -> var\n");
+		// System.out.print("====================== stmt -> varDec\n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
-		this.var = var;
+		this.varDec = varDec;
 	}
 	
 	/***********************************************/
@@ -35,29 +34,28 @@ public class AstExpVar extends AstExp
 		/************************************/
 		/* AST NODE TYPE = EXP VAR AST NODE */
 		/************************************/
-		// System.out.print("AST NODE EXP VAR\n");
+		// System.out.print("AST NODE STMT VARDEC\n");
 
 		/*****************************/
 		/* RECURSIVELY PRINT var ... */
 		/*****************************/
-		if (var != null) var.printMe();
+		if (varDec != null) varDec.printMe();
 		
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			"EXP\nVAR");
+			"STMT\nVARDEC");
 
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		AstGraphviz.getInstance().logEdge(serialNumber,var.serialNumber);
+		AstGraphviz.getInstance().logEdge(serialNumber,varDec.serialNumber);
 			
 	}
-
 	public Type semantMe() throws SemanticException
 	{
-		return var.semantMe();
-	}	
+		return varDec.semantMe();
+	}
 }

@@ -1,13 +1,12 @@
 package ast;
 import types.*;
-public class AstExpString extends AstExp
+public class AstExpNill extends AstExp
 {
-	public String value;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpString(String value, int line)
+	public AstExpNill(int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -18,12 +17,7 @@ public class AstExpString extends AstExp
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		// System.out.format("====================== exp -> STRING( %s )\n", value);
-
-		/*******************************/
-		/* COPY INPUT DATA MEMBERS ... */
-		/*******************************/
-		this.value = value;
+		// System.out.format("====================== exp -> NILL\n");
 	}
 
 	/************************************************/
@@ -34,17 +28,17 @@ public class AstExpString extends AstExp
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		// System.out.format("AST NODE STRING( %s )\n",value);
+		// System.out.format("AST NODE NILL\n");
 
 		/*********************************/
 		/* Print to AST GRAPHVIZ DOT file */
 		/*********************************/
 		AstGraphviz.getInstance().logNode(
 				serialNumber,
-			String.format("STRING(%s)",value));
+			String.format("NILL"));
 	}
 	public Type semantMe() throws SemanticException
 	{
-		return TypeString.getInstance();
+		return TypeNil.getInstance();
 	}
 }
