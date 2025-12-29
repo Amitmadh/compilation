@@ -90,4 +90,24 @@ public class AstStmtIf extends AstStmt
 		}
 		return null;
 	}
+
+	public Temp irMe()
+	{
+		Temp condTemp = cond.irMe();
+		Temp labelTrue = TempFactory.getInstance().getFreshTemp();
+		Temp labelFalse = TempFactory.getInstance().getFreshTemp();
+		Temp labelEnd = TempFactory.getInstance().getFreshTemp();
+
+		Ir.getInstance().AddIrCommand(new ir.IrCommandIfZero(condTemp, labelFalse));
+		Ir.getInstance().AddIrCommand(new ir.IrCommandLabel(labelTrue));
+		body.irMe();
+		Ir.getInstance().AddIrCommand(new ir.IrCommandJump(labelEnd));
+		Ir.getInstance().AddIrCommand(new ir.IrCommandLabel(labelFalse));
+		if (elseBody != null) {
+			elseBody.irMe();
+		}
+		Ir.getInstance().AddIrCommand(new ir.IrCommandLabel(labelEnd));
+
+		return null;
+	}
 }

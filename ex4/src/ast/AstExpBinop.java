@@ -4,6 +4,9 @@ import ir.IrCommandBinopAddIntegers;
 import ir.IrCommandBinopEqIntegers;
 import ir.IrCommandBinopLtIntegers;
 import ir.IrCommandBinopMulIntegers;
+import ir.IrCommandBinopDivIntegers;
+import ir.IrCommandBinopSubIntegers;
+import ir.IrCommandBinopGtIntegers;
 import temp.Temp;
 import temp.TempFactory;
 import types.*;
@@ -175,6 +178,12 @@ public class AstExpBinop extends AstExp
 					getInstance().
 					AddIrCommand(new IrCommandBinopAddIntegers(dst,t1,t2));
 		}
+		if (op == 1)
+		{
+			Ir.
+					getInstance().
+					AddIrCommand(new IrCommandBinopSubIntegers(dst,t1,t2));
+		}
 		if (op == 2)
 		{
 			Ir.
@@ -185,13 +194,26 @@ public class AstExpBinop extends AstExp
 		{
 			Ir.
 					getInstance().
-					AddIrCommand(new IrCommandBinopEqIntegers(dst,t1,t2));
+					AddIrCommand(new IrCommandBinopDivIntegers(dst,t1,t2));
 		}
+		
 		if (op == 4)
 		{
 			Ir.
 					getInstance().
 					AddIrCommand(new IrCommandBinopLtIntegers(dst,t1,t2));
+		}
+		if (op == 5)
+		{
+			Ir.
+					getInstance().
+					AddIrCommand(new IrCommandBinopGtIntegers(dst,t1,t2));
+		}
+		if (op == 6)
+		{
+			Ir.
+					getInstance().
+					AddIrCommand(new IrCommandBinopEqIntegers(dst,t1,t2));
 		}
 		return dst;
 	}

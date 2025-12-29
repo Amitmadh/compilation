@@ -180,7 +180,7 @@ public class AstCallExp extends AstNode
 	{
 		Temp t = null;
 
-		if (params != null) { t = params.head.irMe(); }
+		if (expList != null) { t = expList.head.irMe(); }
 
 		Ir.getInstance().AddIrCommand(new IrCommandPrintInt(t));
 

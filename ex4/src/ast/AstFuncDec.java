@@ -201,7 +201,7 @@ public class AstFuncDec extends AstDec
 	public Temp irMe()
 	{
 		Ir.getInstance().AddIrCommand(new IrCommandLabel("main"));
-		if (body != null) body.irMe();
+		if (stmtList != null) stmtList.irMe();
 
 		return null;
 	}
