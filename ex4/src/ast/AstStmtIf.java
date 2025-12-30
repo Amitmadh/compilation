@@ -1,5 +1,9 @@
 package ast;
+import ir.Ir;
+import ir.IrCommand;
 import symboltable.SymbolTable;
+import temp.Temp;
+
 import types.*;
 public class AstStmtIf extends AstStmt
 {
@@ -60,7 +64,7 @@ public class AstStmtIf extends AstStmt
 		/****************************************/
 		if (cond != null) AstGraphviz.getInstance().logEdge(serialNumber,cond.serialNumber);
 		if (body != null) AstGraphviz.getInstance().logEdge(serialNumber,body.serialNumber);
-		if (elseBody != null) AstGraphviz.getInstance().logEdge(serialNumber,body.serialNumber);
+		if (elseBody != null) AstGraphviz.getInstance().logEdge(serialNumber,elseBody.serialNumber);
 	}
 	public Type semantMe() throws SemanticException
 	{
@@ -94,14 +98,12 @@ public class AstStmtIf extends AstStmt
 	public Temp irMe()
 	{
 		Temp condTemp = cond.irMe();
-		Temp labelTrue = TempFactory.getInstance().getFreshTemp();
-		Temp labelFalse = TempFactory.getInstance().getFreshTemp();
-		Temp labelEnd = TempFactory.getInstance().getFreshTemp();
+		String labelFalse = IrCommand.getFreshLabel("false");
+		String labelEnd   = IrCommand.getFreshLabel("end");
 
-		Ir.getInstance().AddIrCommand(new ir.IrCommandIfZero(condTemp, labelFalse));
-		Ir.getInstance().AddIrCommand(new ir.IrCommandLabel(labelTrue));
+		Ir.getInstance().AddIrCommand(new ir.IrCommandJumpIfEqToZero(condTemp, labelFalse));
 		body.irMe();
-		Ir.getInstance().AddIrCommand(new ir.IrCommandJump(labelEnd));
+		Ir.getInstance().AddIrCommand(new ir.IrCommandJumpLabel(labelEnd));
 		Ir.getInstance().AddIrCommand(new ir.IrCommandLabel(labelFalse));
 		if (elseBody != null) {
 			elseBody.irMe();
