@@ -3,6 +3,8 @@
 /***********/
 package ir;
 
+import java.io.PrintWriter;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -18,5 +20,10 @@ public class IrCommandJumpLabel extends IrCommand
 	public IrCommandJumpLabel(String labelName)
 	{
 		this.labelName = labelName;
+	}
+
+	public void printMe(PrintWriter fileWriter)
+	{
+		fileWriter.format("BR %s :\n", labelName);
 	}
 }

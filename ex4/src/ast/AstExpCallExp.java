@@ -1,5 +1,7 @@
 package ast;
 import types.*;
+import temp.Temp;
+
 public class AstExpCallExp extends AstExp
 {
 	public AstCallExp callExp;
@@ -53,8 +55,13 @@ public class AstExpCallExp extends AstExp
 		/****************************************/
 		if (callExp  != null) AstGraphviz.getInstance().logEdge(serialNumber,callExp.serialNumber);
 	}
+
 	public Type semantMe() throws SemanticException
 	{
 		return callExp.semantMe();
+	}
+
+	public Temp irMe() {
+		return callExp.irMe();
 	}
 }

@@ -1,5 +1,6 @@
 package ast;
 import types.*;
+import temp.Temp;
 public class AstFuncArgList extends AstNode
 {
 	/****************/
@@ -83,6 +84,4 @@ public class AstFuncArgList extends AstNode
 
 		return new TypeList(headType, tailTypes);
 	}
-	
-	
 }

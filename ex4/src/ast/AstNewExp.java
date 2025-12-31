@@ -1,7 +1,12 @@
 package ast;
 
 import types.*;
+import ir.Ir;
+import ir.IrCommandNewArray;
+import ir.IrCommandNewObject;
 import symboltable.*;
+import temp.Temp;
+import temp.TempFactory;
 
 public class AstNewExp extends AstExp
 {
@@ -117,6 +122,21 @@ public class AstNewExp extends AstExp
 			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		
+	}
+
+	public Temp irMe()
+	{
+		Temp varName = TempFactory.getInstance().getFreshTemp();
+		if (exp != null){
+			// array allocation
+			Temp exp_temp = exp.irMe();
+			Ir.getInstance().AddIrCommand(new IrCommandNewArray(varName, exp_temp, type.name));
+		} 
+		else {
+			// class allocation
+			Ir.getInstance().AddIrCommand(new IrCommandNewObject(varName, type.name));
+		}
+		return varName;
 	}
 	
 }

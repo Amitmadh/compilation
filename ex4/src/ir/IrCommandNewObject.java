@@ -3,6 +3,7 @@
 /***********/
 package ir;
 
+import temp.Temp;
 import java.io.PrintWriter;
 
 /*******************/
@@ -13,17 +14,18 @@ import java.io.PrintWriter;
 /* PROJECT IMPORTS */
 /*******************/
 
-public class IrCommandLabel extends IrCommand
+public class IrCommandNewObject extends IrCommand
 {
-	String labelName;
+	Temp varName;
+	String type;
 	
-	public IrCommandLabel(String labelName)
-	{
-		this.labelName = labelName;
+	public IrCommandNewObject(Temp varName, String type)
+	{	this.varName = varName;
+		this.type = type;
 	}
 
 	public void printMe(PrintWriter fileWriter)
 	{
-		fileWriter.format("LABEL %s :\n", labelName);
+		fileWriter.format("t%d := NEW OBJECT %s\n", varName.getSerialNumber(), type);
 	}
 }

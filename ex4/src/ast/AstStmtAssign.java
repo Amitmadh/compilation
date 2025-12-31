@@ -1,5 +1,10 @@
 package ast;
 import types.*;
+import ir.Ir;
+import ir.IrCommandStore;
+import ir.IrCommandFieldSet;
+import ir.IrCommandArraySet;
+import temp.Temp;
 
 public class AstStmtAssign extends AstStmt
 {
@@ -61,6 +66,7 @@ public class AstStmtAssign extends AstStmt
 		AstGraphviz.getInstance().logEdge(serialNumber,var.serialNumber);
 		AstGraphviz.getInstance().logEdge(serialNumber,exp.serialNumber);
 	}
+
 	public Type semantMe() throws SemanticException
 	{
 		Type t = var.semantMe();
@@ -138,9 +144,29 @@ public class AstStmtAssign extends AstStmt
 
 	public Temp irMe()
 	{
-		Temp varAddr = var.irMe();
 		Temp expVal = exp.irMe();
-		Ir.getInstance().AddIrCommand(new IrCommandStoreAtAddress(varAddr, expVal));
+
+		// handle simple variable assignment by name
+		if (var instanceof AstVarSimple) {
+			String name = ((AstVarSimple)var).name;
+			Ir.getInstance().AddIrCommand(new IrCommandStore(name, expVal));
+		}
+
+		// field assignment: instance.field := exp
+		if (var instanceof AstVarField) {
+			AstVarField varField = (AstVarField)var;
+			Temp instanceAddr = varField.var.irMe();
+			Ir.getInstance().AddIrCommand(new IrCommandFieldSet(instanceAddr, varField.fieldName, expVal));
+		}
+
+		// array assignment: arr[index] := exp
+		if (var instanceof AstVarSubscript) {
+			AstVarSubscript varSubscript = (AstVarSubscript)var;
+			Temp arrayAddr = varSubscript.var.irMe();
+			Temp index = varSubscript.subscript.irMe();
+			Ir.getInstance().AddIrCommand(new IrCommandArraySet(arrayAddr, index, expVal));
+		}
+
 		return null;
 	}
 }

@@ -1,4 +1,8 @@
 package ast;
+import ir.Ir;
+import ir.IrCommandFieldAccess;
+import temp.Temp;
+import temp.TempFactory;
 import types.*;
 
 public class AstVarField extends AstVar
@@ -87,6 +91,16 @@ public class AstVarField extends AstVar
 		throw new SemanticException(String.format("ERROR(%d)",line));
     
     	//return null;
+	}
+
+	public Temp irMe()
+	{
+		Temp t = TempFactory.getInstance().getFreshTemp();
+		Temp instanceAddr = var.irMe();
+
+		Ir.getInstance().AddIrCommand(new IrCommandFieldAccess(t,instanceAddr, fieldName));
+		
+		return t;
 	}
 		
 		

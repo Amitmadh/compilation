@@ -3,6 +3,8 @@
 /***********/
 package ir;
 
+import java.io.PrintWriter;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -21,5 +23,10 @@ public class IrCommandLoad extends IrCommand
 	{
 		this.dst      = dst;
 		this.varName = varName;
+	}
+
+	public void printMe(PrintWriter fileWriter)
+	{
+		fileWriter.format("t%d = %s\n", dst.getSerialNumber(), varName);
 	}
 }

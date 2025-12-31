@@ -1,9 +1,16 @@
 package ast;
 import types.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import ir.Ir;
-import ir.IrCommandPrintInt;
+import ir.IrCommandCallMethod;
+import ir.IrCommandCallFunc;
 import symboltable.*;
 import temp.Temp;
+import temp.TempFactory;
+
 public class AstCallExp extends AstNode
 {
 	AstVar var;
@@ -178,12 +185,24 @@ public class AstCallExp extends AstNode
 
 	public Temp irMe()
 	{
-		Temp t = null;
+		Temp returnValue = TempFactory.getInstance().getFreshTemp();
 
-		if (expList != null) { t = expList.head.irMe(); }
+		List<Temp> temps = new ArrayList<>();
+		AstExpList curr_arg = expList;
+		while (curr_arg != null)
+		{
+			Temp argTemp = curr_arg.head.irMe();
+			temps.add(argTemp);
+			curr_arg = curr_arg.tail;
+		}
 
-		Ir.getInstance().AddIrCommand(new IrCommandPrintInt(t));
+		if (var != null) {
+			Temp varBase = var.irMe();
+			Ir.getInstance().AddIrCommand(new IrCommandCallMethod(varBase, fieldName, temps));
+		} else {
+			Ir.getInstance().AddIrCommand(new IrCommandCallFunc(fieldName, temps));
+		}
 
-		return null;
+		return returnValue;
 	}
 }

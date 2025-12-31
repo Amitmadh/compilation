@@ -1,4 +1,9 @@
 package ast;
+import ir.Ir;
+import ir.IrCommandArrayAccess;
+import ir.IrCommandLoad;
+import temp.Temp;
+import temp.TempFactory;
 import types.*;
 public class AstVarSubscript extends AstVar
 {
@@ -85,5 +90,16 @@ public class AstVarSubscript extends AstVar
 		
 		/* 3. Return the array element type */
 		return ((TypeArray)varType).elemType;
+	}
+
+	public Temp irMe()
+	{
+		Temp t = TempFactory.getInstance().getFreshTemp();
+		Temp arrayAddr = var.irMe();
+		Temp index = subscript.irMe();
+
+		Ir.getInstance().AddIrCommand(new IrCommandArrayAccess(t,arrayAddr, index));
+		
+		return t;
 	}
 }

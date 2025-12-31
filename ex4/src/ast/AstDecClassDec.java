@@ -1,4 +1,5 @@
 package ast;
+import temp.Temp;
 
 public class AstDecClassDec extends AstDec
 {
@@ -56,5 +57,10 @@ public class AstDecClassDec extends AstDec
 
 	public void semantMe() throws SemanticException {
 		if (classDec != null) classDec.semantMe();
+	}
+
+	public Temp irMe() {
+		if (classDec != null) return classDec.irMe();
+		return null;
 	}
 }

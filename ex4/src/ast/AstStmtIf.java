@@ -1,5 +1,12 @@
 package ast;
+import ir.Ir;
+import ir.IrCommand;
+import ir.IrCommandJumpIfEqToZero;
+import ir.IrCommandLabel;
+import ir.IrCommandJumpLabel;
 import symboltable.SymbolTable;
+import temp.Temp;
+import temp.TempFactory;
 import types.*;
 public class AstStmtIf extends AstStmt
 {
@@ -93,21 +100,95 @@ public class AstStmtIf extends AstStmt
 
 	public Temp irMe()
 	{
-		Temp condTemp = cond.irMe();
-		Temp labelTrue = TempFactory.getInstance().getFreshTemp();
-		Temp labelFalse = TempFactory.getInstance().getFreshTemp();
-		Temp labelEnd = TempFactory.getInstance().getFreshTemp();
-
-		Ir.getInstance().AddIrCommand(new ir.IrCommandIfZero(condTemp, labelFalse));
-		Ir.getInstance().AddIrCommand(new ir.IrCommandLabel(labelTrue));
-		body.irMe();
-		Ir.getInstance().AddIrCommand(new ir.IrCommandJump(labelEnd));
-		Ir.getInstance().AddIrCommand(new ir.IrCommandLabel(labelFalse));
 		if (elseBody != null) {
-			elseBody.irMe();
-		}
-		Ir.getInstance().AddIrCommand(new ir.IrCommandLabel(labelEnd));
+			/*******************************/
+			/* [1] Allocate 3 fresh labels */
+			/*******************************/
+			String labelTrue = IrCommand.getFreshLabel("true");
+			String labelFalse = IrCommand.getFreshLabel("false");
+			String labelEnd = IrCommand.getFreshLabel("end");
+			
+			/********************/
+			/* [2] cond.IRme(); */
+			/********************/
+			Temp condTemp = cond.irMe();
 
+			/**********************************/
+			/* [3] Jump conditionally to false label */
+			/**********************************/
+			Ir.
+				getInstance().
+				AddIrCommand(new IrCommandJumpIfEqToZero(condTemp, labelFalse));
+			
+			/**********************************/
+			/* [4] if true label */
+			/**********************************/
+			Ir.
+				getInstance().
+				AddIrCommand(new IrCommandLabel(labelTrue));
+			
+			/*******************/
+			/* [5] if body.IRme() */
+			/*******************/
+			body.irMe();
+
+			/*******************/
+			/* [5] jump to end label */
+			/*******************/
+			Ir.
+				getInstance().
+				AddIrCommand(new IrCommandJumpLabel(labelEnd));
+
+			/*******************/
+			/* [5] if false label */
+			/*******************/
+			Ir.
+				getInstance().
+				AddIrCommand(new IrCommandLabel(labelFalse));
+			
+			/*******************/
+			/* [5] else body.IRme() */
+			/*******************/
+			elseBody.irMe();
+
+			/**********************************/
+			/* [4] if end label */
+			/**********************************/
+			Ir.
+				getInstance().
+				AddIrCommand(new ir.IrCommandLabel(labelEnd));
+		
+		} else {
+			/*******************************/
+			/* [1] Allocate fresh label */
+			/*******************************/
+			String labelEnd = IrCommand.getFreshLabel("end");
+						
+			/********************/
+			/* [2] cond.IRme(); */
+			/********************/
+			Temp condTemp = cond.irMe();
+
+			/**********************************/
+			/* [3] Jump conditionally to end label */
+			/**********************************/
+			Ir.
+				getInstance().
+				AddIrCommand(new IrCommandJumpIfEqToZero(condTemp, labelEnd));
+
+			/*******************/
+			/* [4] if body.IRme() */
+			/*******************/
+			body.irMe();
+
+			/**********************************/
+			/* [4] if end label */
+			/**********************************/
+			Ir.
+				getInstance().
+				AddIrCommand(new ir.IrCommandLabel(labelEnd));
+		
+		}
 		return null;
 	}
 }

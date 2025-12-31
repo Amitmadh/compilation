@@ -3,6 +3,8 @@
 /***********/
 package ir;
 
+import java.io.PrintWriter;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -21,4 +23,5 @@ public abstract class IrCommand
 	{
 		return String.format("Label_%d_%s", labelCounter++,msg);
 	}
+	public void printMe(PrintWriter fileWriter) {}
 }

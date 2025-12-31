@@ -1,4 +1,5 @@
 package ast;
+import temp.Temp;
 
 public class AstDecFuncDec extends AstDec
 {
@@ -56,5 +57,10 @@ public class AstDecFuncDec extends AstDec
 
 	public void semantMe() throws SemanticException {
 		if (funcDec != null) funcDec.semantMe();
+	}
+
+	public Temp irMe() {
+		if (funcDec != null) return funcDec.irMe();
+		return null;
 	}
 }

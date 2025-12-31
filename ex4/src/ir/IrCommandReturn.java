@@ -3,6 +3,8 @@
 /***********/
 package ir;
 
+import java.io.PrintWriter;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -19,5 +21,14 @@ public class IrCommandReturn extends IrCommand
 	public IrCommandReturn(Temp t)
 	{
 		this.t = t;
+	}
+
+	public void printMe(PrintWriter fileWriter)
+	{
+		if (t == null) {
+			fileWriter.format("RETURN\n");
+		} else {
+			fileWriter.format("RETURN t%d\n", t.getSerialNumber());
+		}
 	}
 }
