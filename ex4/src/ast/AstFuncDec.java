@@ -198,6 +198,7 @@ public class AstFuncDec extends AstDec
 		/************************************************************/
 			
 	}
+	
 	public Temp irMe()
 	{
 		Ir.getInstance().AddIrCommand(new IrCommandLabel("main"));

@@ -2,7 +2,9 @@ package ast;
 
 import symboltable.SymbolTable;
 import types.*;
-
+import ir.Ir;
+import ir.IrCommandReturn;
+import temp.Temp;
 
 public class AstStmtReturn extends AstStmt
 {
@@ -120,6 +122,16 @@ public class AstStmtReturn extends AstStmt
 		throw new SemanticException(String.format("ERROR(%d)",line));
 	}
 	
-	
+	public Temp irMe()
+	{
+		if (exp != null) {
+			Temp returnValue = exp.irMe();
+			Ir.getInstance().AddIrCommand(new IrCommandReturn(returnValue));
+		} 
+		else {
+			Ir.getInstance().AddIrCommand(new IrCommandReturn(null));
+		}
+		return null;
+	}
 }
 

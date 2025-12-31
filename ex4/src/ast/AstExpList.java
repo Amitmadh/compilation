@@ -1,6 +1,7 @@
 package ast;
 
 import types.*;
+import temp.Temp;
 
 public class AstExpList extends AstNode
 {
@@ -63,6 +64,7 @@ public class AstExpList extends AstNode
 		if (head != null) AstGraphviz.getInstance().logEdge(serialNumber,head.serialNumber);
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
 	}
+
 	public TypeList semantMe() throws SemanticException
 	{
 		TypeList tailTypes = null;
@@ -85,5 +87,4 @@ public class AstExpList extends AstNode
 
 		return new TypeList(headType, tailTypes);
 	}
-	
 }

@@ -3,6 +3,8 @@
 /***********/
 package ir;
 
+import java.io.PrintWriter;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -23,5 +25,10 @@ public class IrCommandBinopAddIntegers extends IrCommand
 		this.dst = dst;
 		this.t1 = t1;
 		this.t2 = t2;
+	}
+
+	public void printMe(PrintWriter fileWriter)
+	{
+		fileWriter.print("t" + dst.getSerialNumber() + " = add t" + t1.getSerialNumber() + ", t" + t2.getSerialNumber() + "\n");
 	}
 }

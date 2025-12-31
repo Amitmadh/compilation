@@ -12,18 +12,21 @@ import java.io.PrintWriter;
 /*******************/
 /* PROJECT IMPORTS */
 /*******************/
+import temp.*;
 
-public class IrCommandLabel extends IrCommand
+public class IRcommandConstString extends IrCommand
 {
-	public String labelName;
+	Temp t;
+	String value;
 	
-	public IrCommandLabel(String labelName)
+	public IRcommandConstString(Temp t, String value)
 	{
-		this.labelName = labelName;
+		this.t = t;
+		this.value = value;
 	}
 
 	public void printMe(PrintWriter fileWriter)
 	{
-		fileWriter.format("LABEL %s :\n", labelName);
+		fileWriter.format("t%d := %s\n", t.getSerialNumber(), value);
 	}
 }

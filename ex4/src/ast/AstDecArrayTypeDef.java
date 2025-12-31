@@ -1,4 +1,5 @@
 package ast;
+import temp.Temp;
 
 public class AstDecArrayTypeDef extends AstDec
 {
@@ -56,5 +57,10 @@ public class AstDecArrayTypeDef extends AstDec
 	
 	public void semantMe() throws SemanticException {
 		if (arrayTypeDef != null) arrayTypeDef.semantMe();
+	}
+
+	public Temp irMe() {
+		if (arrayTypeDef != null) return arrayTypeDef.irMe();
+		return null;
 	}
 }

@@ -1,7 +1,8 @@
 import java.io.*;
-import java.io.PrintWriter;
+
 import java_cup.runtime.Symbol;
 import ast.*;
+import ir.Ir;
 
 
 public class Main
@@ -11,7 +12,8 @@ public class Main
 		Lexer l;
 		Parser p;
 		Symbol s;
-		AstDecList ast;
+		Ir ir;
+		AstProgram ast;
 		FileReader fileReader;
 		PrintWriter fileWriter;
 		String inputFileName = argv[0];
@@ -42,7 +44,7 @@ public class Main
 			/***********************************/
 			/* [5] 3 ... 2 ... 1 ... Parse !!! */
 			/***********************************/
-			ast = (AstDecList) p.parse().value;
+			ast = (AstProgram) p.parse().value;
 
 			/*************************/
 			/* [6] Print the AST ... */
@@ -59,6 +61,8 @@ public class Main
 			/* [8] IR the AST ... */
 			/**********************/
 			ast.irMe();
+			ir = Ir.getInstance();
+			ir.printIrCommands(outputFileName.replace(".txt", "_ir.txt"));
 
 			Ir commands = Ir.getInstance();
 			Cfg cfg = new Cfg(commands);

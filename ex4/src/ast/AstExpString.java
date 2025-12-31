@@ -1,4 +1,8 @@
 package ast;
+import ir.IRcommandConstString;
+import ir.Ir;
+import temp.Temp;
+import temp.TempFactory;
 import types.*;
 public class AstExpString extends AstExp
 {
@@ -43,8 +47,16 @@ public class AstExpString extends AstExp
 				serialNumber,
 			String.format("STRING(%s)",value));
 	}
+
 	public Type semantMe() throws SemanticException
 	{
 		return TypeString.getInstance();
+	}
+
+	public Temp irMe()
+	{
+		Temp t = TempFactory.getInstance().getFreshTemp();
+		Ir.getInstance().AddIrCommand(new IRcommandConstString(t,value));
+		return t;
 	}
 }

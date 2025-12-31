@@ -1,5 +1,7 @@
 package ast;
 
+import temp.Temp;
+
 public class AstProgram extends AstNode
 {
 	/****************/
@@ -66,4 +68,11 @@ public class AstProgram extends AstNode
 		if (head != null) head.semantMe();
 		if (tail != null) tail.semantMe();
     }
+
+	public Temp irMe()
+	{
+		if (head != null) head.irMe();
+		if (tail != null) tail.irMe();
+		return null;
+	}
 }

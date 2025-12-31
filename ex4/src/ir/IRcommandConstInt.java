@@ -3,6 +3,8 @@
 /***********/
 package ir;
 
+import java.io.PrintWriter;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -21,5 +23,10 @@ public class IRcommandConstInt extends IrCommand
 	{
 		this.t = t;
 		this.value = value;
+	}
+
+	public void printMe(PrintWriter fileWriter)
+	{
+		fileWriter.format("t%d := %d\n", t.getSerialNumber(), value);
 	}
 }

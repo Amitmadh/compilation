@@ -3,6 +3,8 @@
 /***********/
 package ir;
 
+import java.io.PrintWriter;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -21,5 +23,10 @@ public class IrCommandJumpIfEqToZero extends IrCommand
 	{
 		this.t          = t;
 		this.labelName = labelName;
+	}
+
+	public void printMe(PrintWriter fileWriter)
+	{
+		fileWriter.format("IF t%d == 0 GOTO %s\n", t.getSerialNumber(), labelName);
 	}
 }

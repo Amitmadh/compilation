@@ -1,5 +1,6 @@
 package ast;
 import types.*;
+import temp.Temp;
 
 public class AstExpVar extends AstExp
 {
@@ -59,5 +60,9 @@ public class AstExpVar extends AstExp
 	public Type semantMe() throws SemanticException
 	{
 		return var.semantMe();
-	}	
+	}
+	
+	public Temp irMe() {
+		return var.irMe();
+	}
 }
