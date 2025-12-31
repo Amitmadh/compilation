@@ -3,6 +3,7 @@ import java.io.PrintWriter;
 import java_cup.runtime.Symbol;
 import ast.*;
 
+
 public class Main
 {
 	static public void main(String argv[])
@@ -53,11 +54,14 @@ public class Main
 			/**************************/
 			ast.semantMe();
 
+
 			/**********************/
 			/* [8] IR the AST ... */
 			/**********************/
 			ast.irMe();
 
+			Ir commands = Ir.getInstance();
+			Cfg cfg = new Cfg(commands);
 			/**************************/
 			/* [9] Close output file */
 			/**************************/

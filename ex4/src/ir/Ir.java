@@ -64,4 +64,10 @@ public class Ir
 		}
 		return instance;
 	}
+	public IrCommand getHead() {
+		return head;
+	}
+	public IrCommandList getTail() {
+		return tail;
+	}
 }
