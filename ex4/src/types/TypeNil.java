@@ -1,33 +1,32 @@
 package types;
 
-public class TypeInt extends Type
+public class TypeNil extends Type
 {
-	/**************************************/
+   /**************************************/
 	/* USUAL SINGLETON IMPLEMENTATION ... */
 	/**************************************/
-	private static TypeInt instance = null;
+	private static TypeNil instance = null;
 
 	/*****************************/
 	/* PREVENT INSTANTIATION ... */
 	/*****************************/
-	protected TypeInt() {}
+	protected TypeNil() {}
 
 	/******************************/
 	/* GET SINGLETON INSTANCE ... */
 	/******************************/
-	public static TypeInt getInstance()
+	public static TypeNil getInstance()
 	{
 		if (instance == null)
 		{
-			instance = new TypeInt();
-			instance.name = "int";
+			instance = new TypeNil();
+			instance.name = "nil";
 		}
 		return instance;
 	}
 
-	/*************/
-	/* isInt() */
-	/*************/
-	@Override
-	public boolean isInt(){ return true;}
+	
+
+    
+    
 }

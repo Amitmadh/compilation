@@ -4,6 +4,7 @@
 package ir;
 
 import java.io.PrintWriter;
+import java.util.HashSet;
 
 /*******************/
 /* GENERAL IMPORTS */
@@ -23,6 +24,15 @@ public class IRcommandConstInt extends IrCommand
 	{
 		this.t = t;
 		this.value = value;
+	}
+
+	public HashSet<String> tempsUsed() {
+		HashSet<String> used = new HashSet<String>();
+		return used;
+	}
+
+	public String tempDefined() {
+		return "t" + t.getSerialNumber();
 	}
 
 	public void printMe(PrintWriter fileWriter)

@@ -1,8 +1,11 @@
 import java.io.*;
+import java.util.List;
 
 import java_cup.runtime.Symbol;
+import java.util.Collections;
 import ast.*;
 import ir.Ir;
+import cfg.Cfg;
 
 
 public class Main
@@ -25,11 +28,6 @@ public class Main
 			/* [1] Initialize a file reader */
 			/********************************/
 			fileReader = new FileReader(inputFileName);
-
-			/********************************/
-			/* [2] Initialize a file writer */
-			/********************************/
-			fileWriter = new PrintWriter(outputFileName);
 
 			/******************************/
 			/* [3] Initialize a new lexer */
@@ -66,6 +64,27 @@ public class Main
 
 			Ir commands = Ir.getInstance();
 			Cfg cfg = new Cfg(commands);
+
+			/********************************/
+			/* [2] Initialize a file writer */
+			/********************************/
+			List<String> uninitVars = cfg.usedBeforeSet();
+
+			fileWriter = new PrintWriter(outputFileName);
+
+			if (uninitVars.size() == 0) {
+				fileWriter.print("!OK");
+				System.out.println("!OK\n");
+			} else {
+				Collections.sort(uninitVars);
+				for (int i = 0; i < uninitVars.size() - 1; i++) {
+					fileWriter.format("%s\n", uninitVars.get(i));
+					System.out.format("%s\n", uninitVars.get(i));
+				}
+				fileWriter.format("%s", uninitVars.get(uninitVars.size() - 1));
+				System.out.format("%s\n", uninitVars.get(uninitVars.size() - 1));
+			}
+
 			/**************************/
 			/* [9] Close output file */
 			/**************************/

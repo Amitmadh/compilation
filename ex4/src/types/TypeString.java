@@ -24,4 +24,10 @@ public class TypeString extends Type
 		}
 		return instance;
 	}
+
+	/*************/
+	/* isString() */
+	/*************/
+	@Override
+	public boolean isString(){ return true;}
 }

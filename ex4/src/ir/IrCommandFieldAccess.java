@@ -4,6 +4,7 @@
 package ir;
 
 import java.io.PrintWriter;
+import java.util.HashSet;
 
 /*******************/
 /* GENERAL IMPORTS */
@@ -25,6 +26,16 @@ public class IrCommandFieldAccess extends IrCommand
 		this.dst = dst;
 		this.instanceAddr = instanceAddr;
 		this.fieldName = fieldName;
+	}
+
+	public HashSet<String> tempsUsed() {
+		HashSet<String> used = new HashSet<String>();
+		used.add("t" + instanceAddr.getSerialNumber());
+		return used;
+	}
+
+	public String tempDefined() {
+		return "t" + dst.getSerialNumber();
 	}
 
 	public void printMe(PrintWriter fileWriter)

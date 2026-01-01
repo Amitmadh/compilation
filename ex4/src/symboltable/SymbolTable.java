@@ -7,10 +7,6 @@ package symboltable;
 /* GENERAL IMPORTS */
 /*******************/
 import java.io.PrintWriter;
-
-/*******************/
-/* PROJECT IMPORTS */
-/*******************/
 import types.*;
 
 /****************/
@@ -19,6 +15,7 @@ import types.*;
 public class SymbolTable
 {
 	private int hashArraySize = 13;
+	private int scopeDepth = 0;
 	
 	/**********************************************/
 	/* The actual symbol table data structure ... */
@@ -26,6 +23,7 @@ public class SymbolTable
 	private SymbolTableEntry[] table = new SymbolTableEntry[hashArraySize];
 	private SymbolTableEntry top;
 	private int topIndex = 0;
+	private Type currentFunctionReturnType = null; /* for return statement checks */
 	
 	/**************************************************************/
 	/* A very primitive hash function for exposition purposes ... */
@@ -80,6 +78,41 @@ public class SymbolTable
 		printMe();
 	}
 
+	/**
+	 * Begin a new scope and pre-populate it with the members of the given
+	 * parent class. This is used to implement inheritance: entries of the
+	 * parent class (fields and methods) are entered into the new scope so
+	 * they are visible to the child class unless shadowed by child members.
+	 */
+	public void beginScopeFrom(types.TypeClass parent)
+	{
+		/* Start a new scope boundary */
+		beginScope();
+
+		if (parent == null) return;
+
+		/*
+		 * Walk the ancestor chain from the root-most ancestor down to the
+		 * immediate parent, inserting their members in that order. This
+		 * guarantees that nearer ancestors (the immediate parent) will shadow
+		 * members from more distant ancestors when names clash.
+		 */
+		java.util.List<types.TypeClass> chain = new java.util.ArrayList<>();
+		types.TypeClass cur = parent;
+		while (cur != null) {
+			chain.add(0, cur); /* insert at front to reverse order */
+			cur = cur.father;
+		}
+
+		for (types.TypeClass anc : chain) {
+			types.TypeClassVarDecList members = anc.dataMembers;
+			while (members != null) {
+				enter(members.head.name, members.head.type);
+				members = members.tail;
+			}
+		}
+	}
+
 	/***********************************************/
 	/* Find the inner-most scope element with name */
 	/***********************************************/
@@ -98,6 +131,28 @@ public class SymbolTable
 		return null;
 	}
 
+	/***********************************************/
+	/* Find name in current scope */
+	/***********************************************/
+	public Type findInCurrentScope(String name) {
+		for (SymbolTableEntry e = top; e != null; e = e.prevtop) {
+			if (e.name.equals("SCOPE-BOUNDARY")) {
+				break;  /* reached scope boundary */
+			}
+			if (e.name.equals(name)) {
+				return e.type; /* found in current scope */
+			}
+		}
+		return null;
+	}
+	public void setFunctionReturnType(Type t) {
+		this.currentFunctionReturnType = t;
+	}
+
+	public Type getFunctionReturnType() {
+		return this.currentFunctionReturnType;
+	}
+
 	/***************************************************************************/
 	/* begine scope = Enter the <SCOPE-BOUNDARY> element to the data structure */
 	/***************************************************************************/
@@ -112,7 +167,8 @@ public class SymbolTable
 		enter(
 			"SCOPE-BOUNDARY",
 			new TypeForScopeBoundaries("NONE"));
-
+		/* Update number of scopes */
+		scopeDepth++;
 		/*********************************************/
 		/* Print the symbol table after every change */
 		/*********************************************/
@@ -128,7 +184,7 @@ public class SymbolTable
 		/**************************************************************************/
 		/* Pop elements from the symbol table stack until a SCOPE-BOUNDARY is hit */		
 		/**************************************************************************/
-		while (top.name != "SCOPE-BOUNDARY")
+		while (!top.name.equals("SCOPE-BOUNDARY"))
 		{
 			table[top.index] = top.next;
 			topIndex = topIndex -1;
@@ -141,11 +197,17 @@ public class SymbolTable
 		topIndex = topIndex -1;
 		top = top.prevtop;
 
+		/* Update number of scopes */
+		scopeDepth--;
 		/*********************************************/
 		/* Print the symbol table after every change */		
 		/*********************************************/
 		printMe();
 	}
+
+	public boolean isGlobalScope() {
+        return scopeDepth == 0;
+    }
 	
 	public static int n=0;
 	
@@ -252,13 +314,14 @@ public class SymbolTable
 			/*****************************************/
 			instance.enter("int",   TypeInt.getInstance());
 			instance.enter("string", TypeString.getInstance());
+			instance.enter("void",  TypeVoid.getInstance());
 
 			/*************************************/
 			/* [2] How should we handle void ??? */
 			/*************************************/
 
 			/***************************************/
-			/* [3] Enter library function PrintInt */
+			/* [3] Enter library functions PrintInt and PrintString*/
 			/***************************************/
 			instance.enter(
 				"PrintInt",
@@ -267,6 +330,15 @@ public class SymbolTable
 					"PrintInt",
 					new TypeList(
 						TypeInt.getInstance(),
+						null)));
+			
+			instance.enter(
+				"PrintString",
+				new TypeFunction(
+					TypeVoid.getInstance(),
+					"PrintString",
+					new TypeList(
+						TypeString.getInstance(),
 						null)));
 			
 		}

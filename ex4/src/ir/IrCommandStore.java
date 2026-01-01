@@ -12,20 +12,35 @@ package ir;
 /*******************/
 import temp.*;
 import java.io.PrintWriter;
+import java.util.HashSet;
 
 public class IrCommandStore extends IrCommand
 {
 	String varName;
-	Temp dst;
+	Temp src;
 	
-	public IrCommandStore(String varName, Temp dst)
+	public IrCommandStore(String varName, Temp src)
 	{
-		this.dst      = dst	;
+		this.src      = src	;
 		this.varName = varName;
+	}
+
+	public HashSet<String> tempsUsed() {
+		HashSet<String> used = new HashSet<String>();
+		used.add("t" + src.getSerialNumber());
+		return used;
+	}
+
+	public String tempDefined() {
+		return null;
+	}
+
+	public String getVar() {
+		return varName;
 	}
 
 	public void printMe(PrintWriter fileWriter)
 	{
-		fileWriter.format("%s = t%d\n", varName, dst.getSerialNumber());
+		fileWriter.format("%s = t%d\n", varName, src.getSerialNumber());
 	}
 }

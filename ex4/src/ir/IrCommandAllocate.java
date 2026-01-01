@@ -3,6 +3,9 @@
 /***********/
 package ir;
 
+import java.io.PrintWriter;
+import java.util.HashSet;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -18,5 +21,23 @@ public class IrCommandAllocate extends IrCommand
 	public IrCommandAllocate(String varName)
 	{
 		this.varName = varName;
+	}
+
+	public HashSet<String> tempsUsed() {
+		HashSet<String> used = new HashSet<String>();
+		return used;
+	}
+
+	public String tempDefined() {
+		return null;
+	}
+
+	public String getVar() {
+		return varName;
+	}
+
+	public void printMe(PrintWriter fileWriter)
+	{
+		fileWriter.print("ALLOCATE " + varName + "\n");
 	}
 }

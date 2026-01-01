@@ -4,6 +4,7 @@
 package ir;
 
 import java.io.PrintWriter;
+import java.util.HashSet;
 
 /*******************/
 /* GENERAL IMPORTS */
@@ -15,11 +16,20 @@ import java.io.PrintWriter;
 
 public class IrCommandJumpLabel extends IrCommand
 {
-	String labelName;
+	public String labelName;
 	
 	public IrCommandJumpLabel(String labelName)
 	{
 		this.labelName = labelName;
+	}
+
+	public HashSet<String> tempsUsed() {
+		HashSet<String> used = new HashSet<String>();
+		return used;
+	}
+
+	public String tempDefined() {
+		return null;
 	}
 
 	public void printMe(PrintWriter fileWriter)

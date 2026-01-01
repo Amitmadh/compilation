@@ -4,6 +4,7 @@
 package ir;
 
 import java.io.PrintWriter;
+import java.util.HashSet;
 
 /*******************/
 /* GENERAL IMPORTS */
@@ -23,5 +24,8 @@ public abstract class IrCommand
 	{
 		return String.format("Label_%d_%s", labelCounter++,msg);
 	}
+
+	public abstract HashSet<String> tempsUsed();
+	public abstract String tempDefined();
 	public void printMe(PrintWriter fileWriter) {}
 }

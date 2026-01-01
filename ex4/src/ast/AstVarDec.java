@@ -1,6 +1,7 @@
 package ast;
 import types.*;
 import ir.Ir;
+import ir.IrCommandAllocate;
 import ir.IrCommandStore;
 import symboltable.*;
 import temp.Temp;
@@ -169,6 +170,8 @@ public class AstVarDec extends AstNode
 
 	public Temp irMe()
 	{	
+		Ir.getInstance().AddIrCommand(new IrCommandAllocate(fieldName));
+
 		AstExp initialValue = null;
 		if (exp != null) {
 			initialValue = exp;

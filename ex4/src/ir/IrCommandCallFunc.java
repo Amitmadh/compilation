@@ -5,6 +5,7 @@ package ir;
 
 import temp.Temp;
 import java.io.PrintWriter;
+import java.util.HashSet;
 import java.util.List;
 
 /*******************/
@@ -24,6 +25,18 @@ public class IrCommandCallFunc extends IrCommand
 	{
 		this.funcName = funcName;
 		this.args = args;
+	}
+
+	public HashSet<String> tempsUsed() {
+		HashSet<String> used = new HashSet<String>();
+		for (Temp t : args) {
+			used.add("t" + t.getSerialNumber());
+		}
+		return used;
+	}
+
+	public String tempDefined() {
+		return null;
 	}
 
 	public void printMe(PrintWriter fileWriter)

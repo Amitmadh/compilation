@@ -5,6 +5,7 @@ package ir;
 
 import temp.Temp;
 import java.io.PrintWriter;
+import java.util.HashSet;
 
 /*******************/
 /* GENERAL IMPORTS */
@@ -24,6 +25,16 @@ public class IrCommandNewArray extends IrCommand
 	{	this.varName = varName;
 		this.size = size;
 		this.type = type;
+	}
+
+	public HashSet<String> tempsUsed() {
+		HashSet<String> used = new HashSet<String>();
+		used.add("t" + size.getSerialNumber());
+		return used;
+	}
+
+	public String tempDefined() {
+		return "t" + varName.getSerialNumber();
 	}
 
 	public void printMe(PrintWriter fileWriter)

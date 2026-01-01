@@ -1,7 +1,7 @@
 package cfg;
 
 import java.util.ArrayList;
-import java.util.BitSet;
+import java.util.HashSet;
 import java.util.List;
 
 import ir.IrCommand;
@@ -12,8 +12,10 @@ public class CfgNode {
     public List<CfgNode> predecessors;
 
     
-    // public BitSet inSet;  
-    // public BitSet outSet; 
+    public HashSet<String> inSetTemps; 
+    public HashSet<String> inSetVars;  
+    public HashSet<String> outSetTemps; 
+    public HashSet<String> outSetVars; 
 
     public CfgNode(IrCommand command) {
         this.command = command;

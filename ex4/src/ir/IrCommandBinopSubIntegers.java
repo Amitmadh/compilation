@@ -4,6 +4,7 @@
 package ir;
 
 import java.io.PrintWriter;
+import java.util.HashSet;
 
 /*******************/
 /* GENERAL IMPORTS */
@@ -25,6 +26,17 @@ public class IrCommandBinopSubIntegers extends IrCommand
 		this.dst = dst;
 		this.t1 = t1;
 		this.t2 = t2;
+	}
+
+	public HashSet<String> tempsUsed() {
+		HashSet<String> used = new HashSet<String>();
+		used.add("t" + t1.getSerialNumber());
+		used.add("t" + t2.getSerialNumber());
+		return used;
+	}
+
+	public String tempDefined() {
+		return "t" + dst.getSerialNumber();
 	}
 
 	public void printMe(PrintWriter fileWriter)
