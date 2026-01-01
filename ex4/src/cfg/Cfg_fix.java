@@ -13,64 +13,91 @@ import ir.*;
 public class Cfg_fix {
     private List<CfgNode> nodes = new ArrayList<>();
     private CfgNode startNode;
-    private CfgNode exitNode = new CfgNode(null); /* Exit node with no successors */
-    private Map<String, CfgNode> labelToNode = new HashMap<>();
-
+    private CfgNode exitNode;
+    private Map<String, CfgNode> labelToNodeMap = new HashMap<>();
     private HashSet<String> allTemps = new HashSet<>();
     private HashSet<String> allVars = new HashSet<>();
 
 
     public Cfg_fix(Ir ir) {
-        /* Create CFG nodes and edges by two passes */
-        /* First pass: create nodes and map labels to nodes */
-        IrCommand currentCommand = ir.getHead();
+        List<IrCommand> globalInits = new ArrayList<>();
+        List<IrCommand> mainBody = new ArrayList<>();
+        /* sorting the commands into global inits and main body */
+        IrCommand current = ir.getHead();
         IrCommandList tail = ir.getTail();
-        CfgNode prevNode = null;
 
-        while (currentCommand != null) {
-            CfgNode currentNode = new CfgNode(currentCommand);
-            nodes.add(currentNode);
-            if (startNode == null) startNode = currentNode;
-
-            if (currentCommand instanceof IrCommandLabel) {
-                IrCommandLabel labelCmd = (IrCommandLabel) currentCommand;
-
-                labelToNode.put(labelCmd.labelName, currentNode);
+        while (current != null) {
+            if (isGlobalInitialization(current)) {
+                globalInits.add(current);
             }
-            if (prevNode != null && !(prevNode.command instanceof IrCommandJumpLabel)) {
-                prevNode.successors.add(currentNode);
-                currentNode.predecessors.add(prevNode);
+
+            else {
+                mainBody.add(current);
             }
-            prevNode = currentNode;
-            currentCommand = (tail != null) ? tail.head : null;
+
+            /* advance to the next command in IR */
+            current = (tail != null) ? tail.head : null;
             tail = (tail != null) ? tail.tail : null;
         }
-        /* Link last node to exit node if it's not a jump */
-        if (prevNode != null && !(prevNode.command instanceof IrCommandJumpLabel)) {
-            prevNode.successors.add(exitNode);
-            exitNode.predecessors.add(prevNode);
-        }
-        nodes.add(exitNode);
 
-        /* Second pass: add edges for jump commands */
-        for (int i = 0; i < nodes.size(); i++) {
-            CfgNode currentNode = nodes.get(i);
-            IrCommand cmd = currentNode.command;
-            String targetLabel = null;
-            if (cmd instanceof IrCommandJumpLabel) {
-                targetLabel = ((IrCommandJumpLabel) cmd).labelName;
-            } 
-            else if (cmd instanceof IrCommandJumpIfEqToZero) {
-                targetLabel = ((IrCommandJumpIfEqToZero) cmd).labelName;
+        /* merge the lists: first the global inits, then the main body */
+        List<IrCommand> commands = new ArrayList<>();
+        commands.addAll(globalInits);
+        commands.addAll(mainBody);
+
+        /* map labels to nodes */
+        CfgNode previousNode = null;
+
+        for (IrCommand cmd : commands) {
+            CfgNode currentNode = new CfgNode(cmd);
+            nodes.add(currentNode);
+
+            if (cmd instanceof ir.IrCommandLabel) {
+                labelToNodeMap.put(((ir.IrCommandLabel) cmd).labelName, currentNode);
             }
 
-            if (targetLabel != null) {
-                CfgNode labelNode = labelToNode.get(targetLabel);
-                if (labelNode != null) {
-                    currentNode.successors.add(labelNode);
-                    labelNode.predecessors.add(currentNode);
+            /* create sequential edges */
+            if (previousNode != null) {
+                IrCommand prevCmd = previousNode.command;
+                /* not creating a sequential edge if the previous command is an unconditional jump */
+                if (!(prevCmd instanceof ir.IrCommandJumpLabel)) {
+                    previousNode.addSuccessor(currentNode);
                 }
             }
+            previousNode = currentNode;
+        }
+
+        /* add jump edges */
+        for (int i = 0; i < nodes.size(); i++) {
+            CfgNode sourceNode = nodes.get(i);
+            IrCommand cmd = sourceNode.command;
+            String targetLabel = null;
+
+            if (cmd instanceof ir.IrCommandJumpLabel) {
+                targetLabel = ((ir.IrCommandJumpLabel) cmd).labelName;
+            }
+
+            else if (cmd instanceof ir.IrCommandJumpIfEqToZero) {
+                targetLabel = ((ir.IrCommandJumpIfEqToZero) cmd).labelName;
+            }
+
+            /* add edge to the target node for any jump*/
+            if (targetLabel != null && labelToNodeMap.containsKey(targetLabel)) {
+                CfgNode targetNode = labelToNodeMap.get(targetLabel);
+
+                /* skip label nodes to point directly to the next executable command */
+                while (targetNode.command instanceof IrCommandLabel && !targetNode.successors.isEmpty()) {
+                    targetNode = targetNode.successors.get(0);
+                }
+                sourceNode.addSuccessor(targetNode);
+            }
+
+        }
+
+        /* setting start and exit nodes */
+        if (!nodes.isEmpty()) {
+            startNode = nodes.get(0);
+            exitNode = nodes.get(nodes.size() - 1);
         }
 
         collectAllSymbols();
