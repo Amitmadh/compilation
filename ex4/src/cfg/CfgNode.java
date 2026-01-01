@@ -1,10 +1,8 @@
 package cfg;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-
 import ir.IrCommand;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CfgNode {
     public IrCommand command;       
@@ -20,5 +18,11 @@ public class CfgNode {
         this.successors = new ArrayList<>();
         this.predecessors = new ArrayList<>();
     
+    }
+
+    public void addSuccessor(CfgNode node) {
+        if (node != null) {
+            successors.add(node);
+        }
     }
 }

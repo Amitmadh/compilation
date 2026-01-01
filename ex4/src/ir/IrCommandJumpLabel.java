@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 
 public class IrCommandJumpLabel extends IrCommand
 {
-	String labelName;
+	public String labelName;
 	
 	public IrCommandJumpLabel(String labelName)
 	{

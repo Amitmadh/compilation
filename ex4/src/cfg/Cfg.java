@@ -10,80 +10,112 @@ import ir.IrCommandJumpIfEqToZero;
 import ir.IrCommandJumpLabel;
 import ir.IrCommandLabel;
 import ir.IrCommandList;
+import ir.IrCommandStore;
 
 public class Cfg {
     private List<CfgNode> nodes = new ArrayList<>();
     private CfgNode startNode;
-    private CfgNode exitNode = new CfgNode(null); /* Exit node with no successors */
-    private Map<String, CfgNode> labelToNode = new HashMap<>();
+    private CfgNode exitNode;
+    private Map<String, CfgNode> labelToNodeMap = new HashMap<>();
 
     public Cfg(Ir ir) {
-        /* Create CFG nodes and edges by two passes */
-        /* First pass: create nodes and map labels to nodes */
-        IrCommand currentCommand = ir.getHead();
+        List<IrCommand> globalInits = new ArrayList<>();
+        List<IrCommand> mainBody = new ArrayList<>();
+        
+        /* sorting the commands into global inits and main body */
+        IrCommand current = ir.getHead();
         IrCommandList tail = ir.getTail();
-        CfgNode prevNode = null;
-        while (currentCommand != null) {
-            CfgNode currentNode = new CfgNode(currentCommand);
-            nodes.add(currentNode);
-            if (startNode == null) startNode = currentNode;
 
-            if (currentCommand instanceof IrCommandLabel) {
-                IrCommandLabel labelCmd = (IrCommandLabel) currentCommand;
+        while (current != null) {
+            if (isGlobalInitialization(current)) {
+                globalInits.add(current);
+            } 
+            else {
+                mainBody.add(current);
+            }
 
-                labelToNode.put(labelCmd.labelName, currentNode);
-            }
-            if (prevNode != null && !(prevNode.command instanceof IrCommandJumpLabel)) {
-                prevNode.successors.add(currentNode);
-                currentNode.predecessors.add(prevNode);
-            }
-            prevNode = currentNode;
-            currentCommand = (tail != null) ? tail.head : null;
+            /* advance to the next command in IR */
+            current = (tail != null) ? tail.head : null;
             tail = (tail != null) ? tail.tail : null;
         }
-        /* Link last node to exit node if it's not a jump */
-        if (prevNode != null && !(prevNode.command instanceof IrCommandJumpLabel)) {
-            prevNode.successors.add(exitNode);
-            exitNode.predecessors.add(prevNode);
-        }
-        nodes.add(exitNode);
 
-        /* Second pass: add edges for jump commands */
-        for (int i = 0; i < nodes.size(); i++) {
-            CfgNode currentNode = nodes.get(i);
-            IrCommand cmd = currentNode.command;
-            String targetLabel = null;
-            if (cmd instanceof IrCommandJumpLabel) {
-                targetLabel = ((IrCommandJumpLabel) cmd).labelName;
-            } 
-            else if (cmd instanceof IrCommandJumpIfEqToZero) {
-                targetLabel = ((IrCommandJumpIfEqToZero) cmd).labelName;
+        /* merge the lists: first the global inits, then the main body */
+        List<IrCommand> commands = new ArrayList<>();
+        commands.addAll(globalInits);
+        commands.addAll(mainBody);
+
+        /* map labels to nodes */
+        CfgNode previousNode = null;
+
+        for (IrCommand cmd : commands) {
+            CfgNode currentNode = new CfgNode(cmd);
+            nodes.add(currentNode);
+
+            if (cmd instanceof ir.IrCommandLabel) {
+                labelToNodeMap.put(((ir.IrCommandLabel) cmd).labelName, currentNode);
             }
 
-            if (targetLabel != null) {
-                CfgNode labelNode = labelToNode.get(targetLabel);
-                if (labelNode != null) {
-                    /* Find the target node by following successors until a non-label command or end of list is reached */
-                    CfgNode target = labelNode;
-                    while (target.command instanceof IrCommandLabel && !target.successors.isEmpty()) {
-                        target = target.successors.get(0);
-                    }
-                    
-                    /* If we reach a label with no successors, link to exit node */
-                    if (target.command instanceof IrCommandLabel && target.successors.isEmpty()) {
-                        target = exitNode;
-                    }
-
-                    currentNode.successors.add(target);
-                    target.predecessors.add(currentNode);
+            /* create sequential edges */
+            if (previousNode != null) {
+                IrCommand prevCmd = previousNode.command;
+                /* not creating a sequential edge if the previous command is an unconditional jump */
+                if (!(prevCmd instanceof ir.IrCommandJumpLabel)) {
+                    previousNode.addSuccessor(currentNode);
                 }
             }
+            previousNode = currentNode;
         }
 
+        /* add jump edges */
+        for (int i = 0; i < nodes.size(); i++) {
+            CfgNode sourceNode = nodes.get(i);
+            IrCommand cmd = sourceNode.command;
+
+            String targetLabel = null;
+
+            if (cmd instanceof ir.IrCommandJumpLabel) {
+                targetLabel = ((ir.IrCommandJumpLabel) cmd).labelName;
+            } 
+            else if (cmd instanceof ir.IrCommandJumpIfEqToZero) {
+                targetLabel = ((ir.IrCommandJumpIfEqToZero) cmd).labelName;
+            }
+
+            /* add edge to the target node for any jump*/
+            if (targetLabel != null && labelToNodeMap.containsKey(targetLabel)) {
+                CfgNode targetNode = labelToNodeMap.get(targetLabel);
+                
+                /* skip label nodes to point directly to the next executable command */
+                while (targetNode.command instanceof IrCommandLabel && !targetNode.successors.isEmpty()) {
+                    targetNode = targetNode.successors.get(0);
+                }
+                
+                sourceNode.addSuccessor(targetNode);
+            }
+        }
+
+        /* setting start and exit nodes */
+        if (!nodes.isEmpty()) {
+            startNode = nodes.get(0);
+            exitNode = nodes.get(nodes.size() - 1);
+        }
     }
 
+    /* helper method to identify global initialization commands */
+    private boolean isGlobalInitialization(IrCommand cmd) {
+        /* if this is a Store command (from VarDec) and the offset is non-negative */
+        if (cmd instanceof IrCommandStore) {
+            return ((IrCommandStore) cmd).offset >= 0;
+        }
+        // other commands (like Load or local Store) belong to Main
+        return false;
+    }
+    
+        
+
+    
+
     public void runChaoticIterations() {
-        // כאן ירוץ הלופ שמעדכן את ה-BitSets
+        
         
     }
 }

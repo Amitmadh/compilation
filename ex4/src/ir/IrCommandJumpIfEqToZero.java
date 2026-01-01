@@ -4,20 +4,12 @@
 package ir;
 
 import java.io.PrintWriter;
-
-/*******************/
-/* GENERAL IMPORTS */
-/*******************/
-
-/*******************/
-/* PROJECT IMPORTS */
-/*******************/
 import temp.*;
 
 public class IrCommandJumpIfEqToZero extends IrCommand
 {
 	Temp t;
-	String labelName;
+	public String labelName;
 	
 	public IrCommandJumpIfEqToZero(Temp t, String labelName)
 	{
