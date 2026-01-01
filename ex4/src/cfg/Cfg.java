@@ -77,6 +77,16 @@ public class Cfg {
         initializeDataflow();
     }
 
+    /* helper method to identify global initialization commands */
+    private boolean isGlobalInitialization(IrCommand cmd) {
+        /* if this is a Store command (from VarDec) and the offset is non-negative */
+        if (cmd instanceof IrCommandStore) {
+            return ((IrCommandStore) cmd).offset >= 0;
+        }
+        // other commands (like Load or local Store) belong to Main
+        return false;
+    }
+
     private void collectAllSymbols() {
         for (CfgNode node : nodes) {
             IrCommand cmd = node.command;

@@ -2,6 +2,7 @@ package ast;
 import types.*;
 import ir.Ir;
 import ir.IrCommandStore;
+import symboltable.SymbolTable;
 import ir.IrCommandFieldSet;
 import ir.IrCommandArraySet;
 import temp.Temp;
@@ -13,6 +14,7 @@ public class AstStmtAssign extends AstStmt
 	/***************/
 	public AstVar var;
 	public AstExp exp;
+	public int offset;
 
 	/*******************/
 	/*  CONSTRUCTOR(S) */
@@ -135,6 +137,7 @@ public class AstStmtAssign extends AstStmt
 						throw new SemanticException(String.format("ERROR(%d)",line));
 					}
 				}
+
 			}
 		}
 		
@@ -147,9 +150,10 @@ public class AstStmtAssign extends AstStmt
 		Temp expVal = exp.irMe();
 
 		// handle simple variable assignment by name
+
 		if (var instanceof AstVarSimple) {
 			String name = ((AstVarSimple)var).name;
-			Ir.getInstance().AddIrCommand(new IrCommandStore(name, expVal));
+			Ir.getInstance().AddIrCommand(new IrCommandStore(name, expVal, 0));
 		}
 
 		// field assignment: instance.field := exp

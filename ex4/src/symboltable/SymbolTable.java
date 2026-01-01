@@ -23,7 +23,11 @@ public class SymbolTable
 	private SymbolTableEntry[] table = new SymbolTableEntry[hashArraySize];
 	private SymbolTableEntry top;
 	private int topIndex = 0;
-	private Type currentFunctionReturnType = null; /* for return statement checks */
+	private Type currentFunctionReturnType = null;
+
+	private int globalOffsetCounter = 0;
+    private int localOffsetCounter = 0;
+    private int scopeLevel = 0;
 	
 	/**************************************************************/
 	/* A very primitive hash function for exposition purposes ... */
@@ -56,11 +60,30 @@ public class SymbolTable
 		/*     NOTE: this entry can very well be null, but the behaviour is identical */
 		/******************************************************************************/
 		SymbolTableEntry next = table[hashValue];
+
+			/*************************************************/
+		/* [2.5] NEW: Compute Offset based on scope level */
+		/*************************************************/
+		int currentOffset = 0;
+		
+		/* Compute offset only for real variables (not types or scope boundaries) */
+		if (!(t instanceof TypeForScopeBoundaries) && !name.equals("int") && !name.equals("string")) {
+			if (scopeLevel == 0) {
+				/* global scope	 */
+				currentOffset = globalOffsetCounter;
+				globalOffsetCounter += 1;
+			} 
+			else {
+				localOffsetCounter -= 1;
+				currentOffset = localOffsetCounter;
+				
+			}
+		}
 	
 		/**************************************************************************/
-		/* [3] Prepare a new symbol table entry with name, type, next and prevtop */
+		/* [3] Prepare a new symbol table entry with name, type, next, prevtop and offset */
 		/**************************************************************************/
-		SymbolTableEntry e = new SymbolTableEntry(name,t,hashValue,next,top, topIndex++);
+		SymbolTableEntry e = new SymbolTableEntry(name, t, hashValue, next, top, topIndex++, currentOffset);
 
 		/**********************************************/
 		/* [4] Update the top of the symbol table ... */
@@ -129,6 +152,33 @@ public class SymbolTable
 		}
 		
 		return null;
+	}
+
+	/*********************************************************/
+	/* Find the offset of the inner-most scope element name  */
+	/*********************************************************/
+	public int getOffset(String name)
+	{
+		SymbolTableEntry e;
+		
+		/*****************************************************************/
+		/* [1] Compute hash value and traverse the linked list at table[i] */
+		/*****************************************************************/
+		for (e = table[hash(name)]; e != null; e = e.next)
+		{
+			/**********************************************************/
+			/* [2] If the name matches, return the offset we stored  */
+			/**********************************************************/
+			if (name.equals(e.name))
+			{
+				return e.offset;
+			}
+		}
+		
+		/*******************************************************************/
+		/* [3] If not found (shouldn't happen after semantMe), return 0    */
+		/*******************************************************************/
+		return 0;
 	}
 
 	/***********************************************/

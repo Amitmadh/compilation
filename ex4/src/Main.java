@@ -7,7 +7,6 @@ import ast.*;
 import ir.Ir;
 import cfg.Cfg;
 
-
 public class Main
 {
 	static public void main(String argv[])
@@ -61,7 +60,9 @@ public class Main
 			ast.irMe();
 			ir = Ir.getInstance();
 			ir.printIrCommands(outputFileName.replace(".txt", "_ir.txt"));
-
+			/**************************/
+			/* [9] Create CFG from IR */
+			/**************************/
 			Ir commands = Ir.getInstance();
 			Cfg cfg = new Cfg(commands);
 
@@ -86,12 +87,12 @@ public class Main
 			}
 
 			/**************************/
-			/* [9] Close output file */
+			/* [10] Close output file */
 			/**************************/
 			fileWriter.close();
 
 			/*************************************/
-			/* [10] Finalize AST GRAPHIZ DOT file */
+			/* [11] Finalize AST GRAPHIZ DOT file */
 			/*************************************/
 			AstGraphviz.getInstance().finalizeFile();
 		}

@@ -10,7 +10,7 @@ package ir;
 /*******************/
 /* PROJECT IMPORTS */
 /*******************/
-import temp.*;
+import temp.Temp;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
@@ -18,11 +18,13 @@ public class IrCommandStore extends IrCommand
 {
 	String varName;
 	Temp src;
+	public int offset;
 	
-	public IrCommandStore(String varName, Temp src)
+	public IrCommandStore(String varName, Temp src, int offset)
 	{
-		this.src      = src	;
+		this.src = src;
 		this.varName = varName;
+		this.offset = offset;
 	}
 
 	public HashSet<String> tempsUsed() {
