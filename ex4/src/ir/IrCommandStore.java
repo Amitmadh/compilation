@@ -10,18 +10,20 @@ package ir;
 /*******************/
 /* PROJECT IMPORTS */
 /*******************/
-import temp.*;
 import java.io.PrintWriter;
+import temp.*;
 
 public class IrCommandStore extends IrCommand
 {
 	String varName;
 	Temp dst;
+	public int offset;
 	
-	public IrCommandStore(String varName, Temp dst)
+	public IrCommandStore(String varName, Temp dst, int offset)
 	{
 		this.dst      = dst	;
 		this.varName = varName;
+		this.offset = offset;
 	}
 
 	public void printMe(PrintWriter fileWriter)

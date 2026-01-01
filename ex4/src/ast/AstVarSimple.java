@@ -12,6 +12,7 @@ public class AstVarSimple extends AstVar
 	/* simple variable name */
 	/************************/
 	public String name;
+	public int offset;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -69,6 +70,11 @@ public class AstVarSimple extends AstVar
 			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
 		
+		/***********************************************************/
+        /* Fetch the offset and store it in the AST node  */
+        /***********************************************************/
+        this.offset = SymbolTable.getInstance().getOffset(name);
+
 		/*************************/
 		/* [3] Return variable type */
 		/*************************/
@@ -78,7 +84,8 @@ public class AstVarSimple extends AstVar
 	public Temp irMe()
 	{
 		Temp t = TempFactory.getInstance().getFreshTemp();
-		Ir.getInstance().AddIrCommand(new IrCommandLoad(t,name));
+        /* Pass the offset to the IrCommandLoad */
+        Ir.getInstance().AddIrCommand(new IrCommandLoad(t, name, this.offset));
 		return t;
 	}
 }

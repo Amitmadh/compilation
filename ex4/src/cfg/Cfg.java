@@ -77,11 +77,13 @@ public class Cfg {
                     currentNode.successors.add(target);
                     target.predecessors.add(currentNode);
                 }
+            }
         }
 
     }
 
     public void runChaoticIterations() {
         // כאן ירוץ הלופ שמעדכן את ה-BitSets
+        
     }
 }

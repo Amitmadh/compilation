@@ -11,6 +11,7 @@ public class AstVarDec extends AstNode
     public String fieldName;
     public AstExp exp;
     public AstNewExp nexp;
+	public int offset;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -164,6 +165,10 @@ public class AstVarDec extends AstNode
 		/************************************************/
 		SymbolTable.getInstance().enter(fieldName, t);
 
+		/*******************/
+		/* [6] Set the offset */
+		this.offset = SymbolTable.getInstance().getOffset(fieldName);
+
 		return null;	
 	}	
 
@@ -179,7 +184,7 @@ public class AstVarDec extends AstNode
 
 		if (initialValue != null)
 		{
-			Ir.getInstance().AddIrCommand(new IrCommandStore(fieldName,initialValue.irMe()));
+			Ir.getInstance().AddIrCommand(new IrCommandStore(fieldName, initialValue.irMe(), this.offset));
 		}
 		return null;
 	}
