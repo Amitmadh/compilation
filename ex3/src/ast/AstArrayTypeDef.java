@@ -50,7 +50,7 @@ public class AstArrayTypeDef extends AstDec
 			String.format("ARRAYTYPEDEF( %s )", fieldname));
 	}
 
-	public void semantMe() throws SemanticException
+	public void semantMe(TypeClass classType) throws SemanticException
 	{
 		Type t;
 		if (!SymbolTable.getInstance().isGlobalScope()) {

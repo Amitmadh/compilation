@@ -1,4 +1,5 @@
 package ast;
+import types.TypeClass;
 
 public class AstDecClassDec extends AstDec
 {
@@ -54,7 +55,7 @@ public class AstDecClassDec extends AstDec
 		if (classDec  != null) AstGraphviz.getInstance().logEdge(serialNumber,classDec.serialNumber);
 	}
 
-	public void semantMe() throws SemanticException {
-		if (classDec != null) classDec.semantMe();
+	public void semantMe(TypeClass classType) throws SemanticException {
+		if (classDec != null) classDec.semantMe(classType);
 	}
 }

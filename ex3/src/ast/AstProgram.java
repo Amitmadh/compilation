@@ -63,7 +63,7 @@ public class AstProgram extends AstNode
 	}
 
 	public void semantMe() throws SemanticException {
-		if (head != null) head.semantMe();
+		if (head != null) head.semantMe(null);
 		if (tail != null) tail.semantMe();
     }
 }

@@ -59,8 +59,7 @@ public class AstCfield extends AstNode
 		if (varDec  != null) AstGraphviz.getInstance().logEdge(serialNumber,varDec.serialNumber);
 		if (funDec != null) AstGraphviz.getInstance().logEdge(serialNumber,funDec.serialNumber);
 	}
-	public TypeClassVarDec semantMe() throws SemanticException
-	{	
+	public TypeClassVarDec semantMe(TypeClass classType) throws SemanticException{				
 		Type t = null;
 		TypeClassVarDec varClassDec = null;
 		if (varDec != null) {
@@ -71,9 +70,25 @@ public class AstCfield extends AstNode
 				throw new SemanticException(String.format("ERROR(%d)",line));
 			}
 			varClassDec = new TypeClassVarDec(varDec.fieldName, t);
+			/*
+			becasue of the recursive nature of class declarations, we will want to add
+			the class variable to the class members before semanting the tail as functions or other members
+			declarations may refer to it.
+			*/
+		
+			if (classType == null) {
+				System.out.printf("ERROR at line %d, class not found for class field\n", line);
+				throw new SemanticException(String.format("ERROR(%d)",	line));
+			}
+
+			if (classType.dataMembers == null) {
+				classType.dataMembers = new TypeClassVarDecList(varClassDec, null);
+			} else {	
+				classType.dataMembers = new TypeClassVarDecList(varClassDec, classType.dataMembers);
+			}
 		}	
 		else {
-			funDec.semantMe();
+			funDec.semantMe(classType);
 			t = SymbolTable.getInstance().find(funDec.fieldName);
 			if (t == null) {
 				System.out.printf("ERROR at line %d, Type %s not found\n", line, funDec.fieldName);
