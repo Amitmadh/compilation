@@ -24,8 +24,9 @@ public class CfgNode {
     }
 
     public void addSuccessor(CfgNode node) {
-        if (node != null) {
-            successors.add(node);
+        if (node != null && !this.successors.contains(node)) {
+            this.successors.add(node);
+            node.predecessors.add(this); 
         }
     }
 }
