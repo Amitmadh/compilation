@@ -57,7 +57,7 @@ public class AstDecFuncDec extends AstDec
 	}
 
 	public void semantMe(TypeClass classType) throws SemanticException {
-		if (funcDec != null) funcDec.semantMe();
+		if (funcDec != null) funcDec.semantMe(classType);
 	}
 
 	public Temp irMe() {
