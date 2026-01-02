@@ -1,5 +1,6 @@
 package ast;
 import temp.Temp;
+import types.TypeClass;
 
 public class AstDecFuncDec extends AstDec
 {
@@ -55,7 +56,7 @@ public class AstDecFuncDec extends AstDec
 		if (funcDec  != null) AstGraphviz.getInstance().logEdge(serialNumber,funcDec.serialNumber);
 	}
 
-	public void semantMe() throws SemanticException {
+	public void semantMe(TypeClass classType) throws SemanticException {
 		if (funcDec != null) funcDec.semantMe();
 	}
 

@@ -63,7 +63,7 @@ public class AstClassDec extends AstDec
 		if (cfieldList != null) AstGraphviz.getInstance().logEdge(serialNumber,cfieldList.serialNumber);
 	}
 
-	public void semantMe() throws SemanticException
+	public void semantMe(TypeClass classType) throws SemanticException
 	{	
 		/***************************/
 		/* [1] Class in global scope */
@@ -110,7 +110,7 @@ public class AstClassDec extends AstDec
 		/*******************************/
 		/* [6] Semant Class Fields */		
 		if (cfieldList != null) {
-			t.dataMembers = cfieldList.semantMe();
+			cfieldList.semantMe(t);
 		}
 		/*****************/
 		/* [7] End Scope */

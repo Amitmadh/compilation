@@ -69,7 +69,7 @@ public class AstFuncDec extends AstDec
 		if (argList != null) AstGraphviz.getInstance().logEdge(serialNumber,argList.serialNumber);
         if (stmtList != null) AstGraphviz.getInstance().logEdge(serialNumber,stmtList.serialNumber);
 	}
-	public void semantMe() throws SemanticException
+	public void semantMe(TypeClass classType) throws SemanticException
 	{
 		Type returnType;
 		TypeList argListTypes = null;
@@ -162,6 +162,19 @@ public class AstFuncDec extends AstDec
 		}
 		TypeFunction funcType = new TypeFunction(returnType, fieldName, null);
 		SymbolTable.getInstance().enter(fieldName, funcType);
+
+		/* if this function is part of a class, we will need to update it's class data members
+		 as it can call itself
+		*/
+		if (classType != null) {
+			TypeClass currentClass = classType;
+			TypeClassVarDec funcAsVarDec = new TypeClassVarDec(fieldName, funcType);
+			if (currentClass.dataMembers == null) {
+				currentClass.dataMembers = new TypeClassVarDecList(funcAsVarDec, null);
+			} else {	
+				currentClass.dataMembers = new TypeClassVarDecList(funcAsVarDec, currentClass.dataMembers);
+			}
+		}
 		/****************************/
 		/* Begin Function Scope */
 		/****************************/

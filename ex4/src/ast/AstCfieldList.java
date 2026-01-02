@@ -63,10 +63,8 @@ public class AstCfieldList extends AstNode
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
 	}
 
-	public TypeClassVarDecList semantMe() throws SemanticException
+	public TypeClassVarDecList semantMe(TypeClass classType) throws SemanticException
 	{
-		TypeClassVarDec headType = null;
-		TypeClassVarDecList tailTypes = null;
 		if (head == null) {
         	return null;
     	}
@@ -74,17 +72,17 @@ public class AstCfieldList extends AstNode
 		/*******************************/
 		/* [1] Semant head cfield ...  */
 		/*******************************/
-		if (head != null) headType = head.semantMe();
+		if (head != null)  head.semantMe(classType);
 
 		/*******************************/
 		/* [2] Semant tail cfieldList */
 		/*******************************/
-		if (tail != null) tailTypes = tail.semantMe();
+		if (tail != null) tail.semantMe(classType);
 
 		/*******************************/
 		/* [3] Return the type list ... */
 		/*******************************/
-		return new TypeClassVarDecList(headType, tailTypes);
+		return classType.dataMembers;
 	}
 	
 }

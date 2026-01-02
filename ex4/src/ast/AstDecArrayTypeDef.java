@@ -1,5 +1,6 @@
 package ast;
 import temp.Temp;
+import types.TypeClass;
 
 public class AstDecArrayTypeDef extends AstDec
 {
@@ -54,9 +55,8 @@ public class AstDecArrayTypeDef extends AstDec
 		/****************************************/
 		if (arrayTypeDef  != null) AstGraphviz.getInstance().logEdge(serialNumber,arrayTypeDef.serialNumber);
 	}
-	
-	public void semantMe() throws SemanticException {
-		if (arrayTypeDef != null) arrayTypeDef.semantMe();
+	public void semantMe(TypeClass classType) throws SemanticException {
+		if (arrayTypeDef != null) arrayTypeDef.semantMe(classType);
 	}
 
 	public Temp irMe() {
