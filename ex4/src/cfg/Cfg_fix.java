@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.HashSet;
 
 import java.io.PrintWriter;
+import java.io.FileWriter;
 
 import ir.*;
 
@@ -27,7 +28,7 @@ public class Cfg_fix {
         IrCommandList tail = ir.getTail();
 
         while (current != null) {
-            if (isGlobalInitialization(current)) {
+            if (current.isGlobal) {
                 globalInits.add(current);
             }
 
@@ -85,11 +86,12 @@ public class Cfg_fix {
             if (targetLabel != null && labelToNodeMap.containsKey(targetLabel)) {
                 CfgNode targetNode = labelToNodeMap.get(targetLabel);
 
-                /* skip label nodes to point directly to the next executable command */
-                while (targetNode.command instanceof IrCommandLabel && !targetNode.successors.isEmpty()) {
-                    targetNode = targetNode.successors.get(0);
-                }
-                sourceNode.addSuccessor(targetNode);
+                // /* skip label nodes to point directly to the next executable command */
+                // while (targetNode.command instanceof IrCommandLabel && !targetNode.successors.isEmpty()) {
+                //     targetNode = targetNode.successors.get(0);
+                // }
+                // sourceNode.addSuccessor(targetNode);
+                sourceNode.addSuccessor(labelToNodeMap.get(targetLabel));
             }
 
         }
@@ -211,7 +213,7 @@ public class Cfg_fix {
 
     private void runChaoticIterations() throws java.io.FileNotFoundException {
         
-        /* PrintWriter fileWriter = new PrintWriter("output/in&out.txt"); */
+        // PrintWriter fileWriter = new PrintWriter("output/in&out.txt"); 
 
         boolean changed;
         do {
@@ -223,21 +225,39 @@ public class Cfg_fix {
                 computeInSet(node);
                 computeOutSet(node);
 
-/*                 if (node.command != null) {
-                    node.command.printMe(fileWriter);
-                    fileWriter.format("IN Temps: %s\n", node.inSetTemps);
-                    fileWriter.format("OUT Temps: %s\n", node.outSetTemps);
-                    fileWriter.format("IN Vars: %s\n", node.inSetVars);
-                    fileWriter.format("OUT Vars: %s\n\n", node.outSetVars);
-                } */
-
+            //    if (node.command != null && (node.command instanceof IrCommandStore || node.command instanceof IrCommandLoad)) {
+            //         node.command.printMe(fileWriter);
+            //         fileWriter.format("IN Temps: %s\n", node.inSetTemps);
+            //         fileWriter.format("OUT Temps: %s\n", node.outSetTemps);
+            //         fileWriter.format("IN Vars: %s\n", node.inSetVars);
+            //         fileWriter.format("OUT Vars: %s\n\n", node.outSetVars);
+            //         if (node.command instanceof IrCommandStore){
+            //             fileWriter.format("Offset: %d\n\n",((IrCommandStore) node.command).offset);
+            //         }
+            //     }
+                // if (node.command != null && (node.command instanceof IrCommandStore || node.command instanceof IrCommandLoad)) {
+                //     System.out.println("Command: " + node.command.toString());
+                //     System.out.println("  IN Vars: " + node.inSetVars);
+                //     System.out.println("  OUT Vars: " + node.outSetVars);
+                // }
                 if (!node.outSetTemps.equals(oldOutSetTemps) || !node.outSetVars.equals(oldOutSetVars)) {
                     changed = true;
                 }
             }
         } while (changed);
 
-        /* fileWriter.close(); */
+        PrintWriter fileWriter = new PrintWriter("output/in&out.txt"); 
+        for (CfgNode node : nodes) {
+            if (node.command != null) {
+                node.command.printMe(fileWriter);
+                fileWriter.format("isGlobal: %b\n", node.command.isGlobal); // הוסיפי את זה כדי לוודא!
+                fileWriter.format("IN Temps: %s\n", node.inSetTemps);
+                fileWriter.format("OUT Temps: %s\n", node.outSetTemps);
+                fileWriter.format("IN Vars: %s\n", node.inSetVars);
+                fileWriter.format("OUT Vars: %s\n\n", node.outSetVars);
+            }
+        }
+        fileWriter.close();
     }
 
     public List<String> usedBeforeSet() throws java.io.FileNotFoundException {

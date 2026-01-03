@@ -16,6 +16,7 @@ import java.util.HashSet;
 
 public abstract class IrCommand
 {
+	public boolean isGlobal = false;
 	/*****************/
 	/* Label Factory */
 	/*****************/

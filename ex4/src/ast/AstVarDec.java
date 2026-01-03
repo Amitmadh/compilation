@@ -1,10 +1,10 @@
 package ast;
-import types.*;
 import ir.Ir;
 import ir.IrCommandAllocate;
 import ir.IrCommandStore;
 import symboltable.*;
 import temp.Temp;
+import types.*;
 
 public class AstVarDec extends AstNode
 {
@@ -175,6 +175,11 @@ public class AstVarDec extends AstNode
 
 	public Temp irMe()
 	{	
+		boolean wasGlobal = Ir.getInstance().generatingGlobal;
+
+		if (this.offset >= 0) {
+			Ir.getInstance().generatingGlobal = true;
+		}
 		Ir.getInstance().AddIrCommand(new IrCommandAllocate(fieldName));
 
 		AstExp initialValue = null;
@@ -187,8 +192,11 @@ public class AstVarDec extends AstNode
 
 		if (initialValue != null)
 		{
-			Ir.getInstance().AddIrCommand(new IrCommandStore(fieldName, initialValue.irMe(), this.offset));
+			Temp valTemp = initialValue.irMe();
+			Ir.getInstance().AddIrCommand(new IrCommandStore(fieldName, valTemp, this.offset));
 		}
+
+		Ir.getInstance().generatingGlobal = wasGlobal;
 		return null;
 	}
 }

@@ -1,11 +1,10 @@
 package ast;
-import types.*;
 import ir.Ir;
-import ir.IrCommandStore;
-import symboltable.SymbolTable;
-import ir.IrCommandFieldSet;
 import ir.IrCommandArraySet;
+import ir.IrCommandFieldSet;
+import ir.IrCommandStore;
 import temp.Temp;
+import types.*;
 
 public class AstStmtAssign extends AstStmt
 {
@@ -72,6 +71,10 @@ public class AstStmtAssign extends AstStmt
 	public Type semantMe() throws SemanticException
 	{
 		Type t = var.semantMe();
+		
+		if (var instanceof AstVarSimple) {
+			this.offset = ((AstVarSimple)var).offset;
+		}
 		
 		/**************************************/
 		/* Check that Initialization expression type matches variable type */
@@ -153,7 +156,7 @@ public class AstStmtAssign extends AstStmt
 
 		if (var instanceof AstVarSimple) {
 			String name = ((AstVarSimple)var).name;
-			Ir.getInstance().AddIrCommand(new IrCommandStore(name, expVal, 0));
+			Ir.getInstance().AddIrCommand(new IrCommandStore(name, expVal, this.offset));
 		}
 
 		// field assignment: instance.field := exp

@@ -27,7 +27,7 @@ public class SymbolTable
 
 	private int globalOffsetCounter = 0;
     private int localOffsetCounter = 0;
-    private int scopeLevel = 0;
+
 	
 	/**************************************************************/
 	/* A very primitive hash function for exposition purposes ... */
@@ -68,7 +68,7 @@ public class SymbolTable
 		
 		/* Compute offset only for real variables (not types or scope boundaries) */
 		if (!(t instanceof TypeForScopeBoundaries) && !name.equals("int") && !name.equals("string")) {
-			if (scopeLevel == 0) {
+			if (scopeDepth == 0) {
 				/* global scope	 */
 				currentOffset = globalOffsetCounter;
 				globalOffsetCounter += 1;

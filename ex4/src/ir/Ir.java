@@ -18,12 +18,14 @@ public class Ir
 {
 	private IrCommand head=null;
 	private IrCommandList tail=null;
+	public boolean generatingGlobal = false;
 
 	/******************/
 	/* Add Ir command */
 	/******************/
 	public void AddIrCommand(IrCommand cmd)
 	{
+		cmd.isGlobal = this.generatingGlobal;
 		if ((head == null) && (tail == null))
 		{
 			this.head = cmd;
