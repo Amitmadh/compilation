@@ -6,7 +6,7 @@ import java.util.Collections;
 import ast.*;
 import ir.Ir;
 import cfg.Cfg;
-import cfg.Cfg_fix;
+
 
 public class Main
 {
@@ -66,7 +66,7 @@ public class Main
 			/**************************/
 			Ir commands = Ir.getInstance();
 			// Cfg cfg = new Cfg(commands);
-			Cfg_fix cfg = new Cfg_fix(commands);
+			Cfg cfg = new Cfg(commands);
 
 			/********************************/
 			/* [2] Initialize a file writer */
