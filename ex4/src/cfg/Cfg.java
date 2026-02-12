@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.HashSet;
 
 import java.io.PrintWriter;
@@ -226,6 +227,17 @@ public class Cfg {
                 }
             }
         }
-        return usedBefore;
+
+        List<String> updated = new ArrayList<>();
+
+        for (String s : usedBefore) {
+            int index = s.lastIndexOf("offset");
+            if (index != -1) {
+                updated.add(s.substring(0, index));
+            } else {
+                updated.add(s);
+            }
+        }
+        return updated;
     }
 }

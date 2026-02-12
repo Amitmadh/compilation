@@ -1,0 +1,12 @@
+LABEL main :
+ALLOCATE xoffset-1
+t0 := 1
+xoffset-1 = t0
+LABEL Label_1_start :
+t2 = xoffset-1
+t3 := 1
+t1 = eq t2, t3
+IF t1 == 0 GOTO Label_0_end
+ALLOCATE xoffset-2
+BR Label_1_start :
+LABEL Label_0_end :

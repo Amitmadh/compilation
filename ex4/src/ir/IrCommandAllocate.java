@@ -18,9 +18,9 @@ public class IrCommandAllocate extends IrCommand
 {
 	String varName;
 	
-	public IrCommandAllocate(String varName)
+	public IrCommandAllocate(String varName, int offset)
 	{
-		this.varName = varName;
+		this.varName = varName + "offset" + offset;
 	}
 
 	public HashSet<String> tempsUsed() {

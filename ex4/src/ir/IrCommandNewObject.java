@@ -17,11 +17,11 @@ import java.util.HashSet;
 
 public class IrCommandNewObject extends IrCommand
 {
-	Temp varName;
+	Temp t;
 	String type;
 	
-	public IrCommandNewObject(Temp varName, String type)
-	{	this.varName = varName;
+	public IrCommandNewObject(Temp t, String type)
+	{	this.t = t;
 		this.type = type;
 	}
 
@@ -31,11 +31,11 @@ public class IrCommandNewObject extends IrCommand
 	}
 
 	public String tempDefined() {
-		return "t" + varName.getSerialNumber();
+		return "t" + t.getSerialNumber();
 	}
 
 	public void printMe(PrintWriter fileWriter)
 	{
-		fileWriter.format("t%d := NEW OBJECT %s\n", varName.getSerialNumber(), type);
+		fileWriter.format("t%d := NEW OBJECT %s\n", t.getSerialNumber(), type);
 	}
 }

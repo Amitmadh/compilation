@@ -18,13 +18,11 @@ public class IrCommandStore extends IrCommand
 {
 	String varName;
 	Temp src;
-	public int offset;
 	
 	public IrCommandStore(String varName, Temp src, int offset)
 	{
 		this.src = src;
-		this.varName = varName;
-		this.offset = offset;
+		this.varName = varName + "offset" + offset;
 	}
 
 	public HashSet<String> tempsUsed() {

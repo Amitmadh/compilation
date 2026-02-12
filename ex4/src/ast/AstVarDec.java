@@ -180,9 +180,8 @@ public class AstVarDec extends AstNode
 		if (this.offset >= 0) {
 			Ir.getInstance().generatingGlobal = true;
 		}
-		// Ir.getInstance().AddIrCommand(new IrCommandAllocate(fieldName));
-		String irName = fieldName + "_" + this.offset;
-		Ir.getInstance().AddIrCommand(new IrCommandAllocate(irName));
+		
+		Ir.getInstance().AddIrCommand(new IrCommandAllocate(fieldName, this.offset));
 
 		AstExp initialValue = null;
 		if (exp != null) {

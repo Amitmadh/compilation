@@ -1,0 +1,39 @@
+ALLOCATE xoffset3
+LABEL main :
+ALLOCATE xoffset-1
+t0 := 1
+xoffset-1 = t0
+LABEL Label_1_start :
+t2 := 1
+t3 := 1
+t1 = eq t2, t3
+IF t1 == 0 GOTO Label_0_end
+ALLOCATE xoffset-2
+t5 := 1
+t6 := 1
+t4 = eq t5, t6
+IF t4 == 0 GOTO Label_2_end
+ALLOCATE xoffset-3
+t7 := 1
+xoffset-3 = t7
+t9 := 1
+t10 := 1
+t8 = eq t9, t10
+IF t8 == 0 GOTO Label_3_end
+LABEL Label_5_start :
+t12 := 1
+t13 := 1
+t11 = eq t12, t13
+IF t11 == 0 GOTO Label_4_end
+ALLOCATE yoffset-4
+t14 = xoffset-3
+yoffset-4 = t14
+BR Label_5_start :
+LABEL Label_4_end :
+LABEL Label_3_end :
+LABEL Label_2_end :
+BR Label_1_start :
+LABEL Label_0_end :
+ALLOCATE yoffset-5
+t15 = xoffset-1
+yoffset-5 = t15

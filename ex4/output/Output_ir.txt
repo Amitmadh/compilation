@@ -1,0 +1,4 @@
+LABEL main :
+ALLOCATE xoffset-1
+t0 := 1
+xoffset-1 = t0

@@ -17,12 +17,12 @@ import java.util.HashSet;
 
 public class IrCommandNewArray extends IrCommand
 {
-	Temp varName;
+	Temp t;
 	Temp size;
 	String type;
 	
-	public IrCommandNewArray(Temp varName, Temp size, String type)
-	{	this.varName = varName;
+	public IrCommandNewArray(Temp t, Temp size, String type)
+	{	this.t = t;
 		this.size = size;
 		this.type = type;
 	}
@@ -34,11 +34,11 @@ public class IrCommandNewArray extends IrCommand
 	}
 
 	public String tempDefined() {
-		return "t" + varName.getSerialNumber();
+		return "t" + t.getSerialNumber();
 	}
 
 	public void printMe(PrintWriter fileWriter)
 	{
-		fileWriter.format("t%d := NEW ARRAY t%d , %s\n", varName.getSerialNumber(), size.getSerialNumber(), type);
+		fileWriter.format("t%d := NEW ARRAY t%d , %s\n", t.getSerialNumber(), size.getSerialNumber(), type);
 	}
 }

@@ -19,13 +19,11 @@ public class IrCommandLoad extends IrCommand
 {
 	Temp dst;
 	String varName;
-	public int offset;
 	
 	public IrCommandLoad(Temp dst, String varName, int offset)
 	{
 		this.dst      = dst;
-		this.varName = varName;
-		this.offset = offset;
+		this.varName = varName + "offset" + offset;
 	}
 
 	public HashSet<String> tempsUsed() {

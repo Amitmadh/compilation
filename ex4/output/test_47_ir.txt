@@ -1,0 +1,45 @@
+ALLOCATE xoffset3
+ALLOCATE yoffset4
+LABEL main :
+LABEL Label_1_start :
+t1 = yoffset4
+t2 := 0
+t0 = gt t1, t2
+IF t0 == 0 GOTO Label_0_end
+ALLOCATE yoffset-1
+ALLOCATE aoffset-2
+t3 := 1
+aoffset-2 = t3
+LABEL Label_3_start :
+t5 = aoffset-2
+t6 := 0
+t4 = gt t5, t6
+IF t4 == 0 GOTO Label_2_end
+t7 := 1
+IF t7 == 0 GOTO Label_4_end
+LABEL Label_6_start :
+t8 := 1
+IF t8 == 0 GOTO Label_5_end
+ALLOCATE aoffset-3
+BR Label_6_start :
+LABEL Label_5_end :
+LABEL Label_4_end :
+ALLOCATE zoffset-4
+t10 = aoffset-2
+t11 := 1
+t9 = add t10, t11
+zoffset-4 = t9
+BR Label_3_start :
+LABEL Label_2_end :
+ALLOCATE zoffset-5
+t13 = aoffset-2
+t14 := 1
+t12 = add t13, t14
+zoffset-5 = t12
+BR Label_1_start :
+LABEL Label_0_end :
+ALLOCATE zoffset6
+t16 = xoffset3
+t17 := 1
+t15 = add t16, t17
+zoffset6 = t15
