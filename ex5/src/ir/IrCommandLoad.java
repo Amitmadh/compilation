@@ -3,6 +3,9 @@
 /***********/
 package ir;
 
+import java.io.PrintWriter;
+import java.util.HashSet;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -11,24 +14,33 @@ package ir;
 /* PROJECT IMPORTS */
 /*******************/
 import temp.*;
-import mips.*;
 
 public class IrCommandLoad extends IrCommand
 {
 	Temp dst;
 	String varName;
 	
-	public IrCommandLoad(Temp dst, String varName)
+	public IrCommandLoad(Temp dst, String varName, int offset)
 	{
 		this.dst      = dst;
-		this.varName = varName;
+		this.varName = varName + "offset" + offset;
 	}
-	
-	/***************/
-	/* MIPS me !!! */
-	/***************/
-	public void mipsMe()
+
+	public HashSet<String> tempsUsed() {
+		HashSet<String> used = new HashSet<String>();
+		return used;
+	}
+
+	public String tempDefined() {
+		return "t" + dst.getSerialNumber();
+	}
+
+	public String getVar() {
+		return varName;
+	}
+
+	public void printMe(PrintWriter fileWriter)
 	{
-		MipsGenerator.getInstance().load(dst, varName);
+		fileWriter.format("t%d = %s\n", dst.getSerialNumber(), varName);
 	}
 }

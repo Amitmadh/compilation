@@ -3,6 +3,9 @@
 /***********/
 package ir;
 
+import java.io.PrintWriter;
+import java.util.HashSet;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -11,24 +14,30 @@ package ir;
 /* PROJECT IMPORTS */
 /*******************/
 import temp.*;
-import mips.*;
 
 public class IrCommandJumpIfEqToZero extends IrCommand
 {
 	Temp t;
-	String labelName;
+	public String labelName;
 	
 	public IrCommandJumpIfEqToZero(Temp t, String labelName)
 	{
 		this.t          = t;
 		this.labelName = labelName;
 	}
-	
-	/***************/
-	/* MIPS me !!! */
-	/***************/
-	public void mipsMe()
+
+	public HashSet<String> tempsUsed() {
+		HashSet<String> used = new HashSet<String>();
+		used.add("t" + t.getSerialNumber());
+		return used;
+	}
+
+	public String tempDefined() {
+		return null;
+	}
+
+	public void printMe(PrintWriter fileWriter)
 	{
-		MipsGenerator.getInstance().beqz(t, labelName);
+		fileWriter.format("IF t%d == 0 GOTO %s\n", t.getSerialNumber(), labelName);
 	}
 }

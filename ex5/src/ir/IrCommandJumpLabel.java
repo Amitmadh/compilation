@@ -3,6 +3,9 @@
 /***********/
 package ir;
 
+import java.io.PrintWriter;
+import java.util.HashSet;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -10,22 +13,27 @@ package ir;
 /*******************/
 /* PROJECT IMPORTS */
 /*******************/
-import mips.*;
 
 public class IrCommandJumpLabel extends IrCommand
 {
-	String labelName;
+	public String labelName;
 	
 	public IrCommandJumpLabel(String labelName)
 	{
 		this.labelName = labelName;
 	}
-	
-	/***************/
-	/* MIPS me !!! */
-	/***************/
-	public void mipsMe()
+
+	public HashSet<String> tempsUsed() {
+		HashSet<String> used = new HashSet<String>();
+		return used;
+	}
+
+	public String tempDefined() {
+		return null;
+	}
+
+	public void printMe(PrintWriter fileWriter)
 	{
-		MipsGenerator.getInstance().jump(labelName);
+		fileWriter.format("BR %s :\n", labelName);
 	}
 }

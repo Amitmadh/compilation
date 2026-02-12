@@ -1,9 +1,12 @@
 import java.io.*;
-import java.io.PrintWriter;
+import java.util.List;
+
 import java_cup.runtime.Symbol;
+import java.util.Collections;
 import ast.*;
-import ir.*;
-import mips.*;
+import ir.Ir;
+import cfg.Cfg;
+
 
 public class Main
 {
@@ -12,7 +15,8 @@ public class Main
 		Lexer l;
 		Parser p;
 		Symbol s;
-		AstDecList ast;
+		Ir ir;
+		AstProgram ast;
 		FileReader fileReader;
 		PrintWriter fileWriter;
 		String inputFileName = argv[0];
@@ -24,11 +28,6 @@ public class Main
 			/* [1] Initialize a file reader */
 			/********************************/
 			fileReader = new FileReader(inputFileName);
-
-			/********************************/
-			/* [2] Initialize a file writer */
-			/********************************/
-			fileWriter = new PrintWriter(outputFileName);
 
 			/******************************/
 			/* [3] Initialize a new lexer */
@@ -43,7 +42,7 @@ public class Main
 			/***********************************/
 			/* [5] 3 ... 2 ... 1 ... Parse !!! */
 			/***********************************/
-			ast = (AstDecList) p.parse().value;
+			ast = (AstProgram) p.parse().value;
 
 			/*************************/
 			/* [6] Print the AST ... */
@@ -55,30 +54,49 @@ public class Main
 			/**************************/
 			ast.semantMe();
 
+
 			/**********************/
-			/* [8] Ir the AST ... */
+			/* [8] IR the AST ... */
 			/**********************/
 			ast.irMe();
+			ir = Ir.getInstance();
+			ir.printIrCommands(outputFileName.replace(".txt", "_ir.txt"));
+			/**************************/
+			/* [9] Create CFG from IR */
+			/**************************/
+			Ir commands = Ir.getInstance();
+			// Cfg cfg = new Cfg(commands);
+			Cfg cfg = new Cfg(commands);
 
-			/***********************/
-			/* [9] MIPS the Ir ... */
-			/***********************/
-			Ir.getInstance().mipsMe();
+			/********************************/
+			/* [2] Initialize a file writer */
+			/********************************/
+			List<String> uninitVars = cfg.usedBeforeSet();
 
-			/**************************************/
-			/* [10] Finalize AST GRAPHIZ DOT file */
-			/**************************************/
-			AstGraphviz.getInstance().finalizeFile();
+			fileWriter = new PrintWriter(outputFileName);
 
-			/***************************/
-			/* [11] Finalize MIPS file */
-			/***************************/
-			MipsGenerator.getInstance().finalizeFile();
+			if (uninitVars.size() == 0) {
+				fileWriter.print("!OK");
+				System.out.println("!OK\n");
+			} else {
+				Collections.sort(uninitVars);
+				for (int i = 0; i < uninitVars.size() - 1; i++) {
+					fileWriter.format("%s\n", uninitVars.get(i));
+					System.out.format("%s\n", uninitVars.get(i));
+				}
+				fileWriter.format("%s", uninitVars.get(uninitVars.size() - 1));
+				System.out.format("%s\n", uninitVars.get(uninitVars.size() - 1));
+			}
 
 			/**************************/
-			/* [12] Close output file */
+			/* [10] Close output file */
 			/**************************/
 			fileWriter.close();
+
+			/*************************************/
+			/* [11] Finalize AST GRAPHIZ DOT file */
+			/*************************************/
+			AstGraphviz.getInstance().finalizeFile();
 		}
 
 		catch (Exception e)
@@ -87,3 +105,5 @@ public class Main
 		}
 	}
 }
+
+

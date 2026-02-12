@@ -24,4 +24,10 @@ public class TypeInt extends Type
 		}
 		return instance;
 	}
+
+	/*************/
+	/* isInt() */
+	/*************/
+	@Override
+	public boolean isInt(){ return true;}
 }

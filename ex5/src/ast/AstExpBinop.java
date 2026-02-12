@@ -1,8 +1,15 @@
 package ast;
-
+import ir.Ir;
+import ir.IrCommandBinopAddIntegers;
+import ir.IrCommandBinopEqIntegers;
+import ir.IrCommandBinopLtIntegers;
+import ir.IrCommandBinopMulIntegers;
+import ir.IrCommandBinopDivIntegers;
+import ir.IrCommandBinopSubIntegers;
+import ir.IrCommandBinopGtIntegers;
+import temp.Temp;
+import temp.TempFactory;
 import types.*;
-import temp.*;
-import ir.*;
 
 public class AstExpBinop extends AstExp
 {
@@ -13,20 +20,21 @@ public class AstExpBinop extends AstExp
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpBinop(AstExp left, AstExp right, int op)
+	public AstExpBinop(AstExp left, AstExp right, int op, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== exp -> exp BINOP exp\n");
+		// System.out.print("====================== exp -> exp BINOP exp\n");
 
 		/*******************************/
-		/* COPY INPUT DATA MENBERS ... */
+		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
 		this.left = left;
 		this.right = right;
@@ -41,30 +49,33 @@ public class AstExpBinop extends AstExp
 		String sop="";
 		
 		/*********************************/
-		/* CONVERT OP to a printable sop */
+		/* CONVERT op to a printable sop */
 		/*********************************/
 		if (op == 0) {sop = "+";}
 		if (op == 1) {sop = "-";}
-		if (op == 3) {sop = "=";}
-
-		/**********************************/
+		if (op == 2) {sop = "*";}
+		if (op == 3) {sop = "/";}
+		if (op == 4) {sop = "<";}
+		if (op == 5) {sop = ">";}
+		if (op == 6) {sop = "=";}
+		
+		/*************************************/
 		/* AST NODE TYPE = AST BINOP EXP */
-		/*********************************/
-		System.out.print("AST NODE BINOP EXP\n");
-		System.out.format("BINOP EXP(%s)\n",sop);
+		/*************************************/
+		// System.out.print("AST NODE BINOP EXP\n");
 
 		/**************************************/
 		/* RECURSIVELY PRINT left + right ... */
 		/**************************************/
 		if (left != null) left.printMe();
 		if (right != null) right.printMe();
-
+		
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
 		AstGraphviz.getInstance().logNode(
-                serialNumber,
-			String.format("BINOP(%s)",sop));
+				serialNumber,
+			String.format("EXP BINOP(%s)",sop));
 		
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
@@ -73,20 +84,83 @@ public class AstExpBinop extends AstExp
 		if (right != null) AstGraphviz.getInstance().logEdge(serialNumber,right.serialNumber);
 	}
 
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
-		Type t1 = null;
-		Type t2 = null;
+		Type type_left = left.semantMe();
+		Type type_right = right.semantMe();
+		if (op != 6){
+			/****************************/
+			/* [1] Check special case: operator + on two strings */
+			/****************************/
+			if(op == 0 && type_left.isString() && type_right.isString()) {
+				return TypeString.getInstance();
+			}
+
+			/****************************/
+			/* [2] General case: ensure both sides are int */
+			/****************************/
+			if (!type_left.isInt() || !type_right.isInt()) {
+				System.out.printf("ERROR at line %d, binary operator %s requires both operands to be of type int\n", line, op);
+				throw new SemanticException(String.format("ERROR(%d)",line));
+			}
+
+			/****************************/
+			/* [3] Check if op is /, if so check that right side is not 0 */
+			/****************************/
+			if (op == 3) {
+				if (right instanceof AstExpInt) {
+					AstExpInt right_int = (AstExpInt)right;
+					if (right_int.value == 0) {
+						System.out.printf("ERROR at line %d, division by zero\n", line);
+						throw new SemanticException(String.format("ERROR(%d)",line));
+					}
+				}
+			}
+			
 		
-		if (left  != null) t1 = left.semantMe();
-		if (right != null) t2 = right.semantMe();
-		
-		if ((t1 == TypeInt.getInstance()) && (t2 == TypeInt.getInstance()))
-		{
-			return TypeInt.getInstance();
 		}
-		System.exit(0);
-		return null;
+		else{ /*equality check */
+		/****************************/
+		    /* both operands are of the same type */
+			if (type_left.name.equals(type_right.name)) {
+				return TypeInt.getInstance();
+			}
+			
+			/*	comparing with nil */
+			boolean leftIsNil = (type_left instanceof TypeNil) || "nil".equals(type_left.name);
+			boolean rightIsNil = (type_right instanceof TypeNil) || "nil".equals(type_right.name);
+
+			if (leftIsNil || rightIsNil) {
+				Type nonNilType = leftIsNil ? type_right : type_left;
+				
+				/* non Nil Type can't be primitive */
+				if (nonNilType.isClass() || nonNilType.isArray()) {
+					return TypeInt.getInstance();
+				} 
+				else {
+					System.out.printf("ERROR at line %d, equality check with nil requires class or array type\n", line);
+					throw new SemanticException(String.format("ERROR(%d)",line));
+				}
+			}
+
+			/* both operands are classes and one is subclass of the other */
+			if (type_left.isClass() && type_right.isClass()) {
+				TypeClass left_class = (TypeClass)type_left;
+				TypeClass right_class = (TypeClass)type_right;
+				
+				if (left_class.isSubClassOf(right_class) || right_class.isSubClassOf(left_class)) {
+					return TypeInt.getInstance();
+				}
+			}
+
+			/* if got here, them type mismatch */
+			System.out.printf("ERROR at line %d, type mismatch for equality operator\n", line);
+			throw new SemanticException(String.format("ERROR(%d)",line));
+		}
+		/****************************/
+		/*  Return type int */
+		/****************************/
+		return TypeInt.getInstance();
 	}
 
 	public Temp irMe()
@@ -104,6 +178,12 @@ public class AstExpBinop extends AstExp
 					getInstance().
 					AddIrCommand(new IrCommandBinopAddIntegers(dst,t1,t2));
 		}
+		if (op == 1)
+		{
+			Ir.
+					getInstance().
+					AddIrCommand(new IrCommandBinopSubIntegers(dst,t1,t2));
+		}
 		if (op == 2)
 		{
 			Ir.
@@ -114,15 +194,28 @@ public class AstExpBinop extends AstExp
 		{
 			Ir.
 					getInstance().
-					AddIrCommand(new IrCommandBinopEqIntegers(dst,t1,t2));
+					AddIrCommand(new IrCommandBinopDivIntegers(dst,t1,t2));
 		}
+		
 		if (op == 4)
 		{
 			Ir.
 					getInstance().
 					AddIrCommand(new IrCommandBinopLtIntegers(dst,t1,t2));
 		}
+		if (op == 5)
+		{
+			Ir.
+					getInstance().
+					AddIrCommand(new IrCommandBinopGtIntegers(dst,t1,t2));
+		}
+		if (op == 6)
+		{
+			Ir.
+					getInstance().
+					AddIrCommand(new IrCommandBinopEqIntegers(dst,t1,t2));
+		}
 		return dst;
 	}
-
+	
 }

@@ -1,8 +1,6 @@
 package ast;
-
+import temp.Temp;
 import types.*;
-import temp.*;
-
 public class AstStmtList extends AstNode
 {
 	/****************/
@@ -14,18 +12,19 @@ public class AstStmtList extends AstNode
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstStmtList(AstStmt head, AstStmtList tail)
+	public AstStmtList(AstStmt head, AstStmtList tail, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		if (tail != null) System.out.print("====================== stmts -> stmt stmts\n");
-		if (tail == null) System.out.print("====================== stmts -> stmt      \n");
+		// if (tail != null) System.out.print("====================== stmts -> stmt stmts\n");
+		// if (tail == null) System.out.print("====================== stmts -> stmt      \n");
 
 		/*******************************/
 		/* COPY INPUT DATA MEMBERS ... */
@@ -42,7 +41,7 @@ public class AstStmtList extends AstNode
 		/**************************************/
 		/* AST NODE TYPE = AST STATEMENT LIST */
 		/**************************************/
-		System.out.print("AST NODE STMT LIST\n");
+		// System.out.print("AST NODE STMT LIST\n");
 
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
@@ -63,12 +62,22 @@ public class AstStmtList extends AstNode
 		if (head != null) AstGraphviz.getInstance().logEdge(serialNumber,head.serialNumber);
 		if (tail != null) AstGraphviz.getInstance().logEdge(serialNumber,tail.serialNumber);
 	}
-	
-	public Type semantMe()
+	public TypeList semantMe() throws SemanticException
 	{
-		if (head != null) head.semantMe();
+		if (head == null) {
+        	return null;
+    	}
+
+		/*******************************/
+		/* [1] Semant head stmt ...  */
+		/*******************************/
+		head.semantMe();
+
+		/*******************************/
+		/* [2] Semant tail stmtList */
+		/*******************************/
 		if (tail != null) tail.semantMe();
-		
+
 		return null;
 	}
 

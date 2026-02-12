@@ -12,15 +12,33 @@ public class TypeClass extends Type
 	/* Note that data members coming from the AST are */
 	/* packed together with the class methods         */
 	/**************************************************/
-	public TypeList dataMembers;
+	public TypeClassVarDecList dataMembers;
 	
 	/****************/
 	/* CTROR(S) ... */
 	/****************/
-	public TypeClass(TypeClass father, String name, TypeList dataMembers)
+	public TypeClass(TypeClass father, String name, TypeClassVarDecList dataMembers)
 	{
 		this.name = name;
 		this.father = father;
 		this.dataMembers = dataMembers;
+	}
+
+	/***************/
+	/* isClass() */
+	/***************/
+	@Override
+	public boolean isClass(){ return true;}	
+
+	public boolean isSubClassOf(TypeClass other) {
+		if (other == null) return false;
+		TypeClass curr = this;
+		while (curr != null) {
+			if (curr.name != null && curr.name.equals(other.name)) {
+				return true;
+			}
+			curr = curr.father;
+		}
+		return false;
 	}
 }

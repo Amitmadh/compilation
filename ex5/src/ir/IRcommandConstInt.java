@@ -3,6 +3,9 @@
 /***********/
 package ir;
 
+import java.io.PrintWriter;
+import java.util.HashSet;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -11,7 +14,6 @@ package ir;
 /* PROJECT IMPORTS */
 /*******************/
 import temp.*;
-import mips.*;
 
 public class IRcommandConstInt extends IrCommand
 {
@@ -23,12 +25,18 @@ public class IRcommandConstInt extends IrCommand
 		this.t = t;
 		this.value = value;
 	}
-	
-	/***************/
-	/* MIPS me !!! */
-	/***************/
-	public void mipsMe()
+
+	public HashSet<String> tempsUsed() {
+		HashSet<String> used = new HashSet<String>();
+		return used;
+	}
+
+	public String tempDefined() {
+		return "t" + t.getSerialNumber();
+	}
+
+	public void printMe(PrintWriter fileWriter)
 	{
-		MipsGenerator.getInstance().li(t,value);
+		fileWriter.format("t%d := %d\n", t.getSerialNumber(), value);
 	}
 }

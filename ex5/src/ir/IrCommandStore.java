@@ -10,25 +10,37 @@ package ir;
 /*******************/
 /* PROJECT IMPORTS */
 /*******************/
-import temp.*;
-import mips.*;
+import temp.Temp;
+import java.io.PrintWriter;
+import java.util.HashSet;
 
 public class IrCommandStore extends IrCommand
 {
 	String varName;
 	Temp src;
 	
-	public IrCommandStore(String varName, Temp src)
+	public IrCommandStore(String varName, Temp src, int offset)
 	{
-		this.src      = src;
-		this.varName = varName;
+		this.src = src;
+		this.varName = varName + "offset" + offset;
 	}
-	
-	/***************/
-	/* MIPS me !!! */
-	/***************/
-	public void mipsMe()
+
+	public HashSet<String> tempsUsed() {
+		HashSet<String> used = new HashSet<String>();
+		used.add("t" + src.getSerialNumber());
+		return used;
+	}
+
+	public String tempDefined() {
+		return null;
+	}
+
+	public String getVar() {
+		return varName;
+	}
+
+	public void printMe(PrintWriter fileWriter)
 	{
-		MipsGenerator.getInstance().store(varName,src);
+		fileWriter.format("%s = t%d\n", varName, src.getSerialNumber());
 	}
 }

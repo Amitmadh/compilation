@@ -1,8 +1,12 @@
 package ast;
-
-import temp.*;
-import ir.*;
-
+import types.*;
+import ir.Ir;
+import ir.IrCommand;
+import ir.IrCommandJumpIfEqToZero;
+import ir.IrCommandJumpLabel;
+import ir.IrCommandLabel;
+import symboltable.SymbolTable;
+import temp.Temp;
 public class AstStmtWhile extends AstStmt
 {
 	public AstExp cond;
@@ -11,10 +15,75 @@ public class AstStmtWhile extends AstStmt
 	/*******************/
 	/*  CONSTRUCTOR(S) */
 	/*******************/
-	public AstStmtWhile(AstExp cond, AstStmtList body)
+	public AstStmtWhile(AstExp cond, AstStmtList body, int line)
 	{
+		/******************************/
+		/* SET A UNIQUE SERIAL NUMBER */
+		/******************************/
+		super(line);
+		serialNumber = AstNodeSerialNumber.getFresh();
+
+		/***************************************/
+		/* PRINT CORRESPONDING DERIVATION RULE */
+		/***************************************/
+		// System.out.print("====================== stmt -> WHILE LPAREN exp RPAREN LBRACE stmtList RBRACE\n");
+
+		/*******************************/
+		/* COPY INPUT DATA MEMBERS ... */
+		/*******************************/
 		this.cond = cond;
 		this.body = body;
+	}
+
+	/*********************************************************/
+	/* The printing message for an assign statement AST node */
+	/*********************************************************/
+	public void printMe()
+	{
+		/********************************************/
+		/* AST NODE TYPE = AST ASSIGNMENT STATEMENT */
+		/********************************************/
+		// System.out.print("AST NODE WHILE STMT\n");
+
+		/***********************************/
+		/* RECURSIVELY PRINT VAR + EXP ... */
+		/***********************************/
+		if (cond != null) cond.printMe();
+		if (body != null) body.printMe();
+
+		/***************************************/
+		/* PRINT Node to AST GRAPHVIZ DOT file */
+		/***************************************/
+		AstGraphviz.getInstance().logNode(
+				serialNumber,
+			"WHILE\nSTMT\n");
+		
+		/****************************************/
+		/* PRINT Edges to AST GRAPHVIZ DOT file */
+		/****************************************/
+		if (cond != null) AstGraphviz.getInstance().logEdge(serialNumber,cond.serialNumber);
+		if (body != null) AstGraphviz.getInstance().logEdge(serialNumber,body.serialNumber);
+	}
+	public Type semantMe() throws SemanticException
+	{
+		/****************************/
+		/* [1] Semant the cond exp */
+		/****************************/
+		Type condType = cond.semantMe();
+		if (!condType.isInt())
+		{
+			System.out.printf("ERROR at line %d, While condition is not boolean\n", line);
+			throw new SemanticException(String.format("ERROR(%d)",line));
+		}
+		/*	[2] Begin scope */
+		SymbolTable.getInstance().beginScope();
+		/*******************************/
+		/* [3] Semant the body stmtList */
+		/*******************************/
+		body.semantMe();
+		SymbolTable.getInstance().endScope();
+		
+		return null;
 	}
 
 	public Temp irMe()

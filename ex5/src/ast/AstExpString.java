@@ -1,7 +1,9 @@
 package ast;
-
+import ir.IRcommandConstString;
+import ir.Ir;
+import temp.Temp;
+import temp.TempFactory;
 import types.*;
-
 public class AstExpString extends AstExp
 {
 	public String value;
@@ -9,37 +11,52 @@ public class AstExpString extends AstExp
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpString(String value)
+	public AstExpString(String value, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
-		System.out.format("====================== exp -> STRING( %s )\n", value);
+		/***************************************/
+		/* PRINT CORRESPONDING DERIVATION RULE */
+		/***************************************/
+		// System.out.format("====================== exp -> STRING( %s )\n", value);
+
+		/*******************************/
+		/* COPY INPUT DATA MEMBERS ... */
+		/*******************************/
 		this.value = value;
 	}
 
-	/******************************************************/
-	/* The printing message for a STRING EXP AST node */
-	/******************************************************/
+	/************************************************/
+	/* The printing message for an int exp AST node */
+	/************************************************/
 	public void printMe()
 	{
 		/*******************************/
-		/* AST NODE TYPE = AST STRING EXP */
+		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE STRING( %s )\n",value);
+		// System.out.format("AST NODE STRING( %s )\n",value);
 
-		/***************************************/
-		/* PRINT Node to AST GRAPHVIZ DOT file */
-		/***************************************/
+		/*********************************/
+		/* Print to AST GRAPHVIZ DOT file */
+		/*********************************/
 		AstGraphviz.getInstance().logNode(
-                serialNumber,
-			String.format("STRING\n%s",value.replace('"','\'')));
+				serialNumber,
+			String.format("STRING(%s)",value));
 	}
 
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		return TypeString.getInstance();
+	}
+
+	public Temp irMe()
+	{
+		Temp t = TempFactory.getInstance().getFreshTemp();
+		Ir.getInstance().AddIrCommand(new IRcommandConstString(t,value));
+		return t;
 	}
 }

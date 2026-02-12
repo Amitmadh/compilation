@@ -1,6 +1,6 @@
 package ast;
 
-import temp.*;
+import temp.Temp;
 
 public abstract class AstNode
 {
@@ -10,7 +10,12 @@ public abstract class AstNode
 	/* a graphviz dot format of the AST ...    */
 	/*******************************************/
 	public int serialNumber;
-	
+	public int line;
+
+	protected AstNode(int line) {
+        this.line = line + 1;
+    }
+
 	/***********************************************/
 	/* The default message for an unknown AST node */
 	/***********************************************/

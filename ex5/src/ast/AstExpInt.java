@@ -1,9 +1,9 @@
 package ast;
-
+import ir.IRcommandConstInt;
+import ir.Ir;
+import temp.Temp;
+import temp.TempFactory;
 import types.*;
-import temp.*;
-import ir.*;
-
 public class AstExpInt extends AstExp
 {
 	public int value;
@@ -11,36 +11,43 @@ public class AstExpInt extends AstExp
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AstExpInt(int value)
+	public AstExpInt(int value, int line)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
+		super(line);
 		serialNumber = AstNodeSerialNumber.getFresh();
 
-		System.out.format("====================== exp -> INT( %d )\n", value);
+		/***************************************/
+		/* PRINT CORRESPONDING DERIVATION RULE */
+		/***************************************/
+		// System.out.format("====================== exp -> INT( %d )\n", value);
+
+		/*******************************/
+		/* COPY INPUT DATA MEMBERS ... */
+		/*******************************/
 		this.value = value;
 	}
 
 	/************************************************/
-	/* The printing message for an INT EXP AST node */
+	/* The printing message for an int exp AST node */
 	/************************************************/
 	public void printMe()
 	{
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE INT( %d )\n",value);
+		// System.out.format("AST NODE INT( %d )\n",value);
 
-		/***************************************/
-		/* PRINT Node to AST GRAPHVIZ DOT file */
-		/***************************************/
+		/*********************************/
+		/* Print to AST GRAPHVIZ DOT file */
+		/*********************************/
 		AstGraphviz.getInstance().logNode(
-                serialNumber,
-			String.format("INT(%d)",value));
+				serialNumber,
+			String.format("EXP INT(%d)",value));
 	}
-
-	public Type semantMe()
+	public Type semantMe() throws SemanticException
 	{
 		return TypeInt.getInstance();
 	}

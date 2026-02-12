@@ -1,14 +1,10 @@
 package ast;
-
-import types.*;
+import types.TypeClass;
 
 public abstract class AstDec extends AstNode
 {
-	/***********************************************/
-	/* The default semantic action for an AST node */
-	/***********************************************/
-	public Type semantMe()
-	{
-		return null;
-	}
+    protected AstDec(int line) {
+        super(line);
+    }
+    public abstract void semantMe(TypeClass classType) throws SemanticException;
 }

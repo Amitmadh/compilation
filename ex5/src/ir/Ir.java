@@ -3,6 +3,9 @@
 /***********/
 package ir;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -15,12 +18,14 @@ public class Ir
 {
 	private IrCommand head=null;
 	private IrCommandList tail=null;
+	public boolean generatingGlobal = false;
 
 	/******************/
 	/* Add Ir command */
 	/******************/
 	public void AddIrCommand(IrCommand cmd)
 	{
+		cmd.isGlobal = this.generatingGlobal;
 		if ((head == null) && (tail == null))
 		{
 			this.head = cmd;
@@ -38,15 +43,6 @@ public class Ir
 			}
 			it.tail = new IrCommandList(cmd,null);
 		}
-	}
-	
-	/***************/
-	/* MIPS me !!! */
-	/***************/
-	public void mipsMe()
-	{
-		if (head != null) head.mipsMe();
-		if (tail != null) tail.mipsMe();
 	}
 
 	/**************************************/
@@ -72,5 +68,23 @@ public class Ir
 			instance = new Ir();
 		}
 		return instance;
+	}
+	public IrCommand getHead() {
+		return head;
+	}
+	public IrCommandList getTail() {
+		return tail;
+	}
+	public void printIrCommands(String fileLocation) throws FileNotFoundException
+	{
+		PrintWriter fileWriter = new PrintWriter(fileLocation);
+		if (head != null) head.printMe(fileWriter);
+		IrCommandList itList = tail;
+		while (itList != null)
+		{
+			if (itList.head != null) itList.head.printMe(fileWriter);
+			itList = itList.tail;
+		}
+		fileWriter.close();
 	}
 }
