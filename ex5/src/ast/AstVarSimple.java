@@ -1,4 +1,8 @@
 package ast;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import ir.Ir;
 import ir.IrCommandLoad;
 import symboltable.*;
@@ -13,6 +17,11 @@ public class AstVarSimple extends AstVar
 	/************************/
 	public String name;
 	public int offset;
+
+	//annotations
+	List<String> globalVars = null;
+	FunctionData funcData = null;
+	ClassData classData = null;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -60,7 +69,8 @@ public class AstVarSimple extends AstVar
 		/* [1] Look up in symbol table */
 		/****************************/
 		Type t = SymbolTable.getInstance().find(name);
-		
+		type = t;
+
 		/******************************/
 		/* [2] Check if variable exists */
 		/******************************/
@@ -81,11 +91,23 @@ public class AstVarSimple extends AstVar
 		return t;
 	}
 
+	public void setGlobalVarData(List<String> globalVars) {
+		this.globalVars = globalVars;
+	}
+
+	public void setFunctionData(FunctionData data) {
+		funcData = data;
+	}
+
+	public void setClassData(ClassData data) {
+		classData = data;
+	}
+
 	public Temp irMe()
 	{
 		Temp t = TempFactory.getInstance().getFreshTemp();
         /* Pass the offset to the IrCommandLoad */
-        Ir.getInstance().AddIrCommand(new IrCommandLoad(t, name, this.offset));
+        Ir.getInstance().AddIrCommand(new IrCommandLoad(t, name, this.offset, globalVars.contains(name + "offset" + offset), funcData, classData));
 		return t;
 	}
 }

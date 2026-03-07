@@ -6,6 +6,7 @@ package ir;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
+import mips.MipsGenerator;
 import temp.*;
 
 public class IrCommandArraySet extends IrCommand
@@ -31,6 +32,19 @@ public class IrCommandArraySet extends IrCommand
 
 	public String tempDefined() {
 		return null;
+	}
+
+    public HashSet<Temp> temps() {
+		HashSet<Temp> temps = new HashSet<Temp>();
+        temps.add(arrayAddr);
+        temps.add(index);
+        temps.add(src);
+		return temps;
+	}
+
+    public void mipsMe()
+	{
+		MipsGenerator.getInstance().arraySet(src, arrayAddr, index);
 	}
 
     public void printMe(PrintWriter fileWriter)

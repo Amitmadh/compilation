@@ -1,9 +1,15 @@
 package ast;
+import java.util.ArrayList;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import temp.Temp;
 import types.*;
 public class AstStmtCallExp extends AstStmt
 {
 	public AstCallExp callExp;
+
 
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -55,15 +61,38 @@ public class AstStmtCallExp extends AstStmt
 		AstGraphviz.getInstance().logEdge(serialNumber,callExp.serialNumber);
 			
 	}
+
 	public Type semantMe() throws SemanticException
 	{
 		return callExp.semantMe();
 	}
 
+	public void annotateAst()
+	{
+		varDecs = new ArrayList<>();
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		callExp.setGlobalVarData(globalVars);
+	}
+
+	public void setFunctionData(FunctionData data) {
+		callExp.setFunctionData(data);
+	}
+
+	public void setClassData(ClassData data) {
+		callExp.setClassData(data);
+	}
+
 	public Temp irMe()
 	{
-		if (callExp != null) callExp.irMe();
-
-		return null;
+		if (callExp != null) 
+		{
+			Temp t = callExp.irMe();
+			return t;
+		}
+		else {
+			return null;
+		}
 	}
 }

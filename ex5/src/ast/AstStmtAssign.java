@@ -1,4 +1,9 @@
 package ast;
+import java.util.ArrayList;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import ir.Ir;
 import ir.IrCommandArraySet;
 import ir.IrCommandFieldSet;
@@ -14,6 +19,11 @@ public class AstStmtAssign extends AstStmt
 	public AstVar var;
 	public AstExp exp;
 	public int offset;
+
+	//annotations
+	List<String> globalVars = null;
+	FunctionData funcData = null;
+	ClassData classData = null;
 
 	/*******************/
 	/*  CONSTRUCTOR(S) */
@@ -121,7 +131,6 @@ public class AstStmtAssign extends AstStmt
 					/* Check inner element type equality */
 					Type tElem = ((TypeArray)t).elemType;
 					Type initElem = ((TypeArray)initType).elemType;
-					System.out.println("ARRAYS TYPES: " + t.name + " , " + initType.name);
 					if (!tElem.name.equals(initElem.name)) {
 						System.out.printf("ERROR at line %d, array element type mismatch\n", line);
 						throw new SemanticException(String.format("ERROR(%d)",line));
@@ -146,24 +155,46 @@ public class AstStmtAssign extends AstStmt
 		
 
 		return null;	
-	}	
+	}
+	
+	public void annotateAst()
+	{
+		varDecs = new ArrayList<>();
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		this.globalVars = globalVars;
+		var.setGlobalVarData(globalVars);
+		exp.setGlobalVarData(globalVars);
+	}
+
+	public void setFunctionData(FunctionData data) {
+		funcData = data;
+		exp.setFunctionData(data);
+		var.setFunctionData(data);
+	}
+
+	public void setClassData(ClassData data) {
+		classData = data;
+		exp.setClassData(data);
+		var.setClassData(data);
+	}
 
 	public Temp irMe()
 	{
-		Temp expVal = exp.irMe();
-
 		// handle simple variable assignment by name
-
 		if (var instanceof AstVarSimple) {
 			String name = ((AstVarSimple)var).name;
-			Ir.getInstance().AddIrCommand(new IrCommandStore(name, expVal, this.offset));
+			Temp expVal = exp.irMe();
+			Ir.getInstance().AddIrCommand(new IrCommandStore(name, expVal, this.offset, globalVars.contains(name + "offset"+ offset), funcData, classData, funcName));
 		}
 
 		// field assignment: instance.field := exp
 		if (var instanceof AstVarField) {
 			AstVarField varField = (AstVarField)var;
 			Temp instanceAddr = varField.var.irMe();
-			Ir.getInstance().AddIrCommand(new IrCommandFieldSet(instanceAddr, varField.fieldName, expVal));
+			Temp expVal = exp.irMe();
+			Ir.getInstance().AddIrCommand(new IrCommandFieldSet(instanceAddr, varField.fieldName, expVal, varField.className));
 		}
 
 		// array assignment: arr[index] := exp
@@ -171,6 +202,7 @@ public class AstStmtAssign extends AstStmt
 			AstVarSubscript varSubscript = (AstVarSubscript)var;
 			Temp arrayAddr = varSubscript.var.irMe();
 			Temp index = varSubscript.subscript.irMe();
+			Temp expVal = exp.irMe();
 			Ir.getInstance().AddIrCommand(new IrCommandArraySet(arrayAddr, index, expVal));
 		}
 

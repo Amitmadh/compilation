@@ -55,6 +55,20 @@ public class Ir
 	/*****************************/
 	protected Ir() {}
 
+	/***************/
+	/* MIPS me !!! */
+	/***************/
+	public void mipsMe()
+	{
+		IrCommandList lst = new IrCommandList(head, tail);
+		lst.mipsMe();
+	}
+	public void mipsGlobals()
+	{
+		IrCommandList lst = new IrCommandList(head, tail);
+		lst.initGlobs();
+	}
+
 	/******************************/
 	/* GET SINGLETON INSTANCE ... */
 	/******************************/

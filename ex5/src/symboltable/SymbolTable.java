@@ -9,6 +9,9 @@ package symboltable;
 import java.io.PrintWriter;
 import types.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /****************/
 /* SYMBOL TABLE */
 /****************/
@@ -26,7 +29,9 @@ public class SymbolTable
 	private Type currentFunctionReturnType = null;
 
 	private int globalOffsetCounter = 0;
-    private int localOffsetCounter = 0;
+	private int localOffsetCounter = 0;
+	/* Stack to save/restore local offset counter per-scope */
+	//private java.util.Deque<Integer> localOffsetStack = new java.util.ArrayDeque<>();
 
 	
 	/**************************************************************/
@@ -61,8 +66,8 @@ public class SymbolTable
 		/******************************************************************************/
 		SymbolTableEntry next = table[hashValue];
 
-			/*************************************************/
-		/* [2.5] NEW: Compute Offset based on scope level */
+		/*************************************************/
+		/* [2.5] Compute Offset based on scope level */
 		/*************************************************/
 		int currentOffset = 0;
 		
@@ -107,7 +112,7 @@ public class SymbolTable
 	 * parent class (fields and methods) are entered into the new scope so
 	 * they are visible to the child class unless shadowed by child members.
 	 */
-	public void beginScopeFrom(types.TypeClass parent)
+	public void beginScopeFrom(TypeClass parent)
 	{
 		/* Start a new scope boundary */
 		beginScope();
@@ -120,15 +125,15 @@ public class SymbolTable
 		 * guarantees that nearer ancestors (the immediate parent) will shadow
 		 * members from more distant ancestors when names clash.
 		 */
-		java.util.List<types.TypeClass> chain = new java.util.ArrayList<>();
-		types.TypeClass cur = parent;
+		List<TypeClass> chain = new ArrayList<>();
+		TypeClass cur = parent;
 		while (cur != null) {
 			chain.add(0, cur); /* insert at front to reverse order */
 			cur = cur.father;
 		}
 
-		for (types.TypeClass anc : chain) {
-			types.TypeClassVarDecList members = anc.dataMembers;
+		for (TypeClass anc : chain) {
+			TypeClassVarDecList members = anc.dataMembers;
 			while (members != null) {
 				enter(members.head.name, members.head.type);
 				members = members.tail;
@@ -195,6 +200,11 @@ public class SymbolTable
 		}
 		return null;
 	}
+
+	public int getCurrentScopeDepth() {
+		return scopeDepth;
+	}
+
 	public void setFunctionReturnType(Type t) {
 		this.currentFunctionReturnType = t;
 	}
@@ -214,6 +224,10 @@ public class SymbolTable
 		/* a special TYPE_FOR_SCOPE_BOUNDARIES was developed for them. This     */
 		/* class only contain their type name which is the bottom sign: _|_     */
 		/************************************************************************/
+		// /* Save current local offset counter and start a fresh one for the new scope */
+		// localOffsetStack.push(localOffsetCounter);
+		// localOffsetCounter = 0;
+
 		enter(
 			"SCOPE-BOUNDARY",
 			new TypeForScopeBoundaries("NONE"));
@@ -249,6 +263,13 @@ public class SymbolTable
 
 		/* Update number of scopes */
 		scopeDepth--;
+
+		// /* Restore previous local offset counter for the enclosing scope */
+		// if (!localOffsetStack.isEmpty()) {
+		// 	localOffsetCounter = localOffsetStack.pop();
+		// } else {
+		// 	localOffsetCounter = 0;
+		// }
 		/*********************************************/
 		/* Print the symbol table after every change */		
 		/*********************************************/
@@ -263,78 +284,78 @@ public class SymbolTable
 	
 	public void printMe()
 	{
-		int i=0;
-		int j=0;
-		String dirname="./output/";
-		String filename=String.format("SYMBOL_TABLE_%d_IN_GRAPHVIZ_DOT_FORMAT.txt",n++);
+		// int i=0;
+		// int j=0;
+		// String dirname="./output/";
+		// String filename=String.format("SYMBOL_TABLE_%d_IN_GRAPHVIZ_DOT_FORMAT.txt",n++);
 
-		try
-		{
-			/*******************************************/
-			/* [1] Open Graphviz text file for writing */
-			/*******************************************/
-			PrintWriter fileWriter = new PrintWriter(dirname+filename);
+		// try
+		// {
+		// 	/*******************************************/
+		// 	/* [1] Open Graphviz text file for writing */
+		// 	/*******************************************/
+		// 	PrintWriter fileWriter = new PrintWriter(dirname+filename);
 
-			/*********************************/
-			/* [2] Write Graphviz dot prolog */
-			/*********************************/
-			fileWriter.print("digraph structs {\n");
-			fileWriter.print("rankdir = LR\n");
-			fileWriter.print("node [shape=record];\n");
+		// 	/*********************************/
+		// 	/* [2] Write Graphviz dot prolog */
+		// 	/*********************************/
+		// 	fileWriter.print("digraph structs {\n");
+		// 	fileWriter.print("rankdir = LR\n");
+		// 	fileWriter.print("node [shape=record];\n");
 
-			/*******************************/
-			/* [3] Write Hash Table Itself */
-			/*******************************/
-			fileWriter.print("hashTable [label=\"");
-			for (i=0;i<hashArraySize-1;i++) { fileWriter.format("<f%d>\n%d\n|",i,i); }
-			fileWriter.format("<f%d>\n%d\n\"];\n",hashArraySize-1,hashArraySize-1);
+		// 	/*******************************/
+		// 	/* [3] Write Hash Table Itself */
+		// 	/*******************************/
+		// 	fileWriter.print("hashTable [label=\"");
+		// 	for (i=0;i<hashArraySize-1;i++) { fileWriter.format("<f%d>\n%d\n|",i,i); }
+		// 	fileWriter.format("<f%d>\n%d\n\"];\n",hashArraySize-1,hashArraySize-1);
 		
-			/****************************************************************************/
-			/* [4] Loop over hash table array and print all linked lists per array cell */
-			/****************************************************************************/
-			for (i=0;i<hashArraySize;i++)
-			{
-				if (table[i] != null)
-				{
-					/*****************************************************/
-					/* [4a] Print hash table array[i] -> entry(i,0) edge */
-					/*****************************************************/
-					fileWriter.format("hashTable:f%d -> node_%d_0:f0;\n",i,i);
-				}
-				j=0;
-				for (SymbolTableEntry it = table[i]; it!=null; it=it.next)
-				{
-					/*******************************/
-					/* [4b] Print entry(i,it) node */
-					/*******************************/
-					fileWriter.format("node_%d_%d ",i,j);
-					fileWriter.format("[label=\"<f0>%s|<f1>%s|<f2>prevtop=%d|<f3>next\"];\n",
-						it.name,
-						it.type.name,
-						it.prevtopIndex);
+		// 	/****************************************************************************/
+		// 	/* [4] Loop over hash table array and print all linked lists per array cell */
+		// 	/****************************************************************************/
+		// 	for (i=0;i<hashArraySize;i++)
+		// 	{
+		// 		if (table[i] != null)
+		// 		{
+		// 			/*****************************************************/
+		// 			/* [4a] Print hash table array[i] -> entry(i,0) edge */
+		// 			/*****************************************************/
+		// 			fileWriter.format("hashTable:f%d -> node_%d_0:f0;\n",i,i);
+		// 		}
+		// 		j=0;
+		// 		for (SymbolTableEntry it = table[i]; it!=null; it=it.next)
+		// 		{
+		// 			/*******************************/
+		// 			/* [4b] Print entry(i,it) node */
+		// 			/*******************************/
+		// 			fileWriter.format("node_%d_%d ",i,j);
+		// 			fileWriter.format("[label=\"<f0>%s|<f1>%s|<f2>prevtop=%d|<f3>next\"];\n",
+		// 				it.name,
+		// 				it.type.name,
+		// 				it.prevtopIndex);
 
-					if (it.next != null)
-					{
-						/***************************************************/
-						/* [4c] Print entry(i,it) -> entry(i,it.next) edge */
-						/***************************************************/
-						fileWriter.format(
-							"node_%d_%d -> node_%d_%d [style=invis,weight=10];\n",
-							i,j,i,j+1);
-						fileWriter.format(
-							"node_%d_%d:f3 -> node_%d_%d:f0;\n",
-							i,j,i,j+1);
-					}
-					j++;
-				}
-			}
-			fileWriter.print("}\n");
-			fileWriter.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}		
+		// 			if (it.next != null)
+		// 			{
+		// 				/***************************************************/
+		// 				/* [4c] Print entry(i,it) -> entry(i,it.next) edge */
+		// 				/***************************************************/
+		// 				fileWriter.format(
+		// 					"node_%d_%d -> node_%d_%d [style=invis,weight=10];\n",
+		// 					i,j,i,j+1);
+		// 				fileWriter.format(
+		// 					"node_%d_%d:f3 -> node_%d_%d:f0;\n",
+		// 					i,j,i,j+1);
+		// 			}
+		// 			j++;
+		// 		}
+		// 	}
+		// 	fileWriter.print("}\n");
+		// 	fileWriter.close();
+		// }
+		// catch (Exception e)
+		// {
+		// 	e.printStackTrace();
+		// }		
 	}
 	
 	/**************************************/

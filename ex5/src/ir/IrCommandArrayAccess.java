@@ -6,6 +6,8 @@ package ir;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
+import mips.MipsGenerator;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -39,8 +41,21 @@ public class IrCommandArrayAccess extends IrCommand
 		return "t" + dst.getSerialNumber();
 	}
 
+	public HashSet<Temp> temps() {
+		HashSet<Temp> temps = new HashSet<Temp>();
+		temps.add(dst);
+		temps.add(arrayAddr);
+		temps.add(index);
+		return temps;
+	}
+
+	public void mipsMe()
+	{
+		MipsGenerator.getInstance().arrayAccess(dst, arrayAddr, index);
+	}
+
 	public void printMe(PrintWriter fileWriter)
 	{
-		fileWriter.print(dst + "=  ARRAY_ACCESS t" + arrayAddr.getSerialNumber() + ", t" + index.getSerialNumber() + "\n");
-	}
+		fileWriter.print("t" + dst.getSerialNumber() + " =  ARRAY_ACCESS t" + arrayAddr.getSerialNumber() + ", t" + index.getSerialNumber() + "\n");
+	} 
 }

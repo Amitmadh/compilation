@@ -1,7 +1,16 @@
 package ast;
 
 import types.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
+import ir.IRcommandConstInt;
+import ir.Ir;
 import temp.Temp;
+import temp.TempFactory;
 
 public class AstExpList extends AstNode
 {
@@ -10,6 +19,9 @@ public class AstExpList extends AstNode
 	/****************/
 	public AstExp head;
 	public AstExpList tail;
+
+	//annotations
+	public String funcName;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -86,5 +98,33 @@ public class AstExpList extends AstNode
 		
 
 		return new TypeList(headType, tailTypes);
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		head.setGlobalVarData(globalVars);
+		if (tail != null) {
+			tail.setGlobalVarData(globalVars);
+		}
+	}
+	
+	public void setFunctionData(FunctionData data) {
+		head.setFunctionData(data);
+		if (tail != null) {
+			tail.setFunctionData(data);
+		}
+	}
+
+	public void setClassData(ClassData data) {
+		head.setClassData(data);
+		if (tail != null) {
+			tail.setClassData(data);
+		}
+	}
+
+	public Temp irMe() 
+	{
+		head.irMe();
+		tail.irMe();
+		return null;
 	}
 }

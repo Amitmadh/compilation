@@ -1,5 +1,8 @@
 package cfg;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,17 +10,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 
-import java.io.PrintWriter;
 import ir.*;
+import temp.Temp;
 
 public class Cfg {
     private List<CfgNode> nodes = new ArrayList<>();
-    private CfgNode startNode;
-    private CfgNode exitNode;
+    private List<CfgNode> cfgs = new ArrayList<>();
+    private List<List<CfgNode>> cfgsNodes = new ArrayList<>();
+    private List<CfgNode> classes = new ArrayList<>();
+    private List<List<CfgNode>> classesNodes = new ArrayList<>();
     private Map<String, CfgNode> labelToNodeMap = new HashMap<>();
-    private HashSet<String> allTemps = new HashSet<>();
-    private HashSet<String> allVars = new HashSet<>();
-
+    public List<String> globalVars = new ArrayList<>();
 
     public Cfg(Ir ir) {
         List<IrCommand> globalInits = new ArrayList<>();
@@ -29,6 +32,9 @@ public class Cfg {
         while (current != null) {
             if (current.isGlobal) {
                 globalInits.add(current);
+                if (current instanceof IrCommandAllocate) {
+                    globalVars.add(((IrCommandAllocate) current).getVar());
+                }
             }
 
             else {
@@ -88,156 +94,154 @@ public class Cfg {
 
         }
 
-        /* setting start and exit nodes */
+        /* setting cfgs */
         if (!nodes.isEmpty()) {
-            startNode = nodes.get(0);
-            exitNode = nodes.get(nodes.size() - 1);
+            //add global cfg
+            CfgNode firstNode = nodes.get(0);
+            if (firstNode.command.isGlobal) {
+                cfgs.add(firstNode);
+            }
+
+            String currFunc = null;
+            String currClass = null;
+            for (CfgNode node : nodes) {
+                if (node.command instanceof IrCommandFuncDec) {
+                    cfgs.add(node);
+                    currFunc = ((IrCommandFuncDec) node.command).funcName;
+
+                    for (CfgNode predecessor : node.predecessors) {
+                        predecessor.successors.remove(node);
+                    }
+                    node.predecessors.clear();
+                }
+
+                if (node.command instanceof IrCommandEndOfFunction && currFunc != null && ((IrCommandEndOfFunction) node.command).getFunctionName().equals(currFunc)) {
+                    currFunc = null;
+
+                    for (CfgNode successor : node.successors) {
+                        successor.predecessors.remove(node);
+                    }
+                    node.successors.clear();
+                }
+            }
         }
 
-        collectAllSymbols();
-        initializeDataflow();
+        setCfgsNodes();
     }
 
+    public List<CfgNode> getNodes() {
+        return nodes;
+    }
 
-    private void collectAllSymbols() {
-        for (CfgNode node : nodes) {
-            IrCommand cmd = node.command;
-            if (cmd == null) continue;
-
-            if (cmd.tempsUsed() != null) {
-                allTemps.addAll(cmd.tempsUsed());
-            }
-            if (cmd.tempDefined() != null) {
-                allTemps.add(cmd.tempDefined());
-            }
-
-            if (cmd instanceof IrCommandStore) {
-                allVars.add(((IrCommandStore) cmd).getVar());
-            }
-            if (cmd instanceof IrCommandLoad) {
-                allVars.add(((IrCommandLoad) cmd).getVar());
-            }
+    private void setCfgsNodes() {
+        for (CfgNode cfg : cfgs) {
+            List<CfgNode> cfgNodes = new ArrayList<>();
+            Set<CfgNode> visited = new HashSet<>();
+            collectCfgNodes(cfg, visited, cfgNodes);
+            cfgsNodes.add(cfgNodes);
         }
     }
 
-    private void initializeDataflow() {
-        for (CfgNode node : nodes) {
-            if (node == startNode) {
-                node.inSetTemps  = new HashSet<>();
-                node.outSetTemps = new HashSet<>();
-                node.inSetVars   = new HashSet<>();
-                node.outSetVars  = new HashSet<>();
-            } else {
-                node.inSetTemps  = new HashSet<>(allTemps);
-                node.outSetTemps = new HashSet<>(allTemps);
-                node.inSetVars   = new HashSet<>(allVars);
-                node.outSetVars  = new HashSet<>(allVars);
-            }
+    private void collectCfgNodes(CfgNode node, Set<CfgNode> visited, List<CfgNode> cfgNodes) {
+        if (node == null || visited.contains(node)) {
+            return;
         }
-    }
-
-    private void computeInSet(CfgNode node) {
-        //temps in set
-        HashSet<String> tempIntersection = new HashSet<String>();
-        if (!node.predecessors.isEmpty()) {
-            tempIntersection.addAll(node.predecessors.get(0).outSetTemps);
-            for (int i = 1; i < node.predecessors.size(); i++) {
-                tempIntersection.retainAll(node.predecessors.get(i).outSetTemps);
-            }
+        visited.add(node);
+        cfgNodes.add(node);
+        for (CfgNode successor : node.successors) {
+            collectCfgNodes(successor, visited, cfgNodes);
         }
-        node.inSetTemps = tempIntersection;
-
-        //vars in set
-        HashSet<String> varIntersection = new HashSet<String>();
-        if (!node.predecessors.isEmpty()) {
-            varIntersection.addAll(node.predecessors.get(0).outSetVars);
-            for (int i = 1; i < node.predecessors.size(); i++) {
-                varIntersection.retainAll(node.predecessors.get(i).outSetVars);
-            }
-        }
-        node.inSetVars = varIntersection;
     }
 
     private void computeOutSet(CfgNode node) {
+        HashSet<String> tempUnion = new HashSet<String>();
+        if (!node.successors.isEmpty()) {
+            for (CfgNode succ : node.successors) {
+                tempUnion.addAll(succ.inSetTemps);
+            }
+        }
+        node.outSetTemps = tempUnion;
+    }
+
+    private void computeInSet(CfgNode node) {
         IrCommand command = node.command;
 
-        node.outSetTemps = new HashSet<String>(node.inSetTemps);
-        node.outSetVars = new HashSet<String>(node.inSetVars);
+        node.inSetTemps = new HashSet<String>(node.outSetTemps);
 
         if (command == null) {
             return;
         }
 
-        if (command instanceof IrCommandStore) {
-            IrCommandStore storeCmd = (IrCommandStore) command;
-            if (node.inSetTemps.containsAll(storeCmd.tempsUsed())) {
-                node.outSetVars.add(storeCmd.getVar());
-            } else {
-                node.outSetVars.remove(storeCmd.getVar());
-            }
-        } else if (command instanceof IrCommandLoad) {
-            IrCommandLoad loadCmd = (IrCommandLoad) command;
-            if (loadCmd.tempDefined() != null && node.inSetVars.contains(loadCmd.getVar())) {
-                node.outSetTemps.add(loadCmd.tempDefined());
-            } else {
-                node.outSetTemps.remove(loadCmd.tempDefined());
-            }
-        } else if (command instanceof IrCommandAllocate){
-            IrCommandAllocate allocCmd = (IrCommandAllocate) command;
-            node.outSetVars.remove(allocCmd.getVar());
-        } else {
-            if (command.tempDefined() != null && node.inSetTemps.containsAll(command.tempsUsed())) {
-                node.outSetTemps.add(command.tempDefined());
-            } else {
-                node.outSetTemps.remove(command.tempDefined());
-            }
+        //kill
+        if (command.tempDefined() != null) {
+            node.inSetTemps.remove(command.tempDefined());
+        }
+
+        //gen
+        if (command.tempsUsed() != null) {
+            node.inSetTemps.addAll(command.tempsUsed());
         }
     }
 
-    private void runChaoticIterations() throws java.io.FileNotFoundException {
+    public void livenessAnalysis() {
         boolean changed;
-        do {
-            changed = false;
-            for (CfgNode node : nodes) {
-                HashSet<String> oldOutSetTemps = new HashSet<>(node.outSetTemps);
-                HashSet<String> oldOutSetVars = new HashSet<>(node.outSetVars);
-                
-                computeInSet(node);
-                computeOutSet(node);
 
-                if (!node.outSetTemps.equals(oldOutSetTemps) || !node.outSetVars.equals(oldOutSetVars)) {
-                    changed = true;
+        for (List<CfgNode> cfgNodes : cfgsNodes) {
+            do {
+                changed = false;
+                for (int i = cfgNodes.size()-1; i>=0; i--) {
+                    CfgNode node = cfgNodes.get(i);
+                    HashSet<String> oldOutSetTemps = new HashSet<>(node.outSetTemps);
+                    
+                    computeOutSet(node);
+                    computeInSet(node);
+
+                    if (!node.outSetTemps.equals(oldOutSetTemps)) {
+                        changed = true;
+                    }
                 }
-            }
-        } while (changed);
-
+            } while (changed);    
+        }
     }
 
-    public List<String> usedBeforeSet() throws java.io.FileNotFoundException {
-        List<String> usedBefore = new ArrayList<>();
-
-        runChaoticIterations();
-
-        for (CfgNode node : nodes) {
-            IrCommand command = node.command;
-            if (command != null && command instanceof IrCommandLoad) {
-                IrCommandLoad loadCmd = (IrCommandLoad) command;
-                if (!node.inSetVars.contains(loadCmd.getVar()) && !usedBefore.contains(loadCmd.getVar())) {
-                    usedBefore.add(loadCmd.getVar());
-                }
-            }
-        }
-
-        List<String> updated = new ArrayList<>();
-
-        for (String s : usedBefore) {
-            int index = s.lastIndexOf("offset");
-            if (index != -1) {
-                updated.add(s.substring(0, index));
+    public void printCfgs() {
+        livenessAnalysis();
+        for (CfgNode cfg : cfgs) {
+            File file;
+            if (cfg.command instanceof IrCommandFuncDec) {
+                file = new File(((IrCommandFuncDec) cfg.command).funcName + "_cfg.txt");
             } else {
-                updated.add(s);
+                file = new File("global_cfg.txt");
+            }
+            try (PrintWriter writer = new PrintWriter(file)) {
+                if (cfg.command instanceof IrCommandFuncDec) {
+                    writer.println("CFG for function: " + ((IrCommandFuncDec) cfg.command).funcName);
+                } else {
+                    writer.println("CFG for global initializations");
+                }
+                printCfg(cfg, new HashSet<>(), writer);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        return updated;
+    } 
+
+    public void printCfg(CfgNode node, HashSet<CfgNode> visited, PrintWriter writer) {
+        if (node == null || visited.contains(node)) {
+            return;
+        }
+        visited.add(node);
+        writer.print("Node: " );
+        node.command.printMe(writer);
+        for (CfgNode successor : node.successors) {
+            writer.print("  Successor: " );
+            successor.command.printMe(writer);
+        }
+        writer.print("  out: " + node.outSetTemps + "\n");
+        writer.print("  in: " + node.inSetTemps + "\n");
+        for (CfgNode successor : node.successors) {
+            printCfg(successor, visited, writer);
+        }
     }
 }
+

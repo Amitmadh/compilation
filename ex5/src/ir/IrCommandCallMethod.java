@@ -7,6 +7,10 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.List;
 
+import ast.AstProgram;
+import data.ClassData;
+import data.FunctionData;
+import mips.MipsGenerator;
 import temp.Temp;
 
 /*******************/
@@ -22,9 +26,16 @@ public class IrCommandCallMethod extends IrCommand
 	Temp baseClass;
 	String methodName;
 	List<Temp> args;
+	Temp returnValue;
+	String className;
 
-	public IrCommandCallMethod(Temp baseClass, String methodName, List<Temp> args)
+	// public List<String> vars;
+	// public List<String> funcs;
+
+	public IrCommandCallMethod(Temp returnValue, String className, Temp baseClass, String methodName, List<Temp> args)
 	{
+		this.returnValue = returnValue;
+		this.className = className;
 		this.baseClass = baseClass;
 		this.methodName = methodName;
 		this.args = args;
@@ -40,9 +51,30 @@ public class IrCommandCallMethod extends IrCommand
 	}
 
 	public String tempDefined() {
+		if (returnValue != null) {
+			return "t" + returnValue.getSerialNumber();
+		}
 		return null;
 	}
 
+	public HashSet<Temp> temps() {
+		HashSet<Temp> temps = new HashSet<Temp>();
+		temps.add(baseClass);
+		for (Temp t : args) {
+			temps.add(t);
+		}
+		if (returnValue != null) {
+			temps.add(returnValue);
+		}
+		return temps;
+	}
+
+	public void mipsMe()
+	{
+		ClassData data = AstProgram.classes.get(className);
+		MipsGenerator.getInstance().callMethod(baseClass, data.methodsNoClass.indexOf(methodName), args, returnValue, returnValue != null);
+	}
+	
 	public void printMe(PrintWriter fileWriter)
 	{
 		fileWriter.print("VIRTUAL CALL ,t" + baseClass.getSerialNumber() + "," + methodName);

@@ -1,4 +1,8 @@
 package ast;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import ir.Ir;
 import ir.IrCommandAllocate;
 import ir.IrCommandStore;
@@ -13,6 +17,12 @@ public class AstVarDec extends AstNode
     public AstExp exp;
     public AstNewExp nexp;
 	public int offset;
+
+	//annotations
+	List<String> globalVars;
+	FunctionData funcData = null;
+	ClassData classData = null;
+	String funcName;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -173,6 +183,36 @@ public class AstVarDec extends AstNode
 		return null;	
 	}	
 
+	public void setGlobalVarData(List<String> globalVars) {
+		this.globalVars = globalVars;
+		if (exp != null) {
+			exp.setGlobalVarData(globalVars);
+		}
+		if (nexp != null) {
+			nexp.setGlobalVarData(globalVars);
+		}
+	}
+
+	public void setFunctionData(FunctionData data) {
+		funcData = data;
+		if (exp != null) {
+			exp.setFunctionData(data);
+		}
+		if (nexp != null) {
+			nexp.setFunctionData(data);
+		}
+	}
+
+	public void setClassData(ClassData data) {
+		classData = data;
+		if (exp != null) {
+			exp.setClassData(data);
+		}
+		if (nexp != null) {
+			nexp.setClassData(data);
+		}
+	}
+
 	public Temp irMe()
 	{	
 		boolean wasGlobal = Ir.getInstance().generatingGlobal;
@@ -181,7 +221,7 @@ public class AstVarDec extends AstNode
 			Ir.getInstance().generatingGlobal = true;
 		}
 		
-		Ir.getInstance().AddIrCommand(new IrCommandAllocate(fieldName, this.offset));
+		Ir.getInstance().AddIrCommand(new IrCommandAllocate(fieldName, this.offset, globalVars.contains(fieldName + "offset" + offset), funcData, classData));
 
 		AstExp initialValue = null;
 		if (exp != null) {
@@ -194,7 +234,11 @@ public class AstVarDec extends AstNode
 		if (initialValue != null)
 		{
 			Temp valTemp = initialValue.irMe();
-			Ir.getInstance().AddIrCommand(new IrCommandStore(fieldName, valTemp, this.offset));
+			Ir.getInstance().AddIrCommand(new IrCommandStore(fieldName, valTemp, this.offset, globalVars.contains(fieldName + "offset" + offset), funcData, classData, funcName));
+
+			Ir.getInstance().generatingGlobal = wasGlobal;
+			return valTemp;
+
 		}
 
 		Ir.getInstance().generatingGlobal = wasGlobal;

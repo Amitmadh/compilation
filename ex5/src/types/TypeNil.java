@@ -24,9 +24,4 @@ public class TypeNil extends Type
 		}
 		return instance;
 	}
-
-	
-
-    
-    
 }

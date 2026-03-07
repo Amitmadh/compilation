@@ -1,5 +1,11 @@
 package ast;
 import types.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import ir.Ir;
 import ir.IrCommand;
 import ir.IrCommandJumpIfEqToZero;
@@ -11,6 +17,7 @@ public class AstStmtWhile extends AstStmt
 {
 	public AstExp cond;
 	public AstStmtList body;
+
 
 	/*******************/
 	/*  CONSTRUCTOR(S) */
@@ -82,9 +89,41 @@ public class AstStmtWhile extends AstStmt
 		/*******************************/
 		body.semantMe();
 		SymbolTable.getInstance().endScope();
-		
+			
 		return null;
 	}
+
+	public void annotateAst()
+	{
+		varDecs = new ArrayList<>();
+
+		if (body != null) {
+			body.annotateAst();
+			varDecs.addAll(body.varDecs);
+		}
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		cond.setGlobalVarData(globalVars);
+		if (body != null) {
+			body.setGlobalVarData(globalVars);
+		}
+	}
+
+	public void setFunctionData(FunctionData data) {
+		cond.setFunctionData(data);
+		if (body != null) {
+			body.setFunctionData(data);
+		}
+	}
+
+	public void setClassData(ClassData data) {
+		cond.setClassData(data);
+		if (body != null) {
+			body.setClassData(data);
+		}
+	}
+	
 
 	public Temp irMe()
 	{
@@ -116,7 +155,7 @@ public class AstStmtWhile extends AstStmt
 		/*******************/
 		/* [5] body.IRme() */
 		/*******************/
-		body.irMe();
+		body.irMe(); 
 
 		/******************************/
 		/* [6] Jump to the loop entry */

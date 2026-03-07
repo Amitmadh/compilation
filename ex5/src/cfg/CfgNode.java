@@ -9,18 +9,17 @@ public class CfgNode {
     public IrCommand command;       
     public List<CfgNode> successors;   
     public List<CfgNode> predecessors;
-
     
-    public HashSet<String> inSetTemps; 
-    public HashSet<String> inSetVars;  
+    public HashSet<String> inSetTemps;  
     public HashSet<String> outSetTemps; 
-    public HashSet<String> outSetVars; 
 
     public CfgNode(IrCommand command) {
         this.command = command;
         this.successors = new ArrayList<>();
         this.predecessors = new ArrayList<>();
-    
+        
+        this.inSetTemps = new HashSet<>();
+        this.outSetTemps = new HashSet<>();
     }
 
     public void addSuccessor(CfgNode node) {

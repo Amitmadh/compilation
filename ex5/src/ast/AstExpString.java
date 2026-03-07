@@ -1,4 +1,8 @@
 package ast;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import ir.IRcommandConstString;
 import ir.Ir;
 import temp.Temp;
@@ -7,6 +11,11 @@ import types.*;
 public class AstExpString extends AstExp
 {
 	public String value;
+	public Type type;
+
+	//annotations
+	FunctionData funcData = null;
+	ClassData classData = null;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -50,13 +59,26 @@ public class AstExpString extends AstExp
 
 	public Type semantMe() throws SemanticException
 	{
-		return TypeString.getInstance();
+		type = TypeString.getInstance();
+		return type;
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		//do nothing
+	}
+
+	public void setFunctionData(FunctionData data) {
+		funcData = data;
+	}
+
+	public void setClassData(ClassData data) {
+		classData = data;
 	}
 
 	public Temp irMe()
 	{
 		Temp t = TempFactory.getInstance().getFreshTemp();
-		Ir.getInstance().AddIrCommand(new IRcommandConstString(t,value));
+		Ir.getInstance().AddIrCommand(new IRcommandConstString(t,value, funcData, classData));
 		return t;
 	}
 }

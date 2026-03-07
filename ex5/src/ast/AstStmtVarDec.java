@@ -1,9 +1,18 @@
 package ast;
+import java.util.ArrayList;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import temp.Temp;
 import types.*;
 public class AstStmtVarDec extends AstStmt
 {
 	public AstVarDec varDec;
+
+	//annotations
+	String varName;
+	int offset;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -55,10 +64,35 @@ public class AstStmtVarDec extends AstStmt
 		AstGraphviz.getInstance().logEdge(serialNumber,varDec.serialNumber);
 			
 	}
+
 	public Type semantMe() throws SemanticException
 	{
 		return varDec.semantMe();
 	}
 
-	public Temp irMe() { return varDec.irMe(); }
+	public void annotateAst()
+	{
+		varName = varDec.fieldName;
+		offset = varDec.offset;
+
+		varDecs = new ArrayList<>();
+		varDecs.add(varName + "offset" + offset);
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		varDec.setGlobalVarData(globalVars);
+	}
+
+	public void setFunctionData(FunctionData data) {
+		varDec.setFunctionData(data);
+	}
+
+	public void setClassData(ClassData data) {
+		varDec.setClassData(data);
+	}
+
+	public Temp irMe() 
+	{
+		return varDec.irMe();
+	}
 }

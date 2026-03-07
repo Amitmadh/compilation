@@ -1,6 +1,6 @@
 class IntList
 {
-    int head;
+    int head := 3;
     IntList tail;
 }
 

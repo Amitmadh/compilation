@@ -6,6 +6,9 @@ package ir;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
+import mips.MipsGenerator;
+import temp.Temp;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -30,6 +33,16 @@ public class IrCommandLabel extends IrCommand
 
 	public String tempDefined() {
 		return null;
+	}
+
+	public HashSet<Temp> temps() {
+		HashSet<Temp> temps = new HashSet<Temp>();
+		return temps;
+	}
+
+	public void mipsMe()
+	{
+		MipsGenerator.getInstance().label(labelName);
 	}
 
 	public void printMe(PrintWriter fileWriter)

@@ -2,6 +2,8 @@ import java.io.*;
 import java.util.List;
 
 import java_cup.runtime.Symbol;
+import mips.MipsGenerator;
+
 import java.util.Collections;
 import ast.*;
 import ir.Ir;
@@ -29,6 +31,11 @@ public class Main
 			/********************************/
 			fileReader = new FileReader(inputFileName);
 
+			/********************************/
+			/* [2] Initialize a file writer */
+			/********************************/
+			//fileWriter = new PrintWriter(outputFileName);
+
 			/******************************/
 			/* [3] Initialize a new lexer */
 			/******************************/
@@ -47,12 +54,13 @@ public class Main
 			/*************************/
 			/* [6] Print the AST ... */
 			/*************************/
-			ast.printMe();
+			//ast.printMe();
 
 			/**************************/
 			/* [7] Semant the AST ... */
 			/**************************/
 			ast.semantMe();
+			ast.annotateAst();
 
 
 			/**********************/
@@ -60,43 +68,35 @@ public class Main
 			/**********************/
 			ast.irMe();
 			ir = Ir.getInstance();
-			ir.printIrCommands(outputFileName.replace(".txt", "_ir.txt"));
-			/**************************/
-			/* [9] Create CFG from IR */
-			/**************************/
-			Ir commands = Ir.getInstance();
-			// Cfg cfg = new Cfg(commands);
-			Cfg cfg = new Cfg(commands);
+	
 
 			/********************************/
-			/* [2] Initialize a file writer */
+			/* [9] Register allocation		 */
 			/********************************/
-			List<String> uninitVars = cfg.usedBeforeSet();
+			Cfg cfg = new Cfg(ir);
+			RegisterAllocation ra = new RegisterAllocation(cfg, outputFileName);
 
-			fileWriter = new PrintWriter(outputFileName);
-
-			if (uninitVars.size() == 0) {
-				fileWriter.print("!OK");
-				System.out.println("!OK\n");
-			} else {
-				Collections.sort(uninitVars);
-				for (int i = 0; i < uninitVars.size() - 1; i++) {
-					fileWriter.format("%s\n", uninitVars.get(i));
-					System.out.format("%s\n", uninitVars.get(i));
-				}
-				fileWriter.format("%s", uninitVars.get(uninitVars.size() - 1));
-				System.out.format("%s\n", uninitVars.get(uninitVars.size() - 1));
-			}
-
-			/**************************/
-			/* [10] Close output file */
-			/**************************/
-			fileWriter.close();
+			
+			/*****************************/
+			/* [10] Print IR with regs   */
+			/*****************************/
+			//ir.printIrCommands(outputFileName.replace(".txt", "_ir.txt"));
 
 			/*************************************/
 			/* [11] Finalize AST GRAPHIZ DOT file */
 			/*************************************/
-			AstGraphviz.getInstance().finalizeFile();
+			//AstGraphviz.getInstance().finalizeFile();
+
+			/***********************/
+			/* [12] MIPS the Ir ... */
+			/***********************/
+			MipsGenerator.outputPath = outputFileName;
+			Ir.getInstance().mipsMe();
+
+			/***************************/
+			/* [13] Finalize MIPS file */
+			/***************************/
+			MipsGenerator.getInstance().finalizeFile();
 		}
 
 		catch (Exception e)

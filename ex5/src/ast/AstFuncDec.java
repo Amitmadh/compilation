@@ -1,7 +1,13 @@
 package ast;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import ir.Ir;
-import ir.IrCommandLabel;
+import ir.IrCommandEndOfFunction;
+import ir.IrCommandFuncDec;
 import symboltable.SymbolTable;
 import temp.Temp;
 import types.*;
@@ -12,6 +18,13 @@ public class AstFuncDec extends AstDec
     public String fieldName;
     public AstFuncArgList argList;
     public AstStmtList stmtList;
+
+	//annotation
+	public List<String> args;
+	public List<String> localVars;
+
+	public FunctionData funcData = null;
+	public ClassData classData = null;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -33,7 +46,11 @@ public class AstFuncDec extends AstDec
 		/* COPY INPUT DATA MEMBERS ... */
 		/*******************************/
 		this.type = type;
-        this.fieldName = fieldName;
+		if (fieldName.equals("main")) {
+			this.fieldName = "user_main";
+		} else {
+			this.fieldName = fieldName;
+		}
         this.argList = argList;
         this.stmtList = stmtList;
 	}
@@ -209,13 +226,64 @@ public class AstFuncDec extends AstDec
 		/************************************************************/
 		/* Return value is irrelevant for function declarations */
 		/************************************************************/
-			
+	}
+
+	public void annotateAst()
+	{
+		args = new ArrayList<>();
+		localVars = new ArrayList<>();
+
+		if (argList != null) {
+			argList.funcName = fieldName;
+			argList.annotateAst();
+		}
+		if (stmtList != null) {
+			stmtList.funcName = fieldName;
+			stmtList.annotateAst();
+		}
+		
+		AstFuncArgList argList = this.argList;
+
+		while (argList != null) {
+			AstFuncArg arg = argList.head;
+			args.add(arg.index, arg.fieldName + "offset" + arg.offset);
+
+			argList = argList.tail;
+		}
+
+		localVars.addAll(stmtList.varDecs);
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		stmtList.setGlobalVarData(globalVars);
+	}
+
+	public void setFunctionData(FunctionData data) {
+		funcData = data;
+		if (argList != null) {
+			argList.setFunctionData(data);
+		}
+		if (stmtList != null) {
+			stmtList.setFunctionData(data);
+		}
+	}
+
+	public void setClassData(ClassData data) {
+		classData = data;
+		if (argList != null) {
+			argList.setClassData(data);
+		}
+		if (stmtList != null) {
+			stmtList.setClassData(data);
+		}
 	}
 	
 	public Temp irMe()
 	{
-		Ir.getInstance().AddIrCommand(new IrCommandLabel("main"));
+		Ir.getInstance().AddIrCommand(new IrCommandFuncDec(fieldName, funcData, classData));
+		if (argList != null) argList.irMe();
 		if (stmtList != null) stmtList.irMe();
+		Ir.getInstance().AddIrCommand(new IrCommandEndOfFunction(fieldName, funcData, classData));
 
 		return null;
 	}

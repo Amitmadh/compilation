@@ -1,9 +1,15 @@
 package ast;
+import java.util.List;
+
 import temp.Temp;
 import types.TypeClass;
 public class AstDecVarDec extends AstDec
 {
 	public AstVarDec varDeck;
+
+	//annotation
+	String varName;
+	int offset;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -54,11 +60,24 @@ public class AstDecVarDec extends AstDec
 		/****************************************/
 		if (varDeck  != null) AstGraphviz.getInstance().logEdge(serialNumber,varDeck.serialNumber);
 	}
+
 	public void semantMe(TypeClass classType) throws SemanticException {
 		if (varDeck != null) varDeck.semantMe();
 	}
 
-	public Temp irMe() {
+	public void annotateAst()
+	{
+		varName = varDeck.fieldName;
+		offset = varDeck.offset;
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		varDeck.setGlobalVarData(globalVars);
+	}
+
+
+	public Temp irMe()
+	{
 		if (varDeck != null) return varDeck.irMe();
 		return null;
 	}

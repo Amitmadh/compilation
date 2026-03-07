@@ -6,6 +6,8 @@ package ir;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
+import mips.MipsGenerator;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -37,6 +39,19 @@ public class IrCommandBinopDivIntegers extends IrCommand
 
 	public String tempDefined() {
 		return "t" + dst.getSerialNumber();
+	}
+
+	public HashSet<Temp> temps() {
+		HashSet<Temp> temps = new HashSet<Temp>();
+		temps.add(dst);
+		temps.add(t1);
+		temps.add(t2);
+		return temps;
+	}
+
+	public void mipsMe()
+	{
+		MipsGenerator.getInstance().divIntegers(dst, t1, t2);
 	}
 
 	public void printMe(PrintWriter fileWriter)

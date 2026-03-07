@@ -1,6 +1,11 @@
 package ast;
 
 import types.*;
+
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import ir.Ir;
 import ir.IrCommandNewArray;
 import ir.IrCommandNewObject;
@@ -121,7 +126,24 @@ public class AstNewExp extends AstExp
 			System.out.printf("ERROR at line %d, only class or array types can be instantiated\n", line);
 			throw new SemanticException(String.format("ERROR(%d)",line));
 		}
-		
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		if (exp != null) {
+			exp.setGlobalVarData(globalVars);
+		}
+	}
+
+	public void setFunctionData(FunctionData data) {
+		if (exp != null) {
+			exp.setFunctionData(data);
+		}
+	}
+
+	public void setClassData(ClassData data) {
+		if (exp != null) {
+			exp.setClassData(data);
+		}
 	}
 
 	public Temp irMe()

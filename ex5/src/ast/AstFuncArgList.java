@@ -1,5 +1,8 @@
 package ast;
 import types.*;
+import data.ClassData;
+import data.FunctionData;
+import ir.Ir;
 import temp.Temp;
 public class AstFuncArgList extends AstNode
 {
@@ -8,6 +11,9 @@ public class AstFuncArgList extends AstNode
 	/****************/
 	public AstFuncArg head;
 	public AstFuncArgList tail;
+
+	//annotations
+	public String funcName;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -81,7 +87,37 @@ public class AstFuncArgList extends AstNode
 		/*******************************/
 		if (tail != null) tailTypes = tail.semantMe();
 		
-
 		return new TypeList(headType, tailTypes);
+	}
+
+	public void annotateAst()
+	{
+		if (tail != null && tail.head != null) {
+			tail.head.index = head.index + 1;
+			tail.funcName = funcName;
+			head.funcName = funcName;
+			tail.annotateAst();
+		}
+	}
+
+	public void setFunctionData(FunctionData data) {
+		head.setFunctionData(data);
+		if (tail != null) {
+			tail.setFunctionData(data);
+		}
+	}
+
+	public void setClassData(ClassData data) {
+		head.setClassData(data);
+		if (tail != null) {
+			tail.setClassData(data);
+		}
+	}
+
+	public Temp irMe()
+	{
+		head.irMe();
+		if (tail != null) tail.irMe();
+		return null;
 	}
 }

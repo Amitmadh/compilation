@@ -2,6 +2,12 @@ package ast;
 
 import symboltable.SymbolTable;
 import types.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import ir.Ir;
 import ir.IrCommandReturn;
 import temp.Temp;
@@ -9,6 +15,10 @@ import temp.Temp;
 public class AstStmtReturn extends AstStmt
 {
 	public AstExp exp;
+
+	//annotations
+	FunctionData funcData = null;
+	ClassData classData = null;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -121,15 +131,41 @@ public class AstStmtReturn extends AstStmt
 		System.out.printf("ERROR at line %d, return type mismatch. Expected %s, got %s\n", line, expectedType.name, actualType.name);
 		throw new SemanticException(String.format("ERROR(%d)",line));
 	}
+
+	public void annotateAst()
+	{
+		varDecs = new ArrayList<>();
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		if (exp != null) {
+			exp.setGlobalVarData(globalVars);
+		}
+	}
+
+	public void setFunctionData(FunctionData data) {
+		funcData = data;
+		if (exp != null) {
+			exp.setFunctionData(data);
+		}
+	}
+
+	public void setClassData(ClassData data) {
+		classData = data;
+		if (exp != null) {
+			exp.setClassData(data);
+		}
+	}
 	
 	public Temp irMe()
 	{
 		if (exp != null) {
 			Temp returnValue = exp.irMe();
-			Ir.getInstance().AddIrCommand(new IrCommandReturn(returnValue));
+			Ir.getInstance().AddIrCommand(new IrCommandReturn(returnValue, funcData, classData, funcName));
+			return returnValue;
 		} 
 		else {
-			Ir.getInstance().AddIrCommand(new IrCommandReturn(null));
+			Ir.getInstance().AddIrCommand(new IrCommandReturn(null, funcData, classData, funcName));
 		}
 		return null;
 	}

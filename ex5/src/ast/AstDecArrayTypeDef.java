@@ -1,4 +1,6 @@
 package ast;
+import java.util.List;
+
 import temp.Temp;
 import types.TypeClass;
 
@@ -55,11 +57,23 @@ public class AstDecArrayTypeDef extends AstDec
 		/****************************************/
 		if (arrayTypeDef  != null) AstGraphviz.getInstance().logEdge(serialNumber,arrayTypeDef.serialNumber);
 	}
+
 	public void semantMe(TypeClass classType) throws SemanticException {
 		if (arrayTypeDef != null) arrayTypeDef.semantMe(classType);
 	}
 
-	public Temp irMe() {
+	public void annotateAst()
+	{
+		//nothing
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		arrayTypeDef.setGlobalVarData(globalVars);
+	}
+
+
+	public Temp irMe()
+	{
 		if (arrayTypeDef != null) return arrayTypeDef.irMe();
 		return null;
 	}

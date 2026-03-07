@@ -4,6 +4,8 @@ import types.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import data.ClassData;
+import data.FunctionData;
 import ir.Ir;
 import ir.IrCommandCallMethod;
 import ir.IrCommandCallFunc;
@@ -16,6 +18,9 @@ public class AstCallExp extends AstNode
 	AstVar var;
     String fieldName;
     AstExpList expList;
+
+	//annotations
+	String funcName;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -183,6 +188,33 @@ public class AstCallExp extends AstNode
 		return funcTypeFunction.returnType;
 	}
 
+	public void setGlobalVarData(List<String> globalVars) {
+		if (var != null) {
+			var.setGlobalVarData(globalVars);
+		}
+		if (expList != null) {
+			expList.setGlobalVarData(globalVars);
+		}
+	}
+
+	public void setFunctionData(FunctionData data) {
+		if (var != null) {
+			var.setFunctionData(data);
+		}
+		if (expList != null) {
+			expList.setFunctionData(data);
+		}
+	}
+
+	public void setClassData(ClassData data) {
+		if (var != null) {
+			var.setClassData(data);
+		}
+		if (expList != null) {
+			expList.setClassData(data);
+		}
+	}
+
 	public Temp irMe()
 	{
 		Temp returnValue = TempFactory.getInstance().getFreshTemp();
@@ -198,9 +230,9 @@ public class AstCallExp extends AstNode
 
 		if (var != null) {
 			Temp varBase = var.irMe();
-			Ir.getInstance().AddIrCommand(new IrCommandCallMethod(varBase, fieldName, temps));
+			Ir.getInstance().AddIrCommand(new IrCommandCallMethod(returnValue, var.type.name, varBase, fieldName, temps));
 		} else {
-			Ir.getInstance().AddIrCommand(new IrCommandCallFunc(fieldName, temps));
+			Ir.getInstance().AddIrCommand(new IrCommandCallFunc(returnValue, fieldName, temps));
 		}
 
 		return returnValue;

@@ -6,6 +6,8 @@ package ir;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
+import mips.MipsGenerator;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -34,6 +36,17 @@ public class IrCommandJumpIfEqToZero extends IrCommand
 
 	public String tempDefined() {
 		return null;
+	}
+	
+	public HashSet<Temp> temps() {
+		HashSet<Temp> temps = new HashSet<Temp>();
+		temps.add(t);
+		return temps;
+	}
+
+	public void mipsMe()
+	{
+		MipsGenerator.getInstance().beqz(t, labelName);
 	}
 
 	public void printMe(PrintWriter fileWriter)

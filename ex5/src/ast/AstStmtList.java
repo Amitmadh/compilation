@@ -1,4 +1,9 @@
 package ast;
+import java.util.ArrayList;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import temp.Temp;
 import types.*;
 public class AstStmtList extends AstNode
@@ -8,6 +13,10 @@ public class AstStmtList extends AstNode
 	/****************/
 	public AstStmt head;
 	public AstStmtList tail;
+
+	//annotations
+	List<String> varDecs;
+	String funcName;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -81,7 +90,48 @@ public class AstStmtList extends AstNode
 		return null;
 	}
 
-	public Temp irMe()
+	public void annotateAst()
+	{
+		AstStmt curr = head;
+		AstStmtList nextStmt = tail;
+
+		varDecs = new ArrayList<>();
+
+		while (curr != null) {
+			curr.annotateAst();
+			varDecs.addAll(curr.varDecs);
+			
+			if (nextStmt != null) {
+				curr = nextStmt.head;
+				nextStmt = nextStmt.tail;
+			} else {
+				break;
+			}
+		}
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		head.setGlobalVarData(globalVars);
+		if (tail != null) {
+			tail.setGlobalVarData(globalVars);
+		}
+	}
+
+	public void setFunctionData(FunctionData data) {
+		head.setFunctionData(data);
+		if (tail != null) {
+			tail.setFunctionData(data);
+		}
+	}
+
+	public void setClassData(ClassData data) {
+		head.setClassData(data);
+		if (tail != null) {
+			tail.setClassData(data);
+		}
+	}
+
+	public Temp irMe() 
 	{
 		if (head != null) head.irMe();
 		if (tail != null) tail.irMe();

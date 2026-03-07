@@ -1,11 +1,21 @@
 package ast;
+import data.ClassData;
+import data.FunctionData;
+import ir.Ir;
+import ir.IrCommandLoadArg;
 import symboltable.SymbolTable;
+import temp.Temp;
 import types.*;
 
 public class AstFuncArg extends AstNode
 {
 	AstType type;
     String fieldName;
+	public int offset;
+	public int index = 0;
+
+	//annotations
+	public String funcName;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -89,7 +99,22 @@ public class AstFuncArg extends AstNode
 		/* [4] Enter the Identifier to the Symbol Table */
 		/************************************************/
 		SymbolTable.getInstance().enter(fieldName, t);
+		this.offset = SymbolTable.getInstance().getOffset(fieldName);
 
 		return t;
+	}
+
+	public void setFunctionData(FunctionData data) {
+		//do nothing
+	}
+
+	public void setClassData(ClassData data) {
+		//do nothing
+	}
+
+	public Temp irMe() 
+	{
+		Ir.getInstance().AddIrCommand(new IrCommandLoadArg(fieldName, this.offset, index));
+		return null;
 	}
 }

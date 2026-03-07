@@ -1,5 +1,7 @@
 package ast;
 
+import java.util.List;
+
 import symboltable.*;
 import types.*;
 
@@ -93,4 +95,14 @@ public class AstArrayTypeDef extends AstDec
 		/* [5] Return value is irrelevant for variable declarations */
 		/************************************************************/	
 	}
+
+	public void annotateAst()
+	{
+		//nothing
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		//nothing
+	}
+
 }

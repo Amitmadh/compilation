@@ -1,10 +1,16 @@
 package ast;
 import types.*;
+
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import temp.Temp;
 
 public class AstExpVar extends AstExp
 {
 	public AstVar var;
+	public Type type;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -59,10 +65,24 @@ public class AstExpVar extends AstExp
 
 	public Type semantMe() throws SemanticException
 	{
-		return var.semantMe();
+		type = var.semantMe();
+		return type;
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		var.setGlobalVarData(globalVars);
+	}
+
+	public void setFunctionData(FunctionData data) {
+		var.setFunctionData(data);
+	}
+
+	public void setClassData(ClassData data) {
+		var.setClassData(data);
 	}
 	
-	public Temp irMe() {
+	public Temp irMe()
+	{
 		return var.irMe();
 	}
 }

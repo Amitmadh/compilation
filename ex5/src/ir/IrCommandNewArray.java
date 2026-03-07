@@ -7,6 +7,8 @@ import temp.Temp;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
+import mips.MipsGenerator;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -35,6 +37,18 @@ public class IrCommandNewArray extends IrCommand
 
 	public String tempDefined() {
 		return "t" + t.getSerialNumber();
+	}
+
+	public HashSet<Temp> temps() {
+		HashSet<Temp> temps = new HashSet<Temp>();
+		temps.add(t);
+		temps.add(size);
+		return temps;
+	}
+
+	public void mipsMe()
+	{
+		MipsGenerator.getInstance().creatArray(t, size);
 	}
 
 	public void printMe(PrintWriter fileWriter)

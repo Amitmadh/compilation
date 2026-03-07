@@ -5,6 +5,11 @@ package ir;
 
 import java.io.PrintWriter;
 import java.util.HashSet;
+import java.util.function.Function;
+
+import data.ClassData;
+import data.FunctionData;
+import mips.MipsGenerator;
 
 /*******************/
 /* GENERAL IMPORTS */
@@ -19,11 +24,17 @@ public class IRcommandConstInt extends IrCommand
 {
 	Temp t;
 	int value;
+
+	FunctionData funcData;
+	ClassData classData;
 	
-	public IRcommandConstInt(Temp t, int value)
+	public IRcommandConstInt(Temp t, int value, FunctionData funcData, ClassData classData)
 	{
 		this.t = t;
 		this.value = value;
+
+		this.funcData = funcData;
+		this.classData = classData;
 	}
 
 	public HashSet<String> tempsUsed() {
@@ -33,6 +44,19 @@ public class IRcommandConstInt extends IrCommand
 
 	public String tempDefined() {
 		return "t" + t.getSerialNumber();
+	}
+
+	public HashSet<Temp> temps() {
+		HashSet<Temp> temps = new HashSet<Temp>();
+		temps.add(t);
+		return temps;
+	}
+
+	public void mipsMe()
+	{
+		if ((classData == null) || (funcData != null)) {
+			MipsGenerator.getInstance().li(t,value);
+		}
 	}
 
 	public void printMe(PrintWriter fileWriter)

@@ -1,5 +1,9 @@
 package ast;
+import java.util.List;
+
+import data.ClassData;
 import symboltable.SymbolTable;
+import temp.Temp;
 import types.*;
 
 public class AstCfield extends AstNode
@@ -98,5 +102,36 @@ public class AstCfield extends AstNode
 			
 		}
 		return varClassDec;
+	}
+
+	public void annotateAst() {
+		if (funDec != null) {
+			funDec.annotateAst();
+		}
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		if (varDec != null) {
+			varDec.setGlobalVarData(globalVars);
+		}
+		if (funDec != null) {
+			funDec.setGlobalVarData(globalVars);
+		}
+	}
+
+	public void setClassData(ClassData data) {
+		if (varDec != null) {
+			varDec.setClassData(data);
+		}
+		if (funDec != null) {
+			funDec.setClassData(data);
+		}
+	}
+	
+	public Temp irMe()
+	{
+		if (varDec != null) varDec.irMe();
+		if (funDec != null) funDec.irMe();
+		return null;
 	}
 }

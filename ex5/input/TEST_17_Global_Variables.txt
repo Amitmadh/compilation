@@ -10,3 +10,5 @@ void main()
 	counter := alex + joy; // 37
 	PrintInt(happy+happy*joy); // 160
 }
+
+int sad := 8;

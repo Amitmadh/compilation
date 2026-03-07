@@ -1,4 +1,9 @@
 package ast;
+import java.util.ArrayList;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import ir.Ir;
 import ir.IrCommand;
 import ir.IrCommandJumpIfEqToZero;
@@ -6,7 +11,6 @@ import ir.IrCommandLabel;
 import ir.IrCommandJumpLabel;
 import symboltable.SymbolTable;
 import temp.Temp;
-import temp.TempFactory;
 import types.*;
 public class AstStmtIf extends AstStmt
 {
@@ -95,7 +99,52 @@ public class AstStmtIf extends AstStmt
 			elseBody.semantMe();
 			SymbolTable.getInstance().endScope();
 		}
+
 		return null;
+	}
+
+	public void annotateAst()
+	{
+		varDecs = new ArrayList<>();
+
+		if (body != null) {
+			body.annotateAst();
+			varDecs.addAll(body.varDecs);
+		}
+		if (elseBody != null) {
+			elseBody.annotateAst();
+			varDecs.addAll(elseBody.varDecs);
+		}
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		cond.setGlobalVarData(globalVars);
+		if (body != null) {
+			body.setGlobalVarData(globalVars);
+		}
+		if (elseBody != null) {
+			elseBody.setGlobalVarData(globalVars);
+		}
+	}
+
+	public void setFunctionData(FunctionData data) {
+		cond.setFunctionData(data);
+		if (body != null) {
+			body.setFunctionData(data);
+		}
+		if (elseBody != null) {
+			elseBody.setFunctionData(data);
+		}
+	}
+
+	public void setClassData(ClassData data) {
+		cond.setClassData(data);
+		if (body != null) {
+			body.setClassData(data);
+		}
+		if (elseBody != null) {
+			elseBody.setClassData(data);
+		}
 	}
 
 	public Temp irMe()

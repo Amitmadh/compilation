@@ -1,4 +1,8 @@
 package ast;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import ir.Ir;
 import ir.IrCommandArrayAccess;
 import ir.IrCommandLoad;
@@ -89,7 +93,29 @@ public class AstVarSubscript extends AstVar
 			}
 		
 		/* 3. Return the array element type */
+		type = ((TypeArray)varType).elemType;
 		return ((TypeArray)varType).elemType;
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		var.setGlobalVarData(globalVars);
+		if (subscript != null) {
+			subscript.setGlobalVarData(globalVars);
+		}
+	}
+
+	public void setFunctionData(FunctionData data) {
+		var.setFunctionData(data);
+		if (subscript != null) {
+			subscript.setFunctionData(data);
+		}
+	}
+
+	public void setClassData(ClassData data) {
+		var.setClassData(data);
+		if (subscript != null) {
+			subscript.setClassData(data);
+		}
 	}
 
 	public Temp irMe()

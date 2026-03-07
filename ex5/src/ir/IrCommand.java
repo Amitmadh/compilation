@@ -6,6 +6,8 @@ package ir;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
+import temp.Temp;
+
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
@@ -28,5 +30,7 @@ public abstract class IrCommand
 
 	public abstract HashSet<String> tempsUsed();
 	public abstract String tempDefined();
+	public abstract HashSet<Temp> temps();
+	public abstract void mipsMe();
 	public void printMe(PrintWriter fileWriter) {}
 }

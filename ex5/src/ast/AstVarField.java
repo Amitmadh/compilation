@@ -1,6 +1,11 @@
 package ast;
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
 import ir.Ir;
 import ir.IrCommandFieldAccess;
+import symboltable.SymbolTable;
 import temp.Temp;
 import temp.TempFactory;
 import types.*;
@@ -9,7 +14,9 @@ public class AstVarField extends AstVar
 {
 	public AstVar var;
 	public String fieldName;
-	
+
+	public String className;
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -65,6 +72,8 @@ public class AstVarField extends AstVar
 	{
 		/* 1. Check that the var is instance of class */
 		Type varType = var.semantMe();
+		className = varType.name;
+		
 		if (!(varType.isClass()))
 		{
 			System.out.printf("ERROR at line %d, var must have class type\n", line);
@@ -80,6 +89,7 @@ public class AstVarField extends AstVar
 			while (dataMembers != null) 
 			{
 				if (dataMembers.head.name.equals(fieldName)) {
+					type = dataMembers.head.type;
 					return dataMembers.head.type;
 				}
 				dataMembers = dataMembers.tail;
@@ -93,12 +103,24 @@ public class AstVarField extends AstVar
     	//return null;
 	}
 
+	public void setGlobalVarData(List<String> globalVars) {
+		var.setGlobalVarData(globalVars);
+	}
+
+	public void setFunctionData(FunctionData data) {
+		var.setFunctionData(data);
+	}
+
+	public void setClassData(ClassData data) {
+		var.setClassData(data);
+	}
+
 	public Temp irMe()
 	{
 		Temp t = TempFactory.getInstance().getFreshTemp();
 		Temp instanceAddr = var.irMe();
 
-		Ir.getInstance().AddIrCommand(new IrCommandFieldAccess(t,instanceAddr, fieldName));
+		Ir.getInstance().AddIrCommand(new IrCommandFieldAccess(t, instanceAddr, className, fieldName));
 		
 		return t;
 	}

@@ -1,8 +1,17 @@
 package ast;
+import ir.Ir;
+
+import java.util.List;
+
+import data.ClassData;
+import data.FunctionData;
+import ir.IRCommandNil;
+import temp.Temp;
+import temp.TempFactory;
 import types.*;
 public class AstExpNill extends AstExp
 {
-	
+	public Type type;
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -40,6 +49,26 @@ public class AstExpNill extends AstExp
 	
 	public Type semantMe() throws SemanticException
 	{
-		return TypeNil.getInstance();
+		type = TypeNil.getInstance();
+		return type;
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		//do nothing
+	}
+
+	public void setFunctionData(FunctionData data) {
+		//do nothing
+	}
+
+	public void setClassData(ClassData data) {
+		//do nothing
+	}
+
+	public Temp irMe()
+	{
+		Temp t = TempFactory.getInstance().getFreshTemp();
+		Ir.getInstance().AddIrCommand(new IRCommandNil(t));
+		return t;
 	}
 }

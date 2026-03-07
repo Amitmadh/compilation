@@ -1,6 +1,15 @@
 package ast;
 
+import java.util.List;
+import java.util.Map;
+
+import data.ClassData;
+import data.FunctionData;
+import ir.Ir;
+import ir.IrCommandClassDec;
+import ir.IrCommandEndOfClass;
 import symboltable.*;
+import temp.Temp;
 import types.*;
 
 public class AstClassDec extends AstDec
@@ -8,6 +17,18 @@ public class AstClassDec extends AstDec
     public String className;
     public String extendName;
     public AstCfieldList cfieldList;
+
+	//annotations
+	public List<String> vars;
+	public List<String> varsNoOffset;
+    public List<String> methods;
+	public List<String> methodsNoClass;
+    public Map<String, FunctionData> methodsData;
+
+	public Map<String,Integer> intVals;
+	public Map<String,String> strVals;
+
+	public ClassData classData = null; 
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -111,6 +132,7 @@ public class AstClassDec extends AstDec
 		/* [6] Semant Class Fields */		
 		if (cfieldList != null) {
 			cfieldList.semantMe(t);
+			cfieldList.className = className;
 		}
 		/*****************/
 		/* [7] End Scope */
@@ -121,5 +143,37 @@ public class AstClassDec extends AstDec
 		/* [8] Return value is irrelevant for class declarations */
 		/*********************************************************/
 		
+	}
+
+	public void annotateAst()
+	{
+		cfieldList.annotateAst();
+
+		this.vars = cfieldList.vars;
+		this.varsNoOffset = cfieldList.varsNoOffset;
+    	this.methods = cfieldList.methods;
+		this.methodsNoClass = cfieldList.methodsNoClass;
+    	this.methodsData = cfieldList.methodsData;
+		this.intVals = cfieldList.intVals;
+		this.strVals = cfieldList.strVals;
+	}
+
+	public void setGlobalVarData(List<String> globalVars) {
+		cfieldList.setGlobalVarData(globalVars);
+	}
+
+	public void setClassData(ClassData data) {
+		classData = data;
+		cfieldList.setClassData(data);
+	}
+
+
+	public Temp irMe() 
+	{
+		Ir.getInstance().AddIrCommand(new IrCommandClassDec(className, extendName, classData));
+		if (cfieldList != null) cfieldList.irMe();
+		Ir.getInstance().AddIrCommand(new IrCommandEndOfClass(className, extendName));
+
+		return null;
 	}
 }

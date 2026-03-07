@@ -48,7 +48,7 @@ CUP_FLAGS =                                \
 #########################
 # DEFINITIONS :: PARSER #
 #########################
-INPUT    = ${INPUT_DIR}/Input.txt
+INPUT    = ${INPUT_DIR}/TEST_05_Classes.txt
 OUTPUT   = ${OUTPUT_DIR}/mips.txt
 
 ##########
@@ -103,7 +103,7 @@ all:
 	@echo "*                                                      *"
 	@echo "********************************************************"
 	mkdir -p ${BIN_DIR}
-	javac -cp ${EXTERNAL_JAR_FILES} -d ${BIN_DIR} ${SRC_FILES}
+	javac -g -cp ${EXTERNAL_JAR_FILES} -d ${BIN_DIR} ${SRC_FILES}
 	@echo "\n"
 	@echo "***********************************************************"
 	@echo "*                                                         *"
@@ -113,6 +113,15 @@ all:
 	@echo "*                                                         *"
 	@echo "***********************************************************"
 	jar cfm COMPILER ${MANIFEST_FILE} -C ${BIN_DIR} .
+	@echo "\n"
+	@echo "*****************************"
+	@echo "*                           *"
+	@echo "*                           *"
+	@echo "* [6] Run resulting program *"
+	@echo "*                           *"
+	@echo "*                           *"
+	@echo "*****************************"
+	java -jar COMPILER ${INPUT} ${OUTPUT}
 
 everything: all
 	@echo "\n"
