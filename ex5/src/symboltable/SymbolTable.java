@@ -6,7 +6,6 @@ package symboltable;
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
-import java.io.PrintWriter;
 import types.*;
 
 import java.util.ArrayList;

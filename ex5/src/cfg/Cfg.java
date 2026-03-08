@@ -1,7 +1,6 @@
 package cfg;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,14 +10,11 @@ import java.util.Set;
 import java.util.HashSet;
 
 import ir.*;
-import temp.Temp;
 
 public class Cfg {
     private List<CfgNode> nodes = new ArrayList<>();
     private List<CfgNode> cfgs = new ArrayList<>();
     private List<List<CfgNode>> cfgsNodes = new ArrayList<>();
-    private List<CfgNode> classes = new ArrayList<>();
-    private List<List<CfgNode>> classesNodes = new ArrayList<>();
     private Map<String, CfgNode> labelToNodeMap = new HashMap<>();
     public List<String> globalVars = new ArrayList<>();
 
@@ -103,7 +99,6 @@ public class Cfg {
             }
 
             String currFunc = null;
-            String currClass = null;
             for (CfgNode node : nodes) {
                 if (node.command instanceof IrCommandFuncDec) {
                     cfgs.add(node);

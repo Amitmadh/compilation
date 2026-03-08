@@ -58,7 +58,7 @@ import java_cup.runtime.*;
 	private Symbol symbol(int type, Object value) {return new Symbol(type, yyline, yycolumn, value);}
 	private Symbol symbol_integer(int value) {
 		if (value < 32768) {return new Symbol(TokenNames.INT, yyline, yycolumn, value);}
-		else {throw new RuntimeException("lexical error");}
+		else {throw new RuntimeException("ERROR");}
 	}
 
 	/*******************************************/
@@ -136,14 +136,14 @@ Type1CommentError = \/\/.*[^a-zA-Z0-9\s(){}\[\]?!+*\-./;].*{LineTerminator}
 "extends"			{ return symbol(TokenNames.EXTENDS);}
 "nil"				{ return symbol(TokenNames.NIL);}
 {TYPE1COMMENT}		{ /* just skip what was found, do nothing */ }
-{Type1CommentError} { throw new RuntimeException("lexical error");}
+{Type1CommentError} { throw new RuntimeException("ERROR");}
 {TYPE2COMMENT}		{ /* just skip what was found, do nothing */ }
-{Type2CommentError} { throw new RuntimeException("lexical error");}
+{Type2CommentError} { throw new RuntimeException("ERROR");}
 {INTEGER}			{ return symbol_integer(Integer.valueOf(yytext()));}
-{IntegerError}		{ throw new RuntimeException("lexical error");}
+{IntegerError}		{ throw new RuntimeException("ERROR");}
 {STRING}			{ return symbol(TokenNames.STRING, String.valueOf(yytext()));}
 {ID}				{ return symbol(TokenNames.ID,     yytext());}
 {WhiteSpace}		{ /* just skip what was found, do nothing */ }
 <<EOF>>				{ return symbol(TokenNames.EOF);}
-. 					{ throw new RuntimeException("lexical error");}
+. 					{ throw new RuntimeException("ERROR");}
 }

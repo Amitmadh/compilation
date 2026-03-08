@@ -2,7 +2,6 @@ package ast;
 import types.*;
 import data.ClassData;
 import data.FunctionData;
-import ir.Ir;
 import temp.Temp;
 public class AstFuncArgList extends AstNode
 {

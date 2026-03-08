@@ -324,7 +324,7 @@ class Lexer implements java_cup.runtime.Scanner {
 	private Symbol symbol(int type, Object value) {return new Symbol(type, yyline, yycolumn, value);}
 	private Symbol symbol_integer(int value) {
 		if (value < 32768) {return new Symbol(TokenNames.INT, yyline, yycolumn, value);}
-		else {throw new RuntimeException("lexical error");}
+		else {throw new RuntimeException("ERROR");}
 	}
 
 	/*******************************************/
@@ -729,7 +729,7 @@ class Lexer implements java_cup.runtime.Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
-            { throw new RuntimeException("lexical error");
+            { throw new RuntimeException("ERROR");
             } 
             // fall through
           case 35: break;

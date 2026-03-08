@@ -5,9 +5,7 @@ package ir;
 
 import java.io.PrintWriter;
 import java.util.HashSet;
-import java.util.List;
 
-import ast.AstProgram;
 import data.ClassData;
 import mips.MipsGenerator;
 import temp.Temp;

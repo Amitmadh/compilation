@@ -6,8 +6,6 @@ package ir;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
-import mips.MipsGenerator;
-
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/

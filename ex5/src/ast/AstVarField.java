@@ -5,7 +5,6 @@ import data.ClassData;
 import data.FunctionData;
 import ir.Ir;
 import ir.IrCommandFieldAccess;
-import symboltable.SymbolTable;
 import temp.Temp;
 import temp.TempFactory;
 import types.*;

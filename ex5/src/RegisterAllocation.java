@@ -17,7 +17,7 @@ public class RegisterAllocation {
 
     boolean alocFailed = false;
     
-    public RegisterAllocation(Cfg cfg, String outputPath) throws FileNotFoundException {
+    public RegisterAllocation(Cfg cfg) throws FileNotFoundException {
         cfg.livenessAnalysis();
 
         /* collect all temps from the CFG */
@@ -41,9 +41,6 @@ public class RegisterAllocation {
         Map<String, Integer> mapping = colorGraph();
 
         if (alocFailed == true) {
-            PrintWriter fileWriter = new PrintWriter(outputPath);
-            fileWriter.print("Register Allocation Failed");
-            fileWriter.close();
             throw new RuntimeException("Register Allocation Failed");
         }
 
@@ -100,7 +97,7 @@ public class RegisterAllocation {
             alocFailed = true;
         }
 
-        List<Integer> colors = java.util.Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        List<Integer> colors = java.util.Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
         while (!stack.isEmpty()) {
             String vertex = stack.pop();
             currVertices.add(vertex);

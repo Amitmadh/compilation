@@ -1,14 +1,12 @@
 import java.io.*;
 import java.util.List;
+import java.util.Collections;
 
 import java_cup.runtime.Symbol;
-import mips.MipsGenerator;
-
-import java.util.Collections;
 import ast.*;
 import ir.Ir;
 import cfg.Cfg;
-
+import mips.MipsGenerator;
 
 public class Main
 {
@@ -20,7 +18,7 @@ public class Main
 		Ir ir;
 		AstProgram ast;
 		FileReader fileReader;
-		PrintWriter fileWriter;
+		PrintWriter fileWriter = null;
 		String inputFileName = argv[0];
 		String outputFileName = argv[1];
 
@@ -34,7 +32,7 @@ public class Main
 			/********************************/
 			/* [2] Initialize a file writer */
 			/********************************/
-			//fileWriter = new PrintWriter(outputFileName);
+			fileWriter = new PrintWriter(outputFileName);
 
 			/******************************/
 			/* [3] Initialize a new lexer */
@@ -74,7 +72,7 @@ public class Main
 			/* [9] Register allocation		 */
 			/********************************/
 			Cfg cfg = new Cfg(ir);
-			RegisterAllocation ra = new RegisterAllocation(cfg, outputFileName);
+			RegisterAllocation ra = new RegisterAllocation(cfg);
 
 			
 			/*****************************/
@@ -101,7 +99,17 @@ public class Main
 
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			String errorString = e.getMessage();
+
+			if (fileWriter != null)
+			{
+				fileWriter.print(errorString);
+				fileWriter.close();
+			}
+			else
+			{
+				System.out.println(errorString);
+			}
 		}
 	}
 }

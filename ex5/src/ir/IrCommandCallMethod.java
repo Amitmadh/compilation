@@ -9,7 +9,6 @@ import java.util.List;
 
 import ast.AstProgram;
 import data.ClassData;
-import data.FunctionData;
 import mips.MipsGenerator;
 import temp.Temp;
 

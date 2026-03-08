@@ -1,7 +1,6 @@
 package ir;
 
 import java.util.HashSet;
-import java.util.List;
 
 import data.ClassData;
 import data.FunctionData;

@@ -1,10 +1,8 @@
 package ast;
-import java.util.ArrayList;
 import java.util.List;
 
 import data.ClassData;
 import data.FunctionData;
-import temp.Temp;
 import types.*;
 public abstract class AstStmt extends AstNode
 {

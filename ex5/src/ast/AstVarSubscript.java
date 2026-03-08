@@ -5,7 +5,6 @@ import data.ClassData;
 import data.FunctionData;
 import ir.Ir;
 import ir.IrCommandArrayAccess;
-import ir.IrCommandLoad;
 import temp.Temp;
 import temp.TempFactory;
 import types.*;

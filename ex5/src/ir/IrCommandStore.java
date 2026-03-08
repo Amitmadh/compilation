@@ -15,7 +15,6 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.List;
 
-import ast.AstProgram;
 import data.ClassData;
 import data.FunctionData;
 import mips.MipsGenerator;

@@ -6,8 +6,6 @@ package ir;
 import temp.Temp;
 import java.io.PrintWriter;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 
 import ast.AstProgram;
 import data.ClassData;

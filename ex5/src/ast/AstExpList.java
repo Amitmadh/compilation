@@ -2,15 +2,11 @@ package ast;
 
 import types.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import data.ClassData;
 import data.FunctionData;
-import ir.IRcommandConstInt;
-import ir.Ir;
 import temp.Temp;
-import temp.TempFactory;
 
 public class AstExpList extends AstNode
 {
