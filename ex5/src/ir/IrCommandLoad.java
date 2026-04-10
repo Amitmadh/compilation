@@ -69,17 +69,36 @@ public class IrCommandLoad extends IrCommand
 	{
 		if (isVarGlobal) {
 			MipsGenerator.getInstance().load(dst, varName);
-		} else if (classData != null) {
-			if (funcdata != null && funcdata.localVars.contains(varName)) {
-				MipsGenerator.getInstance().loadLocal(dst, funcdata.localVars.indexOf(varName));
-			} else if (funcdata != null && classData.vars.contains(varName)) {
-				MipsGenerator.getInstance().loadField(dst, classData.vars.indexOf(varName));
-			}
-		} else if (funcdata != null) {
+		} else if (classData != null && funcdata != null) {
+			// In a method
 			if (funcdata.localVars.contains(varName)) {
 				MipsGenerator.getInstance().loadLocal(dst, funcdata.localVars.indexOf(varName));
 			} else if (funcdata.args.contains(varName)) {
-				MipsGenerator.getInstance().loadArg(dst, funcdata.args.indexOf(varName));
+				// Method parameter - use offset 12 + index*4
+				MipsGenerator.getInstance().loadArg(dst, funcdata.args.indexOf(varName), true);
+			} else {
+				// Try to find in class fields using varsNoOffset
+				String fieldNameNoOffset = varName.substring(0, varName.lastIndexOf("offset"));
+				if (classData.varsNoOffset.contains(fieldNameNoOffset)) {
+					// Class field - use index from varsNoOffset
+					int fieldIndex = classData.varsNoOffset.indexOf(fieldNameNoOffset);
+					MipsGenerator.getInstance().loadField(dst, fieldIndex);
+				}
+			}
+		} else if (funcdata != null) {
+			// In a function (not a method)
+			if (funcdata.localVars.contains(varName)) {
+				MipsGenerator.getInstance().loadLocal(dst, funcdata.localVars.indexOf(varName));
+			} else if (funcdata.args.contains(varName)) {
+				// Function parameter - use offset 8 + index*4
+				MipsGenerator.getInstance().loadArg(dst, funcdata.args.indexOf(varName), false);
+			}
+		} else if (classData != null) {
+			// In a class but not directly in a function (shouldn't normally happen)
+			String fieldNameNoOffset = varName.substring(0, varName.lastIndexOf("offset"));
+			if (classData.varsNoOffset.contains(fieldNameNoOffset)) {
+				int fieldIndex = classData.varsNoOffset.indexOf(fieldNameNoOffset);
+				MipsGenerator.getInstance().loadField(dst, fieldIndex);
 			}
 		} else {
 			System.out.println("Error: cant access field " + varName + "!\n" );

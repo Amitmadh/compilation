@@ -43,7 +43,7 @@ public class MipsGenerator
 		fileWriter.format(".text\n");
 		fileWriter.print("main:\n");
 		Ir.getInstance().mipsGlobals();
-		fileWriter.print("\tjal user_main\n");
+		fileWriter.print("\tjal user_main_function\n");
 		fileWriter.print("\tli $v0,10\n");
 		fileWriter.print("\tsyscall\n");
 		fileWriter.close();
@@ -54,6 +54,7 @@ public class MipsGenerator
 	public static String genLabel(String s) {
 		return s + "_" + labelCounter++;
 	}
+	
 
 	static String accessViolation = genLabel("access_violation");
 	static String divByZero = genLabel("division_by_zero");
@@ -106,8 +107,8 @@ public class MipsGenerator
 		int offset = -(index + 11) * WORD_SIZE;
 		fileWriter.format("\tlw $%s,%d($fp)\n",reg(dst),offset);
 	}
-	public void loadArg(Temp dst, int index) {
-		int offset = 8 + index * WORD_SIZE;
+	public void loadArg(Temp dst, int index, boolean isMethod) {
+		int offset = (isMethod ? 12 : 8) + index * WORD_SIZE;
 		fileWriter.format("\tlw $%s,%d($fp)\n",reg(dst),offset);
 	}
 	public void loadField(Temp dst, int index) {
@@ -124,22 +125,35 @@ public class MipsGenerator
 		if (rt != null) {
 			fileWriter.format("\tmove $v0,$%s\n",reg(rt));
 		}
-		fileWriter.format("\tj %s\n",funcName + "_epilogue");
+		fileWriter.format("\tj %s\n",funcName + "_function_epilogue");
 	}
 	public void pushStack(Temp t)
 	{
 		fileWriter.format("\tsubu $sp,$sp,%d\n",WORD_SIZE);
 		fileWriter.format("\tsw $%s,0($sp)\n",reg(t));
 	}
+	public void label(String inlabel)
+	{
+		fileWriter.format("%s:\n",inlabel);
+	}
+	public void funcLabel(String inlabel)
+	{
+		fileWriter.format("%s_function:\n",inlabel);
+	}
+	public void classLabel(String inlabel)
+	{
+		fileWriter.format("%s_class:\n",inlabel);
+	}
 	public void funcPrologue(String label, int numOfLocalVar)
 	{
 		fileWriter.format(".text\n");
-		label(label);
+		funcLabel(label);
 		fileWriter.format("\tsubu $sp,$sp,%d\n",WORD_SIZE);
 		fileWriter.format("\tsw $ra,0($sp)\n");
 		fileWriter.format("\tsubu $sp,$sp,%d\n",WORD_SIZE);
 		fileWriter.format("\tsw $fp,0($sp)\n");
 		fileWriter.format("\tmove $fp,$sp\n");
+		fileWriter.format("\tli $v0,0\n");
 
 		//backup registers
 		fileWriter.format("\tsubu $sp,$sp,%d\n",WORD_SIZE);
@@ -167,7 +181,7 @@ public class MipsGenerator
 	}
 	public void funcEpilogue(String funcName)
 	{
-		label(funcName + "_epilogue");
+		label(funcName + "_function_epilogue");
 		fileWriter.format("\tmove $sp,$fp\n");
 
 		//restore registers
@@ -194,7 +208,7 @@ public class MipsGenerator
 			fileWriter.format("\tsubu $sp,$sp,%d\n",WORD_SIZE);
 			fileWriter.format("\tsw $%s,0($sp)\n",reg(arg));
 		}
-		fileWriter.format("\tjal %s\n",funcName);
+		fileWriter.format("\tjal %s_function\n",funcName);
 		fileWriter.format("\taddu $sp,$sp,%d\n",WORD_SIZE * args.size());
 		if (haveReturnVal) {
 			fileWriter.format("\tmove $%s,$v0\n",reg(returnValue));
@@ -289,10 +303,6 @@ public class MipsGenerator
 	public void slt(Temp dst, Temp oprnd1, Temp oprnd2)
 	{
 		fileWriter.format("\tslt $%s,$%s,$%s\n",reg(dst),reg(oprnd1),reg(oprnd2));
-	}
-	public void label(String inlabel)
-	{
-		fileWriter.format("%s:\n",inlabel);
 	}	
 	public void jump(String inlabel)
 	{
@@ -334,6 +344,7 @@ public class MipsGenerator
 	}
 	public void arrayAccess(Temp dst, Temp arrayAddr, Temp index)
 	{
+		fileWriter.format("\tbeq $%s,0,%s\n",reg(arrayAddr),invalidPointer);
 		fileWriter.format("\tbltz $%s,%s\n", reg(index), accessViolation);
 		fileWriter.format("\tlw $s0,0($%s)\n", reg(arrayAddr));
 		fileWriter.format("\tbge $%s,$s0,%s\n", reg(index), accessViolation);
@@ -346,6 +357,8 @@ public class MipsGenerator
 	}
 	public void arraySet(Temp src, Temp arrayAddr, Temp index)
 	{
+		fileWriter.format("\tbeq $%s,0,%s\n",reg(arrayAddr),invalidPointer);
+		fileWriter.format("\tblez $%s,%s\n", reg(arrayAddr), accessViolation);
 		fileWriter.format("\tbltz $%s,%s\n", reg(index), accessViolation);
 		fileWriter.format("\tlw $s0,0($%s)\n", reg(arrayAddr));
 		fileWriter.format("\tbge $%s,$s0,%s\n", reg(index), accessViolation);
@@ -358,7 +371,7 @@ public class MipsGenerator
 	}
 	public void eqStrings(Temp dst, Temp str1, Temp str2)
 	{
-		fileWriter.format("\tli $20,1\n");
+		fileWriter.format("\tli $s4,1\n");
 		fileWriter.format("\tmove $s0,$%s\n", reg(str1));
 		fileWriter.format("\tmove $s1,$%s\n", reg(str2));
 		
@@ -376,8 +389,8 @@ public class MipsGenerator
 		fileWriter.format("\tj %s\n", eqLabel);
 		fileWriter.format("%s:\n", neqLabel);
 		fileWriter.format("\tli $s4,0\n");
-		fileWriter.format("\tmove $%s,$s4\n", reg(dst));
-		fileWriter.format("%s:\n", eqEndLabel);			
+		fileWriter.format("%s:\n", eqEndLabel);		
+		fileWriter.format("\tmove $%s,$s4\n", reg(dst));	
 	}
 	public void addStrings(Temp dst, Temp str1, Temp str2)
 	{
@@ -445,9 +458,9 @@ public class MipsGenerator
 	public void classDec(String className, List<String> methods) 
 	{
 		fileWriter.format(".data\n");
-		fileWriter.format("vt_%s:\n", className);
+		fileWriter.format("vt_%s_class:\n", className);
 		for (String method : methods) {
-			fileWriter.format(".word %s\n", method);
+			fileWriter.format(".word %s_function\n", method);
 		}
 	}
 	public void newClass(Temp dst, String className, List<String> vars, List<String> varsNoOffset, Map<String,Integer> intVals, Map<String,String> strVals)
@@ -456,7 +469,7 @@ public class MipsGenerator
 		fileWriter.format("\tli $a0,%d\n", (vars.size()+1)*WORD_SIZE);
 		fileWriter.format("\tsyscall\n");
 		fileWriter.format("\tmove $%s,$v0\n", reg(dst));
-		fileWriter.format("\tla $s0,vt_%s\n", className);
+		fileWriter.format("\tla $s0,vt_%s_class\n", className);
 		fileWriter.format("\tsw $s0,0($%s)\n", reg(dst));
 		for(int i = 0; i < vars.size(); i++) {
 			String var = varsNoOffset.get(i);
@@ -489,11 +502,11 @@ public class MipsGenerator
 	public void callMethod(Temp baseClass, int methodIndex, List<Temp> args, Temp returnValue, boolean haveReturnVal)
 	{
 		fileWriter.format("\tbeq $%s,0,%s\n",reg(baseClass),invalidPointer);
-		int idx;
+		Temp arg;
 		for (int i = args.size() - 1; i >= 0; i--) {
-			idx=args.get(i).getRegister()+7;
+			arg = args.get(i);
 			fileWriter.format("\tsubu $sp,$sp,%d\n",WORD_SIZE);
-			fileWriter.format("\tsw $%d,0($sp)\n",idx);
+			fileWriter.format("\tsw $%s,0($sp)\n", reg(arg));
 		}
 		fileWriter.format("\tsubu $sp,$sp,%d\n",WORD_SIZE);
 		fileWriter.format("\tsw $%s,0($sp)\n",reg(baseClass));

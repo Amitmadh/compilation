@@ -20,10 +20,15 @@ import temp.Temp;
 public class IrCommandLabel extends IrCommand
 {
 	public String labelName;
+
+	boolean isFunction = false;
+	boolean isClass = false;
 	
-	public IrCommandLabel(String labelName)
+	public IrCommandLabel(String labelName, boolean isFunction, boolean isClass)
 	{
 		this.labelName = labelName;
+		this.isFunction = isFunction;
+		this.isClass = isClass;
 	}
 
 	public HashSet<String> tempsUsed() {
@@ -42,7 +47,13 @@ public class IrCommandLabel extends IrCommand
 
 	public void mipsMe()
 	{
-		MipsGenerator.getInstance().label(labelName);
+		if (isFunction) {
+			MipsGenerator.getInstance().funcLabel(labelName);
+		} else if (isClass) {
+			MipsGenerator.getInstance().classLabel(labelName);
+		} else {
+			MipsGenerator.getInstance().label(labelName);
+		}
 	}
 
 	public void printMe(PrintWriter fileWriter)

@@ -45,6 +45,8 @@ public class ClassData {
     public void addFields(ClassData other) {
         vars.addAll(other.vars);
         varsNoOffset.addAll(other.varsNoOffset);
+        intVals.putAll(other.intVals);
+        strVals.putAll(other.strVals);
         for (int i = 0; i < other.methodsNoClass.size(); i++) {
             String methodNoClass = other.methodsNoClass.get(i);
             String otherMethod = other.methods.get(i);

@@ -52,7 +52,7 @@ public class Main
 			/*************************/
 			/* [6] Print the AST ... */
 			/*************************/
-			//ast.printMe();
+			ast.printMe();
 
 			/**************************/
 			/* [7] Semant the AST ... */
@@ -83,7 +83,7 @@ public class Main
 			/*************************************/
 			/* [11] Finalize AST GRAPHIZ DOT file */
 			/*************************************/
-			//AstGraphviz.getInstance().finalizeFile();
+			AstGraphviz.getInstance().finalizeFile();
 
 			/***********************/
 			/* [12] MIPS the Ir ... */

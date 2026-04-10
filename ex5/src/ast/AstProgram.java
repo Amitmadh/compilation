@@ -18,7 +18,7 @@ public class AstProgram extends AstNode
 	public AstProgram tail;
 
 	public static List<String> globalVars = new ArrayList<>();
-	public Map<String,FunctionData> functions;
+	public static Map<String,FunctionData> functions;
 	public static Map<String,ClassData> classes;
 
 	

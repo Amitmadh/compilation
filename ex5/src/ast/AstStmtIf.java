@@ -174,7 +174,7 @@ public class AstStmtIf extends AstStmt
 			/**********************************/
 			Ir.
 				getInstance().
-				AddIrCommand(new IrCommandLabel(labelTrue));
+				AddIrCommand(new IrCommandLabel(labelTrue, false, false));
 			
 			/*******************/
 			/* [5] if body.IRme() */
@@ -193,7 +193,7 @@ public class AstStmtIf extends AstStmt
 			/*******************/
 			Ir.
 				getInstance().
-				AddIrCommand(new IrCommandLabel(labelFalse));
+				AddIrCommand(new IrCommandLabel(labelFalse, false, false));
 			
 			/*******************/
 			/* [5] else body.IRme() */
@@ -205,7 +205,7 @@ public class AstStmtIf extends AstStmt
 			/**********************************/
 			Ir.
 				getInstance().
-				AddIrCommand(new ir.IrCommandLabel(labelEnd));
+				AddIrCommand(new ir.IrCommandLabel(labelEnd, false, false));
 		
 		} else {
 			/*******************************/
@@ -235,7 +235,7 @@ public class AstStmtIf extends AstStmt
 			/**********************************/
 			Ir.
 				getInstance().
-				AddIrCommand(new ir.IrCommandLabel(labelEnd));
+				AddIrCommand(new ir.IrCommandLabel(labelEnd, false, false));
 		
 		}
 		return null;

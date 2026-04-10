@@ -74,17 +74,32 @@ public class IrCommandStore extends IrCommand
 	{
 		if (isVarGlobal) {
 			MipsGenerator.getInstance().store(varName, src);
-		} else if (classData != null) {
-			if (funcdata != null && funcdata.localVars.contains(varName)) {
+		} else if (funcdata != null && classData != null) {
+			// In a method (has both funcdata and classData)
+			if (funcdata.localVars.contains(varName)) {
 				MipsGenerator.getInstance().storeLocal(src, funcdata.localVars.indexOf(varName));
-			} else if (funcdata != null && classData.vars.contains(varName)) {
-				MipsGenerator.getInstance().storeField(src, classData.vars.indexOf(varName));
+			} else {
+				// Try to find in class fields using varsNoOffset
+				String fieldNameNoOffset = varName.substring(0, varName.lastIndexOf("offset"));
+				if (classData.varsNoOffset.contains(fieldNameNoOffset)) {
+					// Class field - use index from varsNoOffset
+					int fieldIndex = classData.varsNoOffset.indexOf(fieldNameNoOffset);
+					MipsGenerator.getInstance().storeField(src, fieldIndex);
+				}
 			}
 		} else if (funcdata != null) {
+			// In a function (not a method)
 			if (funcdata.localVars.contains(varName)) {
 				MipsGenerator.getInstance().storeLocal(src, funcdata.localVars.indexOf(varName));
 			} else if (funcdata.args.contains(varName)) {
 				MipsGenerator.getInstance().storeArg(src, funcdata.args.indexOf(varName));
+			}
+		} else if (classData != null) {
+			// In a class but not directly in a function (shouldn't normally happen)
+			String fieldNameNoOffset = varName.substring(0, varName.lastIndexOf("offset"));
+			if (classData.varsNoOffset.contains(fieldNameNoOffset)) {
+				int fieldIndex = classData.varsNoOffset.indexOf(fieldNameNoOffset);
+				MipsGenerator.getInstance().storeField(src, fieldIndex);
 			}
 		} else {
 			System.out.println("Error: cant access field " + varName + "!\n" );

@@ -138,7 +138,7 @@ public class AstStmtWhile extends AstStmt
 		/*********************************/
 		Ir.
 				getInstance().
-				AddIrCommand(new IrCommandLabel(labelStart));
+				AddIrCommand(new IrCommandLabel(labelStart, false, false));
 
 		/********************/
 		/* [3] cond.IRme(); */
@@ -169,7 +169,7 @@ public class AstStmtWhile extends AstStmt
 		/**********************/
 		Ir.
 				getInstance().
-				AddIrCommand(new IrCommandLabel(labelEnd));
+				AddIrCommand(new IrCommandLabel(labelEnd, false, false));
 
 		/*******************/
 		/* [8] return null */
