@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug Compiler",
+            "request": "launch",
+            "mainClass": "Main",
+            "preLaunchTask": "make",
+            "classPaths": [
+                "${workspaceFolder}/ex5/bin",
+                "${workspaceFolder}/ex5/external_jars/java-cup-11b-runtime.jar"
+            ],
+            "args": [
+                "${workspaceFolder}/ex5/input/TEST_235_Method_Calls_Inherited.txt",
+                "${workspaceFolder}/ex5/output/TEST_235_Method_Calls_Inherited.asm"
+            ]
+        }
+    ]
+}
