@@ -2,300 +2,105 @@
 
 A complete compiler for the **L programming language**, implementing lexical analysis, syntax parsing, semantic analysis, and code generation to MIPS assembly.
 
-## Overview
 
-This project is a full-featured compiler written in Java that compiles programs written in the L language (a C-like procedural language) to MIPS assembly code. The compiler performs multiple stages of compilation including lexical analysis, parsing, semantic analysis, intermediate representation generation, and machine code generation.
 
-## Features
-
-- **Lexical Analysis**: Tokenization using JFlex
-- **Syntax Parsing**: Grammar-based parsing using Java CUP
-- **Abstract Syntax Tree (AST)**: Full representation of program structure
-- **Semantic Analysis**: Type checking, symbol table management
-- **Intermediate Representation (IR)**: Language-independent code generation
-- **MIPS Code Generation**: Final assembly output for MIPS architecture
-- **Control Flow Graph (CFG)**: Program flow analysis
-- **Register Allocation**: Efficient register usage in generated code
-- **Supported Language Features**:
-  - Functions with parameters and return values
-  - Local and global variables
-  - Classes and objects
-  - Arrays and subscripting
-  - Control flow: if/else, while loops
-  - String and integer operations
-  - Function calls and recursion
+- Lexical analysis (JFlex), syntax parsing (Java CUP), AST generation
+- Semantic analysis: type checking, symbol tables, scope validation
+- IR generation and MIPS code generation with register allocation
+- Control flow graph analysis
+- **Supported**: Functions, local/global variables, classes, arrays, if/else, while loops, strings, integers, recursion
 
 ## Project Structure
 
 ```
-├── src/                          # Source code
-│   ├── Main.java                # Compiler entry point
-│   ├── Lexer.java               # Lexer (generated from LEX_FILE.lex)
-│   ├── Parser.java              # Parser (generated from CUP_FILE.cup)
-│   ├── TokenNames.java          # Token definitions (generated)
-│   ├── RegisterAllocation.java   # Register allocation strategy
-│   ├── ast/                      # Abstract Syntax Tree node definitions
-│   ├── cfg/                      # Control Flow Graph implementation
-│   ├── data/                     # Data structures (ClassData, FunctionData)
-│   ├── ir/                       # Intermediate Representation commands
-│   ├── mips/                     # MIPS code generation
-│   ├── symboltable/              # Symbol table management
-│   ├── temp/                     # Temporary variables handling
-│   └── types/                    # Type system
-├── jflex/
-│   └── LEX_FILE.lex              # JFlex lexer specification
-├── cup/
-│   └── CUP_FILE.cup              # Java CUP grammar specification
-├── input/                        # Test input files
-│   ├── TEST_01_Print_Primes.txt
-│   ├── TEST_02_Bubble_Sort.txt
-│   ├── TEST_03_Merge_Lists.txt
-│   ├── TEST_04_Matrices.txt
-│   ├── TEST_05_Classes.txt
-│   ├── TEST_06_Strings.txt
-│   ├── TEST_07_Arrays.txt
-│   └── ... (26 test files total)
-├── output/                       # Compiled output files
-├── examples/                     # Example programs
-├── bin/                          # Compiled Java classes
-├── external_jars/                # External dependencies (Java CUP runtime)
-├── manifest/                     # JAR manifest
-├── Makefile                      # Build automation
-└── README.md                     # This file
+├── src/                  # Source code (AST, CFG, IR, MIPS, symboltable, types, etc.)
+├── jflex/LEX_FILE.lex    # Lexer specification
+├── cup/CUP_FILE.cup      # Parser grammar specification
+├── input/                # 26 test files
+├── output/               # Compiled output
+├── examples/             # Example programs
+├── bin/                  # Compiled classes
+├── external_jars/        # Java CUP runtime
+└── Makefile              # Build automation
 ```
 
-## Building the Compiler
+## Building
 
-### Prerequisites
-
-- Java Development Kit (JDK) 8 or higher
-- JFlex (lexer generator)
-- Java CUP (parser generator)
-- GNU Make
-
-### Build Instructions
+**Prerequisites**: JDK 8+, JFlex, Java CUP, GNU Make
 
 ```bash
-# Build the entire project
-make
-
-# Clean compiled files
-make clean
-
-# Generate lexer only
-make jflex
-
-# Generate parser only
-make cup
-
-# Compile Java sources only
-make compile
-
-# Run all tests
-make run
-
-# Build JAR file
-make jar
+make              # Build entire project
+make clean        # Clean compiled files
 ```
 
 ## Usage
 
-### Basic Compilation
-
 ```bash
-java -jar Compiler.jar input_file.l output_file.s
+java -jar COMPILER input.txt output.asm
 ```
 
-### Example
-
-**Input file** (`example.l`):
+Example:
 ```c
 int f(int x, int y) {
     int z := x + y;
     return z;
 }
-
 void main() {
     int z := f(1, 2);
     PrintInt(z);
 }
 ```
 
-**Compilation**:
-```bash
-java -jar Compiler.jar example.l example.s
-```
-
-**Output**: `example.s` (MIPS assembly code)
-
 ## L Language Syntax
 
-### Variables and Types
-```c
-int x := 5;           // Integer variable
-int arr[10];          // Array declaration
-```
-
-### Functions
-```c
-int add(int a, int b) {
-    int result := a + b;
-    return result;
-}
-```
-
-### Classes
-```c
-class Point {
-    int x;
-    int y;
-}
-```
-
-### Control Flow
-```c
-if (x > 0) {
-    PrintInt(x);
-}
-
-while (i < 10) {
-    i := i + 1;
-}
-```
-
-### Operators
-- Arithmetic: `+`, `-`, `*`, `/`
-- Comparison: `<`, `>`, `=` (equality)
-- Assignment: `:=`
+**Variables**: `int x := 5;` | **Arrays**: `int arr[10];` | **Functions**: `int add(int a, int b) { ... }`  
+**Classes**: `class Point { int x; int y; }` | **Control Flow**: `if`, `while`  
+**Operators**: Arithmetic (`+`, `-`, `*`, `/`), Comparison (`<`, `>`, `=`), Assignment (`:=`)
 
 ## Compilation Stages
 
-### 1. Lexical Analysis (Lexer)
-- Reads source code character by character
-- Produces tokens (keywords, identifiers, literals, operators)
-- Handles line and column tracking
+1. **Lexical Analysis**: Tokenization with line/column tracking
+2. **Syntax Analysis**: LALR parser builds AST
+3. **Semantic Analysis**: Type checking, symbol tables, scope validation
+4. **IR Generation**: Language-independent intermediate code
+5. **Code Generation**: MIPS assembly with register allocation
 
-### 2. Syntax Analysis (Parser)
-- Uses LALR parser generated from grammar
-- Builds Abstract Syntax Tree (AST)
-- Reports syntax errors
+## Tests
 
-### 3. Semantic Analysis
-- Symbol table construction
-- Type checking
-- Scope validation
-- Method resolution
-
-### 4. Intermediate Representation (IR)
-- Language-independent intermediate code
-- Optimization opportunities
-- Machine-independent representation
-
-### 5. Code Generation
-- MIPS assembly generation
-- Register allocation
-- Control flow optimization
-
-## Test Suite
-
-The project includes 26 comprehensive test cases covering:
-- Print operations (Primes)
-- Sorting algorithms (Bubble Sort)
-- Data structure operations (Merge Lists)
-- Matrix operations
-- Object-oriented features (Classes)
-- String handling
-- Array operations
-- Error handling (Access Violations)
-- Advanced arithmetic (Fibonacci, Overflow)
-- Global and local variables
-- Operator precedence
-
-Run tests with:
-```bash
-make run
-```
+26 test cases cover: primes, sorting, lists, matrices, classes, strings, arrays, access violations, recursion, operators, and more.
 
 ## Generated Files
 
-The compiler generates the following files from specifications:
-
-- `src/Lexer.java` - Generated from `jflex/LEX_FILE.lex`
-- `src/Parser.java` - Generated from `cup/CUP_FILE.cup`
-- `src/TokenNames.java` - Token symbol definitions (generated)
+- `src/Lexer.java` (from `jflex/LEX_FILE.lex`)
+- `src/Parser.java` (from `cup/CUP_FILE.cup`)
+- `src/TokenNames.java` (token definitions)
 
 ## Dependencies
 
-- **Java CUP 11b**: LALR parser generator for Java
-  - Located in `external_jars/java-cup-11b.jar`
-  - Location: [www.cups.cs.umn.edu](http://www2.cs.umn.edu/~raid/cup/)
+- **Java CUP 11b**: LALR parser generator (in `external_jars/java-cup-11b.jar`)
 
 ## Error Handling
 
-The compiler provides detailed error reporting:
-- Lexical errors: Invalid tokens or syntax
-- Parse errors: Grammar violations with line numbers
-- Semantic errors: Type mismatches, undefined variables, scope issues
-- Runtime warnings: Overflow, access violations
+Detailed error reporting for: lexical errors, parse errors (with line numbers), semantic errors (type mismatches, undefined variables, scope), and runtime warnings (overflow, access violations)
 
-## Architecture Highlights
+## Architecture
 
-### Symbol Table
-Manages variable declarations, function definitions, and class definitions with scope tracking.
-
-### Type System
-Supports primitive types (int), complex types (arrays, classes), and type compatibility checking.
-
-### Register Allocation
-Implements efficient register assignment to minimize memory access in generated MIPS code.
-
-### Control Flow Graph
-Analyzes program control flow for optimization and debugging.
+- **Symbol Table**: Scope-aware variable, function, and class management
+- **Type System**: Primitive and complex types with compatibility checking
+- **Register Allocation**: Efficient MIPS register assignment
+- **Control Flow Graph**: Program flow analysis for optimization
 
 ## Notes
 
-- The L language uses `:=` for variable assignment (not `=`)
-- All variables must be explicitly typed
-- Functions support recursion
-- Arrays are indexed from 0
-- Type checking is static and strict
+- Assignment operator is `:=` (not `=`)
+- Variables must be explicitly typed
+- Functions support recursion; arrays indexed from 0
+- Static, strict type checking
 
-## Building a JAR
-
-To create an executable JAR file:
-
-```bash
-make jar
-```
-
-The JAR can then be used as:
-```bash
-java -jar Compiler.jar input.l output.s
-```
 
 ## Troubleshooting
 
-**Problem**: JFlex not found
-- **Solution**: Install JFlex and ensure it's in your PATH
+- **JFlex not found**: Install JFlex and add to PATH
+- **CUP parser errors**: Verify Java CUP JARs in `external_jars/`
+- **Compilation fails**: Check JDK 8+ is installed and in PATH
 
-**Problem**: CUP parser errors
-- **Solution**: Check that Java CUP JAR files are in `external_jars/`
-
-**Problem**: Compilation fails
-- **Solution**: Ensure JDK 8+ is installed and in your PATH
-
-## Future Enhancements
-
-- Optimization passes
-- Extended language features
-- Debugging symbol generation
-- Performance improvements
-- Code generation for additional architectures
-
-## License
-
-This project was developed as part of a compiler design course.
-
-## Author
-
-Compiler Development Project - Exercise 5
