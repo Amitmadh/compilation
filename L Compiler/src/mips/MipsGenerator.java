@@ -111,6 +111,9 @@ public class MipsGenerator
 		int offset = (isMethod ? 12 : 8) + index * WORD_SIZE;
 		fileWriter.format("\tlw $%s,%d($fp)\n",reg(dst),offset);
 	}
+	public void loadThis(Temp dst) {
+		fileWriter.format("\tlw $%s,8($fp)\n", reg(dst));
+	}
 	public void loadField(Temp dst, int index) {
 		int offset = 4 + index * WORD_SIZE;
 		fileWriter.format("\tlw $s0,8($fp)\n");

@@ -108,7 +108,7 @@ public class AstStmtAssign extends AstStmt
 			else {
 				/* Check Primitives (int, string) */
 				if (t.name.equals("int") || t.name.equals("string")) {
-					if (!initType.name.equals(t.name)) {
+					if (!t.name.equals(initType.name)) {
 						System.out.printf("ERROR at line %d, type mismatch in assignment. Expected %s, got %s\n", line, t.name, initType.name);
 						throw new SemanticException(String.format("ERROR(%d)",line));
 					}

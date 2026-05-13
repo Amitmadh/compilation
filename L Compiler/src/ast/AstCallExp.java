@@ -9,6 +9,7 @@ import data.FunctionData;
 import ir.Ir;
 import ir.IrCommandCallMethod;
 import ir.IrCommandCallFunc;
+import ir.IrCommandLoadThis;
 import symboltable.*;
 import temp.Temp;
 import temp.TempFactory;
@@ -21,6 +22,7 @@ public class AstCallExp extends AstNode
 
 	//annotations
 	String funcName;
+	ClassData classData = null;
 	
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -207,6 +209,7 @@ public class AstCallExp extends AstNode
 	}
 
 	public void setClassData(ClassData data) {
+		this.classData = data;
 		if (var != null) {
 			var.setClassData(data);
 		}
@@ -231,6 +234,10 @@ public class AstCallExp extends AstNode
 		if (var != null) {
 			Temp varBase = var.irMe();
 			Ir.getInstance().AddIrCommand(new IrCommandCallMethod(returnValue, var.type.name, varBase, fieldName, temps));
+		} else if (classData != null && classData.methodsNoClass.contains(fieldName)) {
+			Temp thisTemp = TempFactory.getInstance().getFreshTemp();
+			Ir.getInstance().AddIrCommand(new IrCommandLoadThis(thisTemp));
+			Ir.getInstance().AddIrCommand(new IrCommandCallMethod(returnValue, classData.className, thisTemp, fieldName, temps));
 		} else {
 			Ir.getInstance().AddIrCommand(new IrCommandCallFunc(returnValue, fieldName, temps));
 		}
